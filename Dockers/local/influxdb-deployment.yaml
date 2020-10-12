@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: D:\Projects\Sandbox\VideoPlatform\Dockers\local\kompose.exe convert
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: influxdb
+  name: influxdb
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: influxdb
+    spec:
+      containers:
+      - env:
+        - name: INFLUXDB_ADMIN_PASSWORD
+          value: admin
+        - name: INFLUXDB_ADMIN_USER
+          value: admin
+        - name: INFLUXDB_DB
+          value: VideoPlatformMetrics
+        image: influxdb:latest
+        name: influxdb
+        ports:
+        - containerPort: 8083
+        - containerPort: 8086
+        resources: {}
+      hostname: influxdb
+      restartPolicy: Always
+status: {}

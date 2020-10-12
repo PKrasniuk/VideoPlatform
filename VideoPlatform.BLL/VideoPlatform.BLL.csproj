@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VideoPlatform.AIL\VideoPlatform.AIL.csproj" />
+    <ProjectReference Include="..\VideoPlatform.CacheService\VideoPlatform.CacheService.csproj" />
+    <ProjectReference Include="..\VideoPlatform.CQRS\VideoPlatform.CQRS.csproj" />
+    <ProjectReference Include="..\VideoPlatform.DAL\VideoPlatform.DAL.csproj" />
+    <ProjectReference Include="..\VideoPlatform.ElasticSearchService\VideoPlatform.ElasticSearchService.csproj" />
+    <ProjectReference Include="..\VideoPlatform.ExternalService\VideoPlatform.ExternalService.csproj" />
+    <ProjectReference Include="..\VideoPlatform.MessageService\VideoPlatform.MessageService.csproj" />
+    <ProjectReference Include="..\VideoPlatform.SchedulerService\VideoPlatform.SchedulerService.csproj" />
+  </ItemGroup>
+
+</Project>

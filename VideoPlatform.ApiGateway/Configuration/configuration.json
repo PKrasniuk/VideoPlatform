@@ -1,0 +1,86 @@
+{
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 25720
+        }
+      ],
+      "UpstreamPathTemplate": "/api/base/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ],
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 1,
+        "Limit": 1
+      },
+      "FileCacheOptions": {
+        "TtlSeconds": 15,
+        "Region": "VideoPlatformCaching"
+      },
+      "SwaggerKey": "videoPlatform"
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 19680
+        }
+      ],
+      "UpstreamPathTemplate": "/api/additional/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ],
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 1,
+        "Limit": 1
+      },
+      "FileCacheOptions": {
+        "TtlSeconds": 15,
+        "Region": "VideoPlatformNotificationCaching"
+      },
+      "SwaggerKey": "videoPlatformNotification"
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "videoPlatform",
+      "Config": [
+        {
+          "Name": "Video Platform API",
+          "Version": "v1",
+          "Url": "http://localhost:25720/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "videoPlatformNotification",
+      "Config": [
+        {
+          "Name": "Video Platform Notification API",
+          "Version": "v1",
+          "Url": "http://localhost:19680/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ],
+  "GlobalConfiguration": {
+  }
+}

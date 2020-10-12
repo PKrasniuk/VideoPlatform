@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: D:\Projects\Sandbox\VideoPlatform\Dockers\local\kompose.exe convert
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: logstash
+  name: logstash
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: logstash
+    spec:
+      containers:
+      - image: docker.elastic.co/logstash/logstash:7.2.0
+        name: logstash
+        resources: {}
+      restartPolicy: Always
+status: {}

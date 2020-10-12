@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: D:\Projects\Sandbox\VideoPlatform\Dockers\local\kompose.exe convert
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: sql-server-db
+  name: sql-server-db
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: sql-server-db
+    spec:
+      containers:
+      - env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: MSSQL_AGENT_ENABLED
+          value: "true"
+        - name: SA_PASSWORD
+          value: DBpass@09
+        image: microsoft/mssql-server-linux:2017-latest
+        name: sql-server-db
+        ports:
+        - containerPort: 1433
+        resources: {}
+      hostname: sql-server-db
+      restartPolicy: Always
+status: {}

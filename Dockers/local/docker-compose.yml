@@ -1,0 +1,153 @@
+version: '3.4'
+
+services:
+
+  sql-server-db:
+    container_name: sql-server-db
+    image: microsoft/mssql-server-linux:2017-latest
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "DBpass@09"
+      ACCEPT_EULA: "Y"
+      MSSQL_AGENT_ENABLED: "true"
+    hostname: sql-server-db
+    networks: 
+       - videoplatform
+       
+  mongo:
+    container_name: mongo
+    image: mongo:4.0.8
+    hostname: mongo
+    ports:
+      - "27017:27017"
+    networks: 
+      - videoplatform
+    
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.8-management
+    ports:
+       - "15672:15672"
+       - "5672:5672"
+    environment:
+       RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+       RABBITMQ_DEFAULT_USER: "guest"
+       RABBITMQ_DEFAULT_PASS: "guest"
+       RABBITMQ_DEFAULT_VHOST: "/"
+    hostname: rabbitmq
+    networks: 
+       - videoplatform
+       
+  influxdb:
+    container_name: influxdb
+    image: influxdb:latest
+    ports:
+      - "8083:8083"
+      - "8086:8086"
+    environment:
+      - INFLUXDB_DB=VideoPlatformMetrics
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=admin
+    hostname: influxdb
+    networks: 
+       - videoplatform
+  
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    ports:
+      - '3000:3000'
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    hostname: grafana
+    networks: 
+       - videoplatform
+       
+  chronograf:
+    container_name: chronograf
+    image: chronograf:latest
+    ports:
+      - "8888:8888"
+    hostname: chronograf
+    networks: 
+      - videoplatform
+    links:
+      - influxdb
+    
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    hostname: elasticsearch
+    environment:
+      - "discovery.type=single-node"
+    expose:
+      - "9200"
+    networks: 
+      - videoplatform
+
+  kibana:
+    container_name: kibana
+    hostname: kibana
+    image: docker.elastic.co/kibana/kibana:7.2.0
+    ports:
+      - "5601:5601"
+    links:
+      - elasticsearch
+    networks:
+      - videoplatform
+  
+  logstash:
+    container_name: logstash
+    image: docker.elastic.co/logstash/logstash:7.2.0
+    links:
+      - elasticsearch
+    networks:
+      - videoplatform
+      
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    hostname: redis
+    command: ["redis-server", "--appendonly", "yes"]
+    networks: 
+      - videoplatform
+      
+  zookeeper:
+    container_name: zookeeper
+    image: wurstmeister/zookeeper:3.4.6
+    hostname: zookeeper
+    expose:
+      - "2181"
+    networks: 
+      - videoplatform
+
+  kafka:
+    container_name: kafka
+    image: wurstmeister/kafka:2.11-2.0.0
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    hostname: kafka
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    networks: 
+      - videoplatform
+ 
+networks:
+
+    videoplatform:
+        driver: bridge
+        driver_opts:
+            com.docker.network.enable_ipv6: "true"

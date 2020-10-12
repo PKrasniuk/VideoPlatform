@@ -1,0 +1,7 @@
+REM NET START chronograf
+REM NET START Elasticsearch
+REM NET START Grafana
+REM NET START influxdb
+REM NET START Kibana
+REM NET START MySQL80
+REM NET START RabbitMQ

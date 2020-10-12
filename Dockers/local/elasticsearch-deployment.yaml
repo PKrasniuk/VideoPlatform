@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: D:\Projects\Sandbox\VideoPlatform\Dockers\local\kompose.exe convert
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: elasticsearch
+  name: elasticsearch
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: elasticsearch
+    spec:
+      containers:
+      - env:
+        - name: discovery.type
+          value: single-node
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
+        name: elasticsearch
+        ports:
+        - containerPort: 9200
+        - containerPort: 9300
+        resources: {}
+      hostname: elasticsearch
+      restartPolicy: Always
+status: {}

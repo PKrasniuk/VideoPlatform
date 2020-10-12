@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Confluent.Kafka" Version="1.2.2" />
+    <PackageReference Include="DotNetCore.CAP" Version="2.6.0" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.6.0" />
+    <PackageReference Include="DotNetCore.CAP.SqlServer" Version="2.6.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Polly" Version="7.2.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="5.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VideoPlatform.Common\VideoPlatform.Common.csproj" />
+    <ProjectReference Include="..\VideoPlatform.DAL\VideoPlatform.DAL.csproj" />
+    <ProjectReference Include="..\VideoPlatform.Domain\VideoPlatform.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
