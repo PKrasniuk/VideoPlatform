@@ -53,14 +53,14 @@ namespace VideoPlatform.DAL.Repositories
             return await _collection.Find(x => x.Id.Equals(id)).SingleOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<TEntity> GetMetaEntityAsync(Expression<Func<TEntity, bool>> filterExpression = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<TEntity> GetMetaEntityAsync(Expression<Func<TEntity, bool>> filterExpression = null, CancellationToken cancellationToken = default)
         {
             return filterExpression != null
                 ? await _collection.Find(filterExpression).SingleOrDefaultAsync(cancellationToken)
                 : await _collection.Find(_ => true).SingleOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<ICollection<TEntity>> GetMetaEntitiesAsync(Expression<Func<TEntity, bool>> filterExpression = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ICollection<TEntity>> GetMetaEntitiesAsync(Expression<Func<TEntity, bool>> filterExpression = null, CancellationToken cancellationToken = default)
         {
             return filterExpression != null
                 ? await _collection.Find(filterExpression).ToListAsync(cancellationToken)
@@ -76,16 +76,14 @@ namespace VideoPlatform.DAL.Repositories
             var sortOrder = !string.IsNullOrWhiteSpace(pagingModel.SortedProperty)
                 ? pagingModel.SortedProperty.FirstCharToUpper()
                 : "UpdatedAt";
-            switch (pagingModel.SortOrder)
+
+            query = pagingModel.SortOrder switch
             {
-                case SortOrder.None:
-                case SortOrder.Ascending:
-                    query = query.Sort(Builders<TEntity>.Sort.Ascending(sortOrder));
-                    break;
-                case SortOrder.Descending:
-                    query = query.Sort(Builders<TEntity>.Sort.Descending(sortOrder));
-                    break;
-            }
+                SortOrder.None => query.Sort(Builders<TEntity>.Sort.Ascending(sortOrder)),
+                SortOrder.Ascending => query.Sort(Builders<TEntity>.Sort.Ascending(sortOrder)),
+                SortOrder.Descending => query.Sort(Builders<TEntity>.Sort.Descending(sortOrder)),
+                _ => query
+            };
 
             return new PagingResult<TEntity>
             {
@@ -102,65 +100,61 @@ namespace VideoPlatform.DAL.Repositories
 
         public async Task<TEntity> CreateMetaEntityAsync(TEntity entity, CancellationToken cancellationToken)
         {
-            using (var session = await Client.StartSessionAsync(cancellationToken: cancellationToken))
+            using var session = await Client.StartSessionAsync(cancellationToken: cancellationToken);
+            try
             {
-                try
+                session.StartTransaction(
+                    new TransactionOptions(writeConcern: new Optional<WriteConcern>(WriteConcern.WMajority)));
+
+                entity.CreatedAt = new BsonDateTime(DateTime.Now);
+                entity.UpdatedAt = entity.CreatedAt;
+                await _collection.InsertOneAsync(entity, new InsertOneOptions
                 {
-                    session.StartTransaction(
-                        new TransactionOptions(writeConcern: new Optional<WriteConcern>(WriteConcern.WMajority)));
+                    BypassDocumentValidation = true
+                }, cancellationToken);
 
-                    entity.CreatedAt = new BsonDateTime(DateTime.Now);
-                    entity.UpdatedAt = entity.CreatedAt;
-                    await _collection.InsertOneAsync(entity, new InsertOneOptions
-                    {
-                        BypassDocumentValidation = true
-                    }, cancellationToken);
+                await session.CommitTransactionAsync(cancellationToken);
 
-                    await session.CommitTransactionAsync(cancellationToken);
+                return entity;
+            }
+            catch (Exception)
+            {
+                await session.AbortTransactionAsync(cancellationToken);
 
-                    return entity;
-                }
-                catch (Exception)
-                {
-                    await session.AbortTransactionAsync(cancellationToken);
-
-                    return default;
-                }
+                return default;
             }
         }
 
         public async Task<IList<TEntity>> CreateMetaEntitiesAsync(IList<TEntity> entities, CancellationToken cancellationToken)
         {
-            using (var session = await Client.StartSessionAsync(cancellationToken: cancellationToken))
+            using var session = await Client.StartSessionAsync(cancellationToken: cancellationToken);
+            session.StartTransaction(
+                new TransactionOptions(writeConcern: new Optional<WriteConcern>(WriteConcern.WMajority)));
+
+            try
             {
-                session.StartTransaction(
-                    new TransactionOptions(writeConcern: new Optional<WriteConcern>(WriteConcern.WMajority)));
-
-                try
+                var dataTime = new BsonDateTime(DateTime.Now);
+                foreach (var entity in entities)
                 {
-                    var dataTime = new BsonDateTime(DateTime.Now);
-                    foreach (var entity in entities)
-                    {
-                        entity.CreatedAt = dataTime;
-                        entity.UpdatedAt = dataTime;
-                    }
-
-                    await _collection.InsertManyAsync(entities, new InsertManyOptions
-                    {
-                        IsOrdered = false,
-                        BypassDocumentValidation = true
-                    }, cancellationToken);
-
-                    await session.CommitTransactionAsync(cancellationToken);
-
-                    return entities;
+                    entity.CreatedAt = dataTime;
+                    entity.UpdatedAt = dataTime;
                 }
-                catch (Exception)
+
+                await _collection.InsertManyAsync(entities, new InsertManyOptions
                 {
-                    await session.AbortTransactionAsync(cancellationToken);
+                    IsOrdered = false,
+                    BypassDocumentValidation = true
+                }, cancellationToken);
 
-                    return default;
-                }
+                await session.CommitTransactionAsync(cancellationToken);
+
+                return entities;
+            }
+            catch (Exception)
+            {
+                await session.AbortTransactionAsync(cancellationToken);
+
+                return default;
             }
         }
 
@@ -168,34 +162,33 @@ namespace VideoPlatform.DAL.Repositories
         {
             var operationStatus = false;
 
-            using (var session = await Client.StartSessionAsync(cancellationToken: cancellationToken))
+            using var session = await Client.StartSessionAsync(cancellationToken: cancellationToken);
+            session.StartTransaction(
+                new TransactionOptions(writeConcern: new Optional<WriteConcern>(WriteConcern.Acknowledged)));
+
+            try
             {
-                session.StartTransaction(
-                    new TransactionOptions(writeConcern: new Optional<WriteConcern>(WriteConcern.Acknowledged)));
-
-                try
+                var dbEntity = await _collection.Find(x => x.Id.Equals(entity.Id)).SingleOrDefaultAsync(cancellationToken);
+                if (dbEntity != null)
                 {
-                    var dbEntity = await _collection.Find(x => x.Id.Equals(entity.Id)).SingleOrDefaultAsync(cancellationToken);
-                    if (dbEntity != null)
-                    {
-                        entity.UpdatedAt = new BsonDateTime(DateTime.Now);
-                        entity.CreatedAt = dbEntity.CreatedAt;
+                    entity.UpdatedAt = new BsonDateTime(DateTime.Now);
+                    entity.CreatedAt = dbEntity.CreatedAt;
 
-                        var result = await _collection.ReplaceOneAsync(x => x.Id.Equals(entity.Id), entity, new UpdateOptions
+                    var result = await _collection.ReplaceOneAsync(x => x.Id.Equals(entity.Id), entity,
+                        new ReplaceOptions
                         {
                             IsUpsert = true,
                             BypassDocumentValidation = true
                         }, cancellationToken);
 
-                        operationStatus = result.IsAcknowledged;
-                    }
+                    operationStatus = result.IsAcknowledged;
+                }
 
-                    await session.CommitTransactionAsync(cancellationToken);
-                }
-                catch (Exception)
-                {
-                    await session.AbortTransactionAsync(cancellationToken);
-                }
+                await session.CommitTransactionAsync(cancellationToken);
+            }
+            catch (Exception)
+            {
+                await session.AbortTransactionAsync(cancellationToken);
             }
 
             return operationStatus;
@@ -207,43 +200,42 @@ namespace VideoPlatform.DAL.Repositories
 
             var dataTime = new BsonDateTime(DateTime.Now);
 
-            using (var session = await Client.StartSessionAsync(cancellationToken: cancellationToken))
+            using var session = await Client.StartSessionAsync(cancellationToken: cancellationToken);
+            session.StartTransaction(
+                new TransactionOptions(writeConcern: new Optional<WriteConcern>(WriteConcern.Acknowledged)));
+
+            try
             {
-                session.StartTransaction(
-                    new TransactionOptions(writeConcern: new Optional<WriteConcern>(WriteConcern.Acknowledged)));
-
-                try
+                foreach (var entity in entities)
                 {
-                    foreach (var entity in entities)
+                    var dbEntity = await _collection.Find(x => x.Id.Equals(entity.Id)).SingleOrDefaultAsync(cancellationToken);
+                    if (dbEntity != null)
                     {
-                        var dbEntity = await _collection.Find(x => x.Id.Equals(entity.Id)).SingleOrDefaultAsync(cancellationToken);
-                        if (dbEntity != null)
-                        {
-                            entity.UpdatedAt = dataTime;
-                            entity.CreatedAt = dbEntity.CreatedAt;
+                        entity.UpdatedAt = dataTime;
+                        entity.CreatedAt = dbEntity.CreatedAt;
 
-                            var result = await _collection.ReplaceOneAsync(x => x.Id.Equals(entity.Id), entity, new UpdateOptions
+                        var result = await _collection.ReplaceOneAsync(x => x.Id.Equals(entity.Id), entity,
+                            new ReplaceOptions
                             {
                                 IsUpsert = true,
                                 BypassDocumentValidation = true
                             }, cancellationToken);
 
-                            operationStatus = operationStatus && result.IsAcknowledged;
-                        }
-                        else
-                        {
-                            operationStatus = false;
-                        }
+                        operationStatus = operationStatus && result.IsAcknowledged;
                     }
-
-                    await session.CommitTransactionAsync(cancellationToken);
+                    else
+                    {
+                        operationStatus = false;
+                    }
                 }
-                catch (Exception)
-                {
-                    await session.AbortTransactionAsync(cancellationToken);
 
-                    operationStatus = false;
-                }
+                await session.CommitTransactionAsync(cancellationToken);
+            }
+            catch (Exception)
+            {
+                await session.AbortTransactionAsync(cancellationToken);
+
+                operationStatus = false;
             }
 
             return operationStatus;
@@ -253,23 +245,21 @@ namespace VideoPlatform.DAL.Repositories
         {
             var operationStatus = false;
 
-            using (var session = await Client.StartSessionAsync(cancellationToken: cancellationToken))
+            using var session = await Client.StartSessionAsync(cancellationToken: cancellationToken);
+            session.StartTransaction(
+                new TransactionOptions(writeConcern: new Optional<WriteConcern>(WriteConcern.Acknowledged)));
+
+            try
             {
-                session.StartTransaction(
-                    new TransactionOptions(writeConcern: new Optional<WriteConcern>(WriteConcern.Acknowledged)));
+                var result = await _collection.DeleteOneAsync(x => x.Id.Equals(id), cancellationToken);
 
-                try
-                {
-                    var result = await _collection.DeleteOneAsync(x => x.Id.Equals(id), cancellationToken);
+                operationStatus = result.IsAcknowledged;
 
-                    operationStatus = result.IsAcknowledged;
-
-                    await session.CommitTransactionAsync(cancellationToken);
-                }
-                catch (Exception)
-                {
-                    await session.AbortTransactionAsync(cancellationToken);
-                }
+                await session.CommitTransactionAsync(cancellationToken);
+            }
+            catch (Exception)
+            {
+                await session.AbortTransactionAsync(cancellationToken);
             }
 
             return operationStatus;
@@ -279,23 +269,21 @@ namespace VideoPlatform.DAL.Repositories
         {
             var operationStatus = false;
 
-            using (var session = await Client.StartSessionAsync(cancellationToken: cancellationToken))
+            using var session = await Client.StartSessionAsync(cancellationToken: cancellationToken);
+            session.StartTransaction(
+                new TransactionOptions(writeConcern: new Optional<WriteConcern>(WriteConcern.Acknowledged)));
+
+            try
             {
-                session.StartTransaction(
-                    new TransactionOptions(writeConcern: new Optional<WriteConcern>(WriteConcern.Acknowledged)));
+                var result = await _collection.DeleteManyAsync(x => ids.Contains(x.Id), cancellationToken);
 
-                try
-                {
-                    var result = await _collection.DeleteManyAsync(x => ids.Contains(x.Id), cancellationToken);
+                operationStatus = result.IsAcknowledged;
 
-                    operationStatus = result.IsAcknowledged;
-
-                    await session.CommitTransactionAsync(cancellationToken);
-                }
-                catch (Exception)
-                {
-                    await session.AbortTransactionAsync(cancellationToken);
-                }
+                await session.CommitTransactionAsync(cancellationToken);
+            }
+            catch (Exception)
+            {
+                await session.AbortTransactionAsync(cancellationToken);
             }
 
             return operationStatus;

@@ -20,9 +20,9 @@ namespace VideoPlatform.DAL.Infrastructure.Configurations
             builder.Property(x => x.Email).IsRequired().HasMaxLength(FieldConstants.HalfFieldLength);
             builder.Property(x => x.PhoneNumber).IsRequired().HasMaxLength(FieldConstants.PhoneFieldLength);
             
-            builder.HasIndex(x => x.PartnerId).IsUnique(false).ForSqlServerIsClustered(false);
-            builder.HasIndex(x => x.Status).IsUnique(false).ForSqlServerIsClustered(false);
-            builder.HasIndex(x => x.Email).IsUnique().ForSqlServerIsClustered(false);
+            builder.HasIndex(x => x.PartnerId).IsUnique(false).IsClustered(false);
+            builder.HasIndex(x => x.Status).IsUnique(false).IsClustered(false);
+            builder.HasIndex(x => x.Email).IsUnique().IsClustered(false);
         }
     }
 }

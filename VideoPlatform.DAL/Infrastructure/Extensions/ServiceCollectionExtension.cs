@@ -25,11 +25,8 @@ namespace VideoPlatform.DAL.Infrastructure.Extensions
             services.AddTransient<IToolsRepository, ToolsRepository>();
             services.AddTransient<ITopicsRepository, TopicsRepository>();
             services.AddTransient<IUserRolesRepository, UserRolesRepository>();
-
             services.AddTransient<IMetaDataRepository, MetaDataRepository>();
-
             services.AddTransient<IInfoDataRepository, InfoDataRepository>();
-
             return services;
         }
     }

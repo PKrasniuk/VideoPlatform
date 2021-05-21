@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using VideoPlatform.DAL.DataModels;
 using VideoPlatform.DAL.Interfaces;
 
@@ -19,7 +18,8 @@ namespace VideoPlatform.DAL.Repositories
 
         public async Task<ICollection<UserRoleDataModel>> GetUserRolesAsync(CancellationToken cancellationToken)
         {
-            return await _dbContext.Query<UserRoleDataModel>().FromSql($"EXEC GetUserRoles").AsNoTracking().ToListAsync(cancellationToken);
+            return await _dbContext.UserRoleData.FromSqlRaw<UserRoleDataModel>("EXEC GetUserRoles").AsNoTracking()
+                .ToListAsync(cancellationToken);
         }
 
         public async Task<ICollection<UserRoleDataModel>> GetUserRolesAlternativeAsync(CancellationToken cancellationToken)

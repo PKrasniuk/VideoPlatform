@@ -21,7 +21,7 @@ namespace VideoPlatform.DAL.Infrastructure.Configurations
             builder.Property(x => x.Status).IsRequired();
             builder.Property(x => x.Type).IsRequired();
 
-            builder.HasIndex(x => x.Name).IsUnique().ForSqlServerIsClustered(false);
+            builder.HasIndex(x => x.Name).IsUnique().IsClustered(false);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace VideoPlatform.DAL.Infrastructure.Configurations
             builder.Property(x => x.Description).IsRequired().HasMaxLength(FieldConstants.BaseFieldLength);
             builder.Property(x => x.Name).IsRequired().HasMaxLength(FieldConstants.QuarterFieldLength);
 
-            builder.HasIndex(x => x.Name).IsUnique().ForSqlServerIsClustered(false);
+            builder.HasIndex(x => x.Name).IsUnique().IsClustered(false);
         }
     }
 }

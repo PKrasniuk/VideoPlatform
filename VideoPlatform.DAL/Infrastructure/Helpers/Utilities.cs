@@ -8,7 +8,7 @@ namespace VideoPlatform.DAL.Infrastructure.Helpers
         {
             return string.IsNullOrEmpty(input) || string.IsNullOrWhiteSpace(input)
                 ? input
-                : input.First().ToString().ToUpper() + input.Substring(1);
+                : input.First().ToString().ToUpper() + input[1..];
         }
     }
 }

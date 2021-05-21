@@ -34,15 +34,15 @@ namespace VideoPlatform.DAL.Infrastructure.Configurations
             builder.Property(x => x.Status).IsRequired();
             builder.Property(x => x.Type).IsRequired();
 
-            builder.HasIndex(x => x.Name).IsUnique().ForSqlServerIsClustered(false);
-            builder.HasIndex(x => x.UploadUserId).IsUnique(false).ForSqlServerIsClustered(false);
-            builder.HasIndex(x => x.PublishUserId).IsUnique(false).ForSqlServerIsClustered(false);
-            builder.HasIndex(x => x.SeriesId).IsUnique(false).ForSqlServerIsClustered(false);
-            builder.HasIndex(x => x.TopicId).IsUnique(false).ForSqlServerIsClustered(false);
-            builder.HasIndex(x => x.SourceId).IsUnique(false).ForSqlServerIsClustered(false);
-            builder.HasIndex(x => x.DatePublished).IsUnique(false).ForSqlServerIsClustered(false);
-            builder.HasIndex(x => x.Status).IsUnique(false).ForSqlServerIsClustered(false);
-            builder.HasIndex(x => x.Type).IsUnique(false).ForSqlServerIsClustered(false);
+            builder.HasIndex(x => x.Name).IsUnique().IsClustered(false);
+            builder.HasIndex(x => x.UploadUserId).IsUnique(false).IsClustered(false);
+            builder.HasIndex(x => x.PublishUserId).IsUnique(false).IsClustered(false);
+            builder.HasIndex(x => x.SeriesId).IsUnique(false).IsClustered(false);
+            builder.HasIndex(x => x.TopicId).IsUnique(false).IsClustered(false);
+            builder.HasIndex(x => x.SourceId).IsUnique(false).IsClustered(false);
+            builder.HasIndex(x => x.DatePublished).IsUnique(false).IsClustered(false);
+            builder.HasIndex(x => x.Status).IsUnique(false).IsClustered(false);
+            builder.HasIndex(x => x.Type).IsUnique(false).IsClustered(false);
         }
     }
 }

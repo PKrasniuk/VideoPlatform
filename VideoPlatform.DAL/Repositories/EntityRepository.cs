@@ -63,14 +63,14 @@ namespace VideoPlatform.DAL.Repositories
             return await DatabaseContext.Set<TEntity>().AsNoTracking().SingleOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
         }
 
-        public async Task<TEntity> GetEntityAsync(Expression<Func<TEntity, bool>> filterExpression = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<TEntity> GetEntityAsync(Expression<Func<TEntity, bool>> filterExpression = null, CancellationToken cancellationToken = default)
         {
             return filterExpression != null
                 ? await DatabaseContext.Set<TEntity>().Where(filterExpression).AsNoTracking().SingleOrDefaultAsync(cancellationToken)
                 : await DatabaseContext.Set<TEntity>().AsNoTracking().SingleOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<ICollection<TEntity>> GetEntitiesAsync(Expression<Func<TEntity, bool>> filterExpression = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ICollection<TEntity>> GetEntitiesAsync(Expression<Func<TEntity, bool>> filterExpression = null, CancellationToken cancellationToken = default)
         {
             return filterExpression != null
                 ? await DatabaseContext.Set<TEntity>().Where(filterExpression).AsNoTracking().ToListAsync(cancellationToken)
@@ -85,18 +85,13 @@ namespace VideoPlatform.DAL.Repositories
                 query = query.Where(pagingModel.FilterExpression);
             }
 
-            switch (pagingModel.SortOrder)
+            query = pagingModel.SortOrder switch
             {
-                case SortOrder.None:
-                    query = query.OrderBy(x => x.Id);
-                    break;
-                case SortOrder.Ascending:
-                    query = query.OrderBy(pagingModel.SortedProperty);
-                    break;
-                case SortOrder.Descending:
-                    query = query.OrderByDescending(pagingModel.SortedProperty);
-                    break;
-            }
+                SortOrder.None => query.OrderBy(x => x.Id),
+                SortOrder.Ascending => query.OrderBy(pagingModel.SortedProperty),
+                SortOrder.Descending => query.OrderByDescending(pagingModel.SortedProperty),
+                _ => query
+            };
 
             return new PagingResult<TEntity>
             {
@@ -112,70 +107,63 @@ namespace VideoPlatform.DAL.Repositories
 
         public async Task<TEntity> CreateEntityAsync(TEntity entity, CancellationToken cancellationToken)
         {
-            using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions
+            using var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
                 Timeout = TimeSpan.FromMinutes(1)
-            }))
-            {
-                await DatabaseContext.AddAsync(entity, cancellationToken);
-                await DatabaseContext.SaveChangesAsync(cancellationToken);
+            });
+            await DatabaseContext.AddAsync(entity, cancellationToken);
+            await DatabaseContext.SaveChangesAsync(cancellationToken);
 
-                scope.Complete();
+            scope.Complete();
 
-                return entity;
-            }
+            return entity;
         }
 
         public async Task<IList<TEntity>> CreateEntitiesAsync(IList<TEntity> entities, CancellationToken cancellationToken)
         {
-            using (var transaction = await DatabaseContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted, cancellationToken))
+            await using var transaction = await DatabaseContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted, cancellationToken);
+            await DatabaseContext.BulkInsertAsync(entities, new BulkConfig
             {
-                await DatabaseContext.BulkInsertAsync(entities, new BulkConfig
-                {
-                    PreserveInsertOrder = false,
-                    SetOutputIdentity = true
-                }, obj => { }, cancellationToken);
+                PreserveInsertOrder = false,
+                SetOutputIdentity = true
+            }, _ => { }, null, cancellationToken);
 
-                transaction.Commit();
+            await transaction.CommitAsync(cancellationToken);
 
-                return entities;
-            }
+            return entities;
         }
 
         public async Task UpdateEntityAsync(TEntity entity, CancellationToken cancellationToken)
         {
-            using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions
+            using var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
                 Timeout = TimeSpan.FromMinutes(1)
-            }))
+            });
+            var dbEntity = await DatabaseContext.Set<TEntity>().AsNoTracking().SingleOrDefaultAsync(x => x.Id.Equals(entity.Id), cancellationToken);
+            if (dbEntity != null)
             {
-                var dbEntity = await DatabaseContext.Set<TEntity>().AsNoTracking().SingleOrDefaultAsync(x => x.Id.Equals(entity.Id), cancellationToken);
-                if (dbEntity != null)
-                {
-                    entity.RowVersion = dbEntity.RowVersion;
-                    //_dbContext.Entry(entity).State = EntityState.Modified;
-                    DatabaseContext.Update(entity);
+                entity.RowVersion = dbEntity.RowVersion;
+                DatabaseContext.Update(entity);
 
-                    var reloadIteration = 0;
-                    while (reloadIteration < MaxReloadIteration)
+                var reloadIteration = 0;
+                while (reloadIteration < MaxReloadIteration)
+                {
+                    try
                     {
-                        try
-                        {
-                            await DatabaseContext.SaveChangesAsync(cancellationToken);
-                            reloadIteration = MaxReloadIteration;
-                        }
-                        catch (DbUpdateConcurrencyException ex)
-                        {
-                            ex.Entries.Single().Reload();
-                            reloadIteration++;
-                        }
+                        await DatabaseContext.SaveChangesAsync(cancellationToken);
+                        reloadIteration = MaxReloadIteration;
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        await ex.Entries.Single().ReloadAsync(cancellationToken);
+                        reloadIteration++;
                     }
                 }
-
-                scope.Complete();
             }
+
+            scope.Complete();
         }
 
         public async Task UpdateEntitiesAsync(IList<TEntity> entities, CancellationToken cancellationToken)
@@ -193,45 +181,42 @@ namespace VideoPlatform.DAL.Repositories
                     }
                 }
 
-                using (var transaction = await DatabaseContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted, cancellationToken))
-                {
-                    await DatabaseContext.BulkUpdateAsync(entities, config => { }, obj => { }, cancellationToken);
-                    transaction.Commit();
-                }
+                await using var transaction = await DatabaseContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted, cancellationToken);
+                await DatabaseContext.BulkUpdateAsync(entities, _ => { }, _ => { }, null, cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
             }
         }
 
         public async Task RemoveEntityAsync(TKey id, CancellationToken cancellationToken)
         {
-            using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions
+            using var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
                 Timeout = TimeSpan.FromMinutes(1)
-            }))
-            {
-                var entity = await DatabaseContext.Set<TEntity>().SingleOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
-                if (entity != null)
-                {
-                    DatabaseContext.Remove(entity);
+            });
 
-                    var reloadIteration = 0;
-                    while (reloadIteration < MaxReloadIteration)
+            var entity = await DatabaseContext.Set<TEntity>().SingleOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
+            if (entity != null)
+            {
+                DatabaseContext.Remove(entity);
+
+                var reloadIteration = 0;
+                while (reloadIteration < MaxReloadIteration)
+                {
+                    try
                     {
-                        try
-                        {
-                            await DatabaseContext.SaveChangesAsync(cancellationToken);
-                            reloadIteration = MaxReloadIteration;
-                        }
-                        catch (DbUpdateConcurrencyException ex)
-                        {
-                            ex.Entries.Single().Reload();
-                            reloadIteration++;
-                        }
+                        await DatabaseContext.SaveChangesAsync(cancellationToken);
+                        reloadIteration = MaxReloadIteration;
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        await ex.Entries.Single().ReloadAsync(cancellationToken);
+                        reloadIteration++;
                     }
                 }
-
-                scope.Complete();
             }
+
+            scope.Complete();
         }
 
         public async Task RemoveEntitiesAsync(IList<TKey> ids, CancellationToken cancellationToken)
@@ -239,11 +224,9 @@ namespace VideoPlatform.DAL.Repositories
             var entities = await DatabaseContext.Set<TEntity>().Where(x => ids.Contains(x.Id)).ToListAsync(cancellationToken);
             if (entities != null)
             {
-                using (var transaction = await DatabaseContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted, cancellationToken))
-                {
-                    await DatabaseContext.BulkDeleteAsync(entities, config => { }, obj => { }, cancellationToken);
-                    transaction.Commit();
-                }
+                await using var transaction = await DatabaseContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted, cancellationToken);
+                await DatabaseContext.BulkDeleteAsync(entities, config => { }, obj => { }, null, cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
             }
         }
     }

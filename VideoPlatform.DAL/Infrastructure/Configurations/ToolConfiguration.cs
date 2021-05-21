@@ -20,9 +20,9 @@ namespace VideoPlatform.DAL.Infrastructure.Configurations
             builder.Property(x => x.Description).IsRequired().HasMaxLength(FieldConstants.BaseFieldLength);
             builder.Property(x => x.Url).IsRequired().HasMaxLength(FieldConstants.BaseFieldLength);
 
-            builder.HasIndex(x => x.Name).IsUnique().ForSqlServerIsClustered(false);
-            builder.HasIndex(x => x.MediaId).IsUnique(false).ForSqlServerIsClustered(false);
-            builder.HasIndex(x => x.SeriesId).IsUnique(false).ForSqlServerIsClustered(false);
+            builder.HasIndex(x => x.Name).IsUnique().IsClustered(false);
+            builder.HasIndex(x => x.MediaId).IsUnique(false).IsClustered(false);
+            builder.HasIndex(x => x.SeriesId).IsUnique(false).IsClustered(false);
         }
     }
 }

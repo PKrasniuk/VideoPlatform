@@ -39,13 +39,13 @@ namespace VideoPlatform.DAL.Repositories
             }
         }
         
-        public async Task<TEntity> GetEntityByIdAsync(Guid id, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<TEntity> GetEntityByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var result = await _container.ReadItemAsync<TEntity>(id.ToString(), new PartitionKey(id.ToString()), null, cancellationToken);
             return result.Resource;
         }
 
-        public async Task<TEntity> GetEntityAsync(Expression<Func<TEntity, bool>> filterExpression = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<TEntity> GetEntityAsync(Expression<Func<TEntity, bool>> filterExpression = null, CancellationToken cancellationToken = default)
         {
             var result = filterExpression != null
                 ? await _container.GetItemLinqQueryable<TEntity>().Where(filterExpression).ToFeedIterator().ReadNextAsync(cancellationToken)
@@ -53,7 +53,7 @@ namespace VideoPlatform.DAL.Repositories
             return result?.FirstOrDefault();
         }
 
-        public async Task<ICollection<TEntity>> GetEntitiesAsync(Expression<Func<TEntity, bool>> filterExpression = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ICollection<TEntity>> GetEntitiesAsync(Expression<Func<TEntity, bool>> filterExpression = null, CancellationToken cancellationToken = default)
         {
             var result = filterExpression != null
                 ? await _container.GetItemLinqQueryable<TEntity>().Where(filterExpression).ToFeedIterator().ReadNextAsync(cancellationToken)
@@ -61,7 +61,7 @@ namespace VideoPlatform.DAL.Repositories
             return result?.ToList();
         }
 
-        public async Task<PagingResult<TEntity>> GetPagingEntitiesAsync(Paging<TEntity> pagingModel, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<PagingResult<TEntity>> GetPagingEntitiesAsync(Paging<TEntity> pagingModel, CancellationToken cancellationToken = default)
         {
             var query = _container.GetItemLinqQueryable<TEntity>();
             if (pagingModel.FilterExpression != null)
@@ -69,18 +69,13 @@ namespace VideoPlatform.DAL.Repositories
                 query = (IOrderedQueryable<TEntity>) query.Where(pagingModel.FilterExpression);
             }
 
-            switch (pagingModel.SortOrder)
+            query = pagingModel.SortOrder switch
             {
-                case SortOrder.None:
-                    query = query.OrderBy(x => x.Id);
-                    break;
-                case SortOrder.Ascending:
-                    query = query.OrderBy(pagingModel.SortedProperty);
-                    break;
-                case SortOrder.Descending:
-                    query = query.OrderByDescending(pagingModel.SortedProperty);
-                    break;
-            }
+                SortOrder.None => query.OrderBy(x => x.Id),
+                SortOrder.Ascending => query.OrderBy(pagingModel.SortedProperty),
+                SortOrder.Descending => query.OrderByDescending(pagingModel.SortedProperty),
+                _ => query
+            };
 
             var result = await query.Skip((pagingModel.PageNumber - 1) * pagingModel.PageSize)
                 .Take(pagingModel.PageSize).ToFeedIterator().ReadNextAsync(cancellationToken);
@@ -92,18 +87,18 @@ namespace VideoPlatform.DAL.Repositories
             };
         }
 
-        public async Task<bool> IsEntityExistAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> IsEntityExistAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             var result = await _container.ReadItemAsync<TEntity>(entity.Id.ToString(), new PartitionKey(entity.Id.ToString()), null, cancellationToken);
             return result.Resource != null;
         }
 
-        public async Task<TEntity> CreateEntityAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<TEntity> CreateEntityAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             return await _container.CreateItemAsync(entity, new PartitionKey(entity.Id.ToString()), null, cancellationToken);
         }
 
-        public async Task<IList<TEntity>> CreateEntitiesAsync(IList<TEntity> entities, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IList<TEntity>> CreateEntitiesAsync(IList<TEntity> entities, CancellationToken cancellationToken = default)
         {
             var firstEntity = entities.FirstOrDefault();
             if (firstEntity != null)
@@ -118,22 +113,14 @@ namespace VideoPlatform.DAL.Repositories
             }
 
             return entities;
-            
-            // Without transaction
-            //foreach (var entity in entities)
-            //{
-            //    await _container.CreateItemAsync(entity, new PartitionKey(entity.Id.ToString()), null, cancellationToken);
-            //}
-
-            //return entities;
         }
 
-        public async Task UpdateEntityAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task UpdateEntityAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             await _container.UpsertItemAsync(entity, new PartitionKey(entity.Id.ToString()), null, cancellationToken);
         }
 
-        public async Task UpdateEntitiesAsync(IList<TEntity> entities, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task UpdateEntitiesAsync(IList<TEntity> entities, CancellationToken cancellationToken = default)
         {
             var firstEntity = entities.FirstOrDefault();
             if (firstEntity != null)
@@ -146,20 +133,14 @@ namespace VideoPlatform.DAL.Repositories
 
                 await transactionalBatch.ExecuteAsync(cancellationToken);
             }
-
-            // Without transaction
-            //foreach (var entity in entities)
-            //{
-            //    await _container.UpsertItemAsync(entity, new PartitionKey(entity.Id.ToString()), null, cancellationToken);
-            //}
         }
 
-        public async Task RemoveEntityAsync(Guid id, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task RemoveEntityAsync(Guid id, CancellationToken cancellationToken = default)
         {
             await _container.DeleteItemAsync<TEntity>(id.ToString(), new PartitionKey(id.ToString()), null, cancellationToken);
         }
 
-        public async Task RemoveEntitiesAsync(IList<Guid> ids, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task RemoveEntitiesAsync(IList<Guid> ids, CancellationToken cancellationToken = default)
         {
             var firstId = ids.FirstOrDefault(x => !x.Equals(Guid.Empty));
             if (firstId != Guid.Empty)
@@ -172,12 +153,6 @@ namespace VideoPlatform.DAL.Repositories
 
                 await transactionalBatch.ExecuteAsync(cancellationToken);
             }
-
-            // Without transaction
-            //foreach (var id in ids)
-            //{
-            //    await _container.DeleteItemAsync<TEntity>(id.ToString(), new PartitionKey(id.ToString()), null, cancellationToken);
-            //}
         }
     }
 }

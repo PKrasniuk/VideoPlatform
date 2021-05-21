@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Identity;
+using VideoPlatform.Common.Infrastructure.Helpers;
 using VideoPlatform.DAL.Infrastructure.Helpers;
 using VideoPlatform.Domain.Entities;
 using VideoPlatform.Domain.Enums;
@@ -16,7 +17,7 @@ namespace VideoPlatform.DAL
 
         private static void SeedUsers(UserManager<AppUser> userManager)
         {
-            if (userManager.FindByNameAsync("superAdmin").Result == null)
+            if (AsyncHelper.RunSync(async () => await userManager.FindByNameAsync("superAdmin")) == null)
             {
                 var user = new AppUser
                 {
@@ -32,11 +33,10 @@ namespace VideoPlatform.DAL
                     PhoneNumberConfirmed = true
                 };
 
-                var result = userManager.CreateAsync(user, "super@Admin023").Result;
-
+                var result = AsyncHelper.RunSync(async () => await userManager.CreateAsync(user, "super@Admin023"));
                 if (result.Succeeded)
                 {
-                    userManager.AddToRoleAsync(user, UserType.Admin.ToString()).Wait();
+                    AsyncHelper.RunSync(async () => await userManager.AddToRoleAsync(user, UserType.Admin.ToString()));
                 }
             }
         }
@@ -45,14 +45,14 @@ namespace VideoPlatform.DAL
         {
             foreach (var userType in (UserType[])Enum.GetValues(typeof(UserType)))
             {
-                if (!roleManager.RoleExistsAsync(userType.ToString()).Result)
+                if (!AsyncHelper.RunSync(async () => await roleManager.RoleExistsAsync(userType.ToString())))
                 {
-                    var identityResult = roleManager.CreateAsync(new AppRole
+                    AsyncHelper.RunSync(async () => await roleManager.CreateAsync(new AppRole
                     {
                         Name = userType.ToString(),
                         NormalizedName = userType.ToString().ToUpperInvariant(),
                         Description = userType.GetDescription()
-                    }).Result;
+                    }));
                 }
             }
         }

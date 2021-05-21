@@ -53,7 +53,7 @@ namespace VideoPlatform.DAL
 
         public virtual DbSet<AppRole> AppUserRoles { get; set; }
 
-        public DbQuery<UserRoleDataModel> UserRoleData { get; set; }
+        public DbSet<UserRoleDataModel> UserRoleData { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -82,9 +82,7 @@ namespace VideoPlatform.DAL
             modelBuilder.ApplyConfiguration(new AppUserConfiguration());
             modelBuilder.ApplyConfiguration(new AppRoleConfiguration());
 
-            modelBuilder.Query<UserRoleDataModel>();
-
-            modelBuilder.Query<UserRoleDataModel>().ToView("UserRolesView");
+            modelBuilder.Entity<UserRoleDataModel>().HasNoKey().ToView("UserRolesView");
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
