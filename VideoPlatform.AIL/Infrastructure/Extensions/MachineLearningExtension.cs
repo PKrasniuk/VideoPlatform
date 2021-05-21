@@ -12,11 +12,12 @@ namespace VideoPlatform.AIL.Infrastructure.Extensions
         public static IServiceCollection AddMachineLearningConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IManager<TripModel, TripFarePredictionModel, RegressionMetrics>, TripManager>(
-                provider => new TripManager(configuration["AIConfiguration:Trip:DataSetsPath"],
+                _ => new TripManager(configuration["AIConfiguration:Trip:DataSetsPath"],
                     configuration["AIConfiguration:Trip:ModelsPath"]));
 
-            services.AddTransient<IManager<SearchResultModel, SearchResultPredictionModel, RankingMetrics>, SearchResultManager>(
-                provider => new SearchResultManager(configuration["AIConfiguration:SearchResult:DataSetsPath"],
+            services.AddTransient<IManager<SearchResultModel, SearchResultPredictionModel, RankingMetrics>,
+                SearchResultManager>(_ =>
+                new SearchResultManager(configuration["AIConfiguration:SearchResult:DataSetsPath"],
                     configuration["AIConfiguration:SearchResult:ModelsPath"]));
 
             return services;

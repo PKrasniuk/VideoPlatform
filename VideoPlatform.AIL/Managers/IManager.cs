@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.ML;
-using Microsoft.ML.Data;
 
 namespace VideoPlatform.AIL.Managers
 {

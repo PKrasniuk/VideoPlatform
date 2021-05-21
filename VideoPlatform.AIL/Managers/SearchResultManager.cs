@@ -64,8 +64,8 @@ namespace VideoPlatform.AIL.Managers
 
             // Evaluate the model using the metrics from the validation dataSet;
             // you would then retrain and reevaluate the model until the desired metrics are achieved.
-            var validationData = _mlContext.Data.LoadFromTextFile<SearchResultModel>(ValidationDataSetPath, '\t', false);
-            var metrics = EvaluateModel(model, validationData);
+            var validationData = _mlContext.Data.LoadFromTextFile<SearchResultModel>(ValidationDataSetPath);
+            EvaluateModel(model, validationData);
 
             // Combine the training and validation dataSets.
             var validationDataEnum = _mlContext.Data.CreateEnumerable<SearchResultModel>(validationData, false);
@@ -78,8 +78,8 @@ namespace VideoPlatform.AIL.Managers
 
             // Evaluate the model using the metrics from the testing dataSet;
             // you do this only once and these are your final metrics.
-            var testData = _mlContext.Data.LoadFromTextFile<SearchResultModel>(TestDataSetPath, '\t', false);
-            metrics = EvaluateModel(model, testData);
+            var testData = _mlContext.Data.LoadFromTextFile<SearchResultModel>(TestDataSetPath);
+            EvaluateModel(model, testData);
 
             // Combine the training, validation, and testing dataSets.
             var testDataEnum = _mlContext.Data.CreateEnumerable<SearchResultModel>(testData, false);
@@ -88,7 +88,7 @@ namespace VideoPlatform.AIL.Managers
 
             // Retrain the model on all of the data, train + validate + test.
             model = pipeline.Fit(allData);
-            metrics = EvaluateModel(model, allData);
+            var metrics = EvaluateModel(model, allData);
 
             // Save the model.
             if (!Directory.Exists(_modelsPath))
@@ -113,7 +113,7 @@ namespace VideoPlatform.AIL.Managers
             }
 
             // Load the model to perform predictions with it.
-            var predictionPipeline = _mlContext.Model.Load(ModelPath, out var predictionPipelineSchema);
+            var predictionPipeline = _mlContext.Model.Load(ModelPath, out _);
 
             // Predict rankings.
             var predictions = predictionPipeline.Transform(_mlContext.Data.LoadFromEnumerable(items));
@@ -143,11 +143,9 @@ namespace VideoPlatform.AIL.Managers
 
             if (!File.Exists(TrainDataSetPath))
             {
-                using (var client = new WebClient())
-                {
-                    client.DownloadFileAsync(new Uri(trainDataSetUrl), TrainDataSetPath);
-                    client.DownloadFileCompleted += DownloadTrainDataSetCompleted;
-                }
+                using var client = new WebClient();
+                client.DownloadFileAsync(new Uri(trainDataSetUrl), TrainDataSetPath);
+                client.DownloadFileCompleted += DownloadTrainDataSetCompleted;
             }
             else
             {
@@ -156,11 +154,9 @@ namespace VideoPlatform.AIL.Managers
 
             if (!File.Exists(ValidationDataSetPath))
             {
-                using (var client = new WebClient())
-                {
-                    client.DownloadFileAsync(new Uri(validationDataSetUrl), ValidationDataSetPath);
-                    client.DownloadFileCompleted += DownloadValidationDataSetCompleted;
-                }
+                using var client = new WebClient();
+                client.DownloadFileAsync(new Uri(validationDataSetUrl), ValidationDataSetPath);
+                client.DownloadFileCompleted += DownloadValidationDataSetCompleted;
             }
             else
             {
@@ -169,11 +165,9 @@ namespace VideoPlatform.AIL.Managers
 
             if (!File.Exists(TestDataSetPath))
             {
-                using (var client = new WebClient())
-                {
-                    client.DownloadFileAsync(new Uri(testDataSetUrl), TestDataSetPath);
-                    client.DownloadFileCompleted += DownloadTestDataSetCompleted;
-                }
+                using var client = new WebClient();
+                client.DownloadFileAsync(new Uri(testDataSetUrl), TestDataSetPath);
+                client.DownloadFileCompleted += DownloadTestDataSetCompleted;
             }
             else
             {
@@ -218,8 +212,7 @@ namespace VideoPlatform.AIL.Managers
                     nameof(SearchResultModel.GroupId), 20));
 
             // Set the LightGBM LambdaRank trainer.
-            IEstimator<ITransformer> trainer = _mlContext.Ranking.Trainers.LightGbm(nameof(SearchResultModel.Label),
-                featuresVectorName, nameof(SearchResultModel.GroupId));
+            IEstimator<ITransformer> trainer = _mlContext.Ranking.Trainers.LightGbm();
             return dataPipeline.Append(trainer);
         }
 

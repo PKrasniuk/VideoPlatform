@@ -57,7 +57,7 @@ namespace VideoPlatform.AIL.Managers
                     "PaymentTypeEncoded", nameof(TripModel.PassengerCount), nameof(TripModel.TripTime), nameof(TripModel.TripDistance)));
 
             // STEP 3: Set the training algorithm, then create and config the modelBuilder - Selected Trainer (SDCA Regression algorithm)                            
-            var trainer = _mlContext.Regression.Trainers.Sdca("Label", "Features");
+            var trainer = _mlContext.Regression.Trainers.Sdca();
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             // STEP 4: Train the model fitting to the DataSet
@@ -66,7 +66,7 @@ namespace VideoPlatform.AIL.Managers
 
             // STEP 5: Evaluate the model and calculate accuracy stats
             var predictions = trainedModel.Transform(testDataView);
-            var metrics = _mlContext.Regression.Evaluate(predictions, "Label", "Score");
+            var metrics = _mlContext.Regression.Evaluate(predictions);
 
             // STEP 6: Save/persist the trained model to a .zip file
             if (!Directory.Exists(_modelsPath))
