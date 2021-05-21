@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Polly;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using VideoPlatform.MessageService.Infrastructure.Helpers;
@@ -74,26 +73,23 @@ namespace VideoPlatform.MessageService.Managers
 
             if (_connection != null)
             {
-                //var retryHandle = Policy.Handle<Exception>()
-                //    .WaitAndRetry(2, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
-                //retryHandle.Execute(() =>
-                //{
-                //});
-
                 _channel.ExchangeDeclare(parameters.ExchangeName, ExchangeType.Topic, true, false, null);
                 _channel.QueueDeclare(parameters.QueueName, true, false, false, null);
                 _channel.QueueBind(parameters.QueueName, parameters.ExchangeName, parameters.RouteKey, null);
                 _channel.BasicQos(0, 1, false);
 
                 var consumer = new EventingBasicConsumer(_channel);
-                consumer.Received += (model, ea) =>
+                consumer.Received += (_, ea) =>
                 {
                     var body = ea.Body;
-                    var message = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(body));
-                    var result = Process(message.ToString());
-                    if (result)
+                    var message = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(body.ToArray()));
+                    if (message != null)
                     {
-                        _channel.BasicAck(ea.DeliveryTag, false);
+                        var result = Process(message.ToString());
+                        if (result)
+                        {
+                            _channel.BasicAck(ea.DeliveryTag, false);
+                        }
                     }
                 };
 

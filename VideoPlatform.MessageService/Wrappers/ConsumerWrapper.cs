@@ -21,7 +21,7 @@ namespace VideoPlatform.MessageService.Wrappers
         public string ReadMessage()
         {
             var consumeResult = _consumer.Consume();
-            return consumeResult.Value;
+            return consumeResult.Message.Value;
         }
 
         public void Close()

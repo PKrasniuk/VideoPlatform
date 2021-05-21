@@ -41,13 +41,10 @@ namespace VideoPlatform.Api.Controllers
             var httpClient = _httpClientFactory.CreateClient(ExternalServiceConstants.GitHubService);
             var httpResponseMessage = await httpClient.GetAsync("repos/symfony/symfony/contributors");
 
-            if (httpResponseMessage.IsSuccessStatusCode)
-            {
-                var result = await httpResponseMessage.Content.ReadAsAsync<dynamic>();
-                return Ok(result.ToString());
-            }
-
-            return StatusCode((int) httpResponseMessage.StatusCode, httpResponseMessage.Content.ReadAsStringAsync());
+            return httpResponseMessage.IsSuccessStatusCode
+                ? Ok(await httpResponseMessage.Content.ReadAsStringAsync())
+                : StatusCode((int) httpResponseMessage.StatusCode,
+                    await httpResponseMessage.Content.ReadAsStringAsync());
         }
     }
 }

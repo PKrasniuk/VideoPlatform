@@ -19,14 +19,12 @@ namespace VideoPlatform.MessageService.Wrappers
 
         public async Task<DeliveryResult<string, string>> WriteMessage(string message, MessageType messageType, CancellationToken cancellationToken)
         {
-            using (var producer = new ProducerBuilder<string, string>(_config).Build())
+            using var producer = new ProducerBuilder<string, string>(_config).Build();
+            return await producer.ProduceAsync(messageType.ToString(), new Message<string, string>()
             {
-                return await producer.ProduceAsync(messageType.ToString(), new Message<string, string>()
-                {
-                    Key = Rand.Next(5).ToString(),
-                    Value = message
-                });
-            }
+                Key = Rand.Next(5).ToString(),
+                Value = message
+            }, cancellationToken);
         }
     }
 }

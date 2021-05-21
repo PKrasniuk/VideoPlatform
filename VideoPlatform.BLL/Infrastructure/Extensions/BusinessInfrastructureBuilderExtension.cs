@@ -12,13 +12,9 @@ namespace VideoPlatform.BLL.Infrastructure.Extensions
     {
         public static IApplicationBuilder AddBusinessInfrastructureBuilder(this IApplicationBuilder app, IConfiguration configuration, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
         {
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                using (var context = serviceScope.ServiceProvider.GetService<VideoPlatformContext>())
-                {
-                    context.Database.Migrate();
-                }
-            }
+            using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            using var context = serviceScope.ServiceProvider.GetService<VideoPlatformContext>();
+            context?.Database.Migrate();
 
             IdentityDataInitializer.SeedData(userManager, roleManager);
 

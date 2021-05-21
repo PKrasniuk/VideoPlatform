@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
-using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using VideoPlatform.Common.Infrastructure.Constants;
 

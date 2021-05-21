@@ -8,7 +8,7 @@ namespace VideoPlatform.Api.Models.Validators
     {
         public RemoveTagsModelValidator()
         {
-            RuleForEach(x => x.Ids).NotNull().NotEmpty().SetValidator(new GreaterThanValidator(0));
+            RuleForEach(x => x.Ids).NotNull().NotEmpty().SetValidator(new GreaterThanOrEqualValidator<RemoveTagsModel, int>(0));
         }
     }
 }

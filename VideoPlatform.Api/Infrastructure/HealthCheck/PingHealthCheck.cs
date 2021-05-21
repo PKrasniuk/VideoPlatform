@@ -57,24 +57,21 @@ namespace VideoPlatform.Api.Infrastructure.HealthCheck
                     {
                         try
                         {
-                            using (var ping = new Ping())
+                            using var ping = new Ping();
+                            _lastPingTime = DateTime.Now;
+
+                            var reply = ping.Send(_host, _timeout);
+                            if (reply != null && reply.Status != IPStatus.Success)
                             {
-                                _lastPingTime = DateTime.Now;
-
-                                var reply = ping.Send(_host, _timeout);
-
-                                if (reply != null && reply.Status != IPStatus.Success)
-                                {
-                                    _lastPingResult = HealthCheckResult.Unhealthy();
-                                }
-                                else if (reply != null && reply.RoundtripTime >= _timeout)
-                                {
-                                    _lastPingResult = HealthCheckResult.Degraded();
-                                }
-                                else
-                                {
-                                    _lastPingResult = HealthCheckResult.Healthy();
-                                }
+                                _lastPingResult = HealthCheckResult.Unhealthy();
+                            }
+                            else if (reply != null && reply.RoundtripTime >= _timeout)
+                            {
+                                _lastPingResult = HealthCheckResult.Degraded();
+                            }
+                            else
+                            {
+                                _lastPingResult = HealthCheckResult.Healthy();
                             }
                         }
                         catch

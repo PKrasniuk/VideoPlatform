@@ -19,7 +19,7 @@ namespace VideoPlatform.ExternalService.Infrastructure.Extensions
             IAsyncPolicy<HttpResponseMessage> httpWaitAndRetryPolicy = Policy
                 .HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode).WaitAndRetryAsync(
                     ExternalServiceConstants.RetryCount, retryAttempt => TimeSpan.FromSeconds(retryAttempt),
-                    (result, span, retryCount, ctx) => Console.WriteLine($"Retrying({retryCount})..."));
+                    (_, _, retryCount, _) => Console.WriteLine($"Retrying({retryCount})..."));
 
             IAsyncPolicy<HttpResponseMessage> fallbackPolicy = Policy
                 .HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)

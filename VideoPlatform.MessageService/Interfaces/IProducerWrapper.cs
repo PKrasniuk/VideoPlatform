@@ -7,6 +7,6 @@ namespace VideoPlatform.MessageService.Interfaces
 {
     public interface IProducerWrapper
     {
-        Task<DeliveryResult<string, string>> WriteMessage(string message, MessageType messageType, CancellationToken cancellationToken = default(CancellationToken));
+        Task<DeliveryResult<string, string>> WriteMessage(string message, MessageType messageType, CancellationToken cancellationToken = default);
     }
 }

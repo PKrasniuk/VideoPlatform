@@ -6,11 +6,10 @@ namespace VideoPlatform.Common.Infrastructure.Helpers
 {
     public static class AsyncHelper
     {
-        private static readonly TaskFactory TaskFactory = new
-            TaskFactory(CancellationToken.None,
-                TaskCreationOptions.None,
-                TaskContinuationOptions.None,
-                TaskScheduler.Default);
+        private static readonly TaskFactory TaskFactory = new(CancellationToken.None,
+            TaskCreationOptions.None,
+            TaskContinuationOptions.None,
+            TaskScheduler.Default);
 
         public static TResult RunSync<TResult>(Func<Task<TResult>> func)
             => TaskFactory

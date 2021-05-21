@@ -27,16 +27,14 @@ namespace VideoPlatform.MessageService.Managers
             if (!string.IsNullOrEmpty(message))
             {
                 var model = JsonConvert.DeserializeObject<PartnerTypesRemoveModel>(message);
-                using (var scope = _scopeFactory.CreateScope())
-                {
-                    var repository = scope.ServiceProvider.GetRequiredService<IPartnerTypesRepository>();
+                using var scope = _scopeFactory.CreateScope();
+                var repository = scope.ServiceProvider.GetRequiredService<IPartnerTypesRepository>();
 
-                    var partnerTypes = await repository.GetEntityAsync(x =>
-                        x.PartnerId == model.PartnerId && x.Type.Equals(model.Type));
-                    if (partnerTypes != null)
-                    {
-                        await repository.RemoveEntityAsync(partnerTypes.Id);
-                    }
+                var partnerTypes = await repository.GetEntityAsync(x =>
+                    x.PartnerId == model.PartnerId && x.Type.Equals(model.Type));
+                if (partnerTypes != null)
+                {
+                    await repository.RemoveEntityAsync(partnerTypes.Id);
                 }
             }
         }

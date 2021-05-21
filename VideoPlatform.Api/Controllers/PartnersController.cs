@@ -46,7 +46,7 @@ namespace VideoPlatform.Api.Controllers
         {
             _partnerManager = partnerManager ?? throw new ArgumentNullException(nameof(partnerManager));
             _indexingPartnerManager = indexingPartnerManager ?? throw new ArgumentNullException(nameof(indexingPartnerManager));
-            _cacheSettings = cacheSettingsAccessor.Value ?? throw new ArgumentNullException(nameof(cacheSettingsAccessor.Value));
+            _cacheSettings = cacheSettingsAccessor.Value ?? throw new ArgumentNullException(nameof(cacheSettingsAccessor));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -55,7 +55,7 @@ namespace VideoPlatform.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PartnerModel))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetailsModel))]
         [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme, Policy = "readAccess")]
@@ -94,30 +94,17 @@ namespace VideoPlatform.Api.Controllers
                 SortOrder = model.SortOrder == SortOrder.Descending
                     ? Nest.SortOrder.Descending
                     : Nest.SortOrder.Ascending,
-                FilterQuery = model.FilterQuery
+                FilterQuery = model.FilterQuery,
+                SortedProperty = model.SortedProperty switch
+                {
+                    PartnerSortedProperty.Name => x => x.Name,
+                    PartnerSortedProperty.Description => x => x.Description,
+                    PartnerSortedProperty.Logo => x => x.Logo,
+                    PartnerSortedProperty.ShowOnPartnerPage => x => x.ShowOnPartnerPage,
+                    PartnerSortedProperty.IsArchived => x => x.IsArchived,
+                    _ => x => x.Id
+                }
             };
-
-            switch (model.SortedProperty)
-            {
-                case PartnerSortedProperty.Name:
-                    filter.SortedProperty = x => x.Name;
-                    break;
-                case PartnerSortedProperty.Description:
-                    filter.SortedProperty = x => x.Description;
-                    break;
-                case PartnerSortedProperty.Logo:
-                    filter.SortedProperty = x => x.Logo;
-                    break;
-                case PartnerSortedProperty.ShowOnPartnerPage:
-                    filter.SortedProperty = x => x.ShowOnPartnerPage;
-                    break;
-                case PartnerSortedProperty.IsArchived:
-                    filter.SortedProperty = x => x.IsArchived;
-                    break;
-                default:
-                    filter.SortedProperty = x => x.Id;
-                    break;
-            }
 
             var result = await _indexingPartnerManager.Find(filter);
 
@@ -167,27 +154,15 @@ namespace VideoPlatform.Api.Controllers
                     x.Logo.StartsWith(model.FilterQuery);
             }
 
-            switch (model.SortedProperty)
+            filter.SortedProperty = model.SortedProperty switch
             {
-                case PartnerSortedProperty.Name:
-                    filter.SortedProperty = x => x.Name;
-                    break;
-                case PartnerSortedProperty.Description:
-                    filter.SortedProperty = x => x.Description;
-                    break;
-                case PartnerSortedProperty.Logo:
-                    filter.SortedProperty = x => x.Logo;
-                    break;
-                case PartnerSortedProperty.ShowOnPartnerPage:
-                    filter.SortedProperty = x => x.ShowOnPartnerPage;
-                    break;
-                case PartnerSortedProperty.IsArchived:
-                    filter.SortedProperty = x => x.IsArchived;
-                    break;
-                default:
-                    filter.SortedProperty = x => x.Id;
-                    break;
-            }
+                PartnerSortedProperty.Name => x => x.Name,
+                PartnerSortedProperty.Description => x => x.Description,
+                PartnerSortedProperty.Logo => x => x.Logo,
+                PartnerSortedProperty.ShowOnPartnerPage => x => x.ShowOnPartnerPage,
+                PartnerSortedProperty.IsArchived => x => x.IsArchived,
+                _ => x => x.Id
+            };
 
             var result = await _partnerManager.GetPartnersAsync(filter);
 

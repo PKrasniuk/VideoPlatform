@@ -7,8 +7,8 @@ namespace VideoPlatform.BLL.Interfaces
 {
     public interface IUserRolesManager
     {
-        Task<ICollection<UserRoleDataModel>> GetUserRolesAsync(CancellationToken cancellationToken = default(CancellationToken));
+        Task<ICollection<UserRoleDataModel>> GetUserRolesAsync(CancellationToken cancellationToken = default);
 
-        Task<ICollection<UserRoleDataModel>> GetUserRolesAlternativeAsync(CancellationToken cancellationToken = default(CancellationToken));
+        Task<ICollection<UserRoleDataModel>> GetUserRolesAlternativeAsync(CancellationToken cancellationToken = default);
     }
 }

@@ -9,22 +9,22 @@ namespace VideoPlatform.BLL.Interfaces
 {
     public interface IPartnerManager
     {
-        Task<Partner> GetPartnerByIdAsync(int partnerId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Partner> GetPartnerByIdAsync(int partnerId, CancellationToken cancellationToken = default);
 
-        Task<Partner> GetPartnerByNameAsync(string partnerName, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Partner> GetPartnerByNameAsync(string partnerName, CancellationToken cancellationToken = default);
 
-        Task<FilterResult<Partner>> GetPartnersByElasticSearchAsync(Filter<Partner> filter, CancellationToken cancellationToken = default(CancellationToken));
+        Task<FilterResult<Partner>> GetPartnersByElasticSearchAsync(Filter<Partner> filter, CancellationToken cancellationToken = default);
 
-        Task<ICollection<Partner>> GetPartnersAsync(CancellationToken cancellationToken = default(CancellationToken));
+        Task<ICollection<Partner>> GetPartnersAsync(CancellationToken cancellationToken = default);
 
-        Task<PagingResult<Partner>> GetPartnersAsync(Paging<Partner> filter, CancellationToken cancellationToken = default(CancellationToken));
+        Task<PagingResult<Partner>> GetPartnersAsync(Paging<Partner> filter, CancellationToken cancellationToken = default);
 
-        Task<ICollection<Partner>> GetCachedPartnersAsync(int expirationMinutes, CancellationToken cancellationToken = default(CancellationToken));
+        Task<ICollection<Partner>> GetCachedPartnersAsync(int expirationMinutes, CancellationToken cancellationToken = default);
 
-        Task<Partner> SavePartnerAsync(Partner entity, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Partner> SavePartnerAsync(Partner entity, CancellationToken cancellationToken = default);
 
-        Task RemovePartnerAsync(int id, CancellationToken cancellationToken = default(CancellationToken));
+        Task RemovePartnerAsync(int id, CancellationToken cancellationToken = default);
 
-        Task ReIndexingPartnersAsync(CancellationToken cancellationToken = default(CancellationToken));
+        Task ReIndexingPartnersAsync(CancellationToken cancellationToken = default);
     }
 }

@@ -25,7 +25,7 @@ namespace VideoPlatform.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public ActionResult<string> Get(int id)
         {
             return "value";
@@ -45,7 +45,7 @@ namespace VideoPlatform.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <param name="value"></param>
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public void Put(int id, [FromBody] string value)
         {
         }
@@ -54,7 +54,7 @@ namespace VideoPlatform.Api.Controllers
         /// DELETE api/values/5
         /// </summary>
         /// <param name="id"></param>
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public void Delete(int id)
         {
         }

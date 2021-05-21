@@ -19,7 +19,7 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
                     c.Response.ContentType = "application/json";
                     var result = new List<ServiceStatus>
                     {
-                        new ServiceStatus { Service = "OverAll", Status = r.Status }
+                        new() { Service = "OverAll", Status = r.Status }
                     };
                     result.AddRange(
                         r.Entries.Select(

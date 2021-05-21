@@ -7,9 +7,9 @@ namespace VideoPlatform.BLL.Interfaces
 {
     public interface ISettingManager
     {
-        Task<ICollection<Setting>> GetSettingsAsync(CancellationToken cancellationToken = default(CancellationToken));
+        Task<ICollection<Setting>> GetSettingsAsync(CancellationToken cancellationToken = default);
 
-        Task<ICollection<Setting>> GetSettingsCQRSAsync(CancellationToken cancellationToken = default(CancellationToken));
+        Task<ICollection<Setting>> GetSettingsCQRSAsync(CancellationToken cancellationToken = default);
 
         Task<Setting> GetSettingCQRSAsync(short id);
 

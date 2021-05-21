@@ -35,7 +35,7 @@ namespace VideoPlatform.CacheService.Repositories
             }
         }
 
-        public async Task SetObjectAsync<T>(string key, T value, int expirationMinutes = ConfigurationConstants.DefaultExpirationMinutes, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task SetObjectAsync<T>(string key, T value, int expirationMinutes = ConfigurationConstants.DefaultExpirationMinutes, CancellationToken cancellationToken = default)
         {
             await _cache.SetStringAsync(key, JsonConvert.SerializeObject(value),
                 new DistributedCacheEntryOptions {AbsoluteExpiration = DateTime.Now.AddMinutes(expirationMinutes)},
@@ -45,7 +45,7 @@ namespace VideoPlatform.CacheService.Repositories
         public async Task<T> GetObjectAsync<T>(string key, CancellationToken cancellationToken)
         {
             var value = await _cache.GetStringAsync(key, cancellationToken);
-            return string.IsNullOrEmpty(value) ? default(T) : JsonConvert.DeserializeObject<T>(value);
+            return string.IsNullOrEmpty(value) ? default : JsonConvert.DeserializeObject<T>(value);
         }
 
         public async Task RemoveAsync(string key, CancellationToken cancellationToken)

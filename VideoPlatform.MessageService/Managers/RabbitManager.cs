@@ -30,20 +30,17 @@ namespace VideoPlatform.MessageService.Managers
 
             try
             {
-                if (channel != null)
-                {
-                    channel.ExchangeDeclare(parameters.ExchangeName, ExchangeType.Topic, true, false, null);
-                    channel.QueueDeclare(parameters.QueueName, true, false, false, null);
-                    channel.QueueBind(parameters.QueueName, parameters.ExchangeName, parameters.RouteKey, null);
-                    channel.BasicQos(0, 1, false);
+                channel.ExchangeDeclare(parameters.ExchangeName, ExchangeType.Topic, true, false, null);
+                channel.QueueDeclare(parameters.QueueName, true, false, false, null);
+                channel.QueueBind(parameters.QueueName, parameters.ExchangeName, parameters.RouteKey, null);
+                channel.BasicQos(0, 1, false);
 
-                    var sendBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+                var sendBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
 
-                    var properties = channel.CreateBasicProperties();
-                    properties.Persistent = true;
+                var properties = channel.CreateBasicProperties();
+                properties.Persistent = true;
 
-                    channel.BasicPublish(parameters.ExchangeName, parameters.RouteKey, properties, sendBytes);
-                }
+                channel.BasicPublish(parameters.ExchangeName, parameters.RouteKey, properties, sendBytes);
             }
             finally
             {

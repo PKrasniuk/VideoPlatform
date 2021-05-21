@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -72,7 +73,7 @@ namespace VideoPlatform.SchedulerService
 
             return JobBuilder
                 .Create(jobType)
-                .WithIdentity(jobType.FullName)
+                .WithIdentity(jobType.FullName ?? throw new InvalidOperationException())
                 .WithDescription(jobType.Name)
                 .Build();
         }

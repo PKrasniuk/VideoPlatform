@@ -16,7 +16,7 @@ namespace VideoPlatform.Api.Infrastructure.HealthCheck
         /// <param name="context"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
+        public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new())
         {
             var client = new MemoryMetricsClient();
             var metrics = client.GetMetrics();

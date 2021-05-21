@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Internal;
 using VideoPlatform.Api.Models.RequestModels;
 using VideoPlatform.Api.Models.ResponseModels;
 using VideoPlatform.BLL.Interfaces;
@@ -77,7 +77,7 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<ICollection<ListItemModel<byte>>>> GetPartnerTypesForPartnerAsync(int partnerId)
         {
             var partnerTypes = await _partnerTypesManager.GetPartnerTypesByPartnerIdAsync(partnerId);
-            if (partnerTypes != null && EnumerableExtensions.Any(partnerTypes))
+            if (partnerTypes != null && partnerTypes.Any())
             {
                 var result = new Collection<ListItemModel<byte>>();
                 foreach (var partnerType in partnerTypes)

@@ -42,7 +42,7 @@ namespace VideoPlatform.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TagModel))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetailsModel))]
         public async Task<ActionResult<TagModel>> GetTagAsync(int id)
@@ -123,15 +123,11 @@ namespace VideoPlatform.Api.Controllers
                 filter.FilterExpression = x => x.Name.StartsWith(model.FilterQuery);
             }
 
-            switch (model.SortedProperty)
+            filter.SortedProperty = model.SortedProperty switch
             {
-                case TagSortedProperty.Name:
-                    filter.SortedProperty = x => x.Name;
-                    break;
-                default:
-                    filter.SortedProperty = x => x.Id;
-                    break;
-            }
+                TagSortedProperty.Name => x => x.Name,
+                _ => x => x.Id
+            };
 
             var result = await _tagManager.GetTagsAsync(filter);
 
