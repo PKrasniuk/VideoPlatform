@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace VideoPlatform.Common.Infrastructure.Filters
@@ -10,16 +10,15 @@ namespace VideoPlatform.Common.Infrastructure.Filters
     /// </summary>
     public class DefaultValueSchemaFilter : ISchemaFilter
     {
-        public void Apply(Schema schema, SchemaFilterContext context)
+        public void Apply(OpenApiSchema schema, SchemaFilterContext context)
         {
             if (schema.Properties == null)
             {
                 return;
             }
 
-            foreach (var propertyInfo in context.SystemType.GetProperties())
+            foreach (var propertyInfo in context.Type.GetProperties())
             {
-
                 var defaultAttribute = propertyInfo.GetCustomAttribute<DefaultValueAttribute>();
                 if (defaultAttribute != null)
                 {
@@ -27,7 +26,7 @@ namespace VideoPlatform.Common.Infrastructure.Filters
                     {
                         if (ToCamelCase(propertyInfo.Name) == key)
                         {
-                            value.Example = defaultAttribute.Value;
+                            //value.Example = defaultAttribute.Value;
                             break;
                         }
                     }
@@ -37,7 +36,7 @@ namespace VideoPlatform.Common.Infrastructure.Filters
 
         private static string ToCamelCase(string name)
         {
-            return char.ToLowerInvariant(name[0]) + name.Substring(1);
+            return char.ToLowerInvariant(name[0]) + name[1..];
         }
     }
 }

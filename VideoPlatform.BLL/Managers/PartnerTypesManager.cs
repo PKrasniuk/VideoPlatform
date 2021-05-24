@@ -130,9 +130,9 @@ namespace VideoPlatform.BLL.Managers
                     cancellationToken);
             if (dbPartnerType != null)
             {
-                await _eventBus.PublishAsync(nameof(PartnerTypesRemoveIntegrationEvent),
-                    new PartnerTypesRemoveIntegrationEvent(dbPartnerType.PartnerId, dbPartnerType.Type), null,
-                    cancellationToken);
+                //await _eventBus.PublishAsync(nameof(PartnerTypesRemoveIntegrationEvent),
+                //    new PartnerTypesRemoveIntegrationEvent(dbPartnerType.PartnerId, dbPartnerType.Type), null,
+                //    cancellationToken);
 
                 await _indexingPartnerTypesManager.RemoveEntityAsync(dbPartnerType, cancellationToken);
             }

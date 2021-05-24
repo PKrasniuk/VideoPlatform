@@ -23,7 +23,7 @@ namespace VideoPlatform.Tests.IntegrationTests
                 })
                 .Configure(app =>
                 {
-                    app.UseSignalR(routes => routes.MapHub<NotificationHub>("/api/notification"));
+                    //app.UseSignalR(routes => routes.MapHub<NotificationHub>("/api/notification"));
                 });
 
             var server = new TestServer(webHostBuilder);

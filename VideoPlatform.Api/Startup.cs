@@ -1,13 +1,9 @@
-﻿using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
 using Serilog;
 using VideoPlatform.Api.Infrastructure.Extensions;
 using VideoPlatform.BLL.Infrastructure.Extensions;
@@ -42,11 +38,11 @@ namespace VideoPlatform.Api
         {
             services.AddLoggerConfiguration(_appConfiguration);
 
-            services.AddMvc(options => options.Filters.Add(new CorsAuthorizationFilterFactory(ConfigurationConstants.DefaultCorsPolicyName)))
-                .SetCompatibilityVersion(CompatibilityVersion.Latest)
-                .AddFluentValidation()
-                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
-                .AddJsonOptions(options => { options.SerializerSettings.Converters.Add(new StringEnumConverter()); });
+            //services.AddMvc(options => options.Filters.Add(new CorsAuthorizationFilterFactory(ConfigurationConstants.DefaultCorsPolicyName)))
+            //    .SetCompatibilityVersion(CompatibilityVersion.Latest)
+            //    .AddFluentValidation()
+            //    .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
+            //    .AddJsonOptions(options => { options.SerializerSettings.Converters.Add(new StringEnumConverter()); });
 
             services.AddRouting(options => options.LowercaseUrls = true);
 

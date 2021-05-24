@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
 using Serilog;
 using VideoPlatform.Common.Infrastructure.Extensions;
 using VideoPlatform.Common.Infrastructure.Middleware;
@@ -41,9 +39,9 @@ namespace VideoPlatform.NotificationService
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
-                .AddFluentValidation()
-                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
-                .AddJsonOptions(options => { options.SerializerSettings.Converters.Add(new StringEnumConverter()); });
+                .AddFluentValidation();
+                //.AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
+                //.AddJsonOptions(options => { options.SerializerSettings.Converters.Add(new StringEnumConverter()); });
 
             services.AddRouting(options => options.LowercaseUrls = true);
 

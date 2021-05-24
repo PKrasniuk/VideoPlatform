@@ -61,31 +61,31 @@ namespace IdentityServer4.Quickstart.UI
 
         private async Task<GrantsViewModel> BuildViewModelAsync()
         {
-            var grants = await _interaction.GetAllUserConsentsAsync();
+            //var grants = await _interaction.GetAllUserConsentsAsync();
 
             var list = new List<GrantViewModel>();
-            foreach(var grant in grants)
-            {
-                var client = await _clients.FindClientByIdAsync(grant.ClientId);
-                if (client != null)
-                {
-                    var resources = await _resources.FindResourcesByScopeAsync(grant.Scopes);
+            //foreach(var grant in grants)
+            //{
+            //    var client = await _clients.FindClientByIdAsync(grant.ClientId);
+            //    if (client != null)
+            //    {
+            //        var resources = await _resources.FindResourcesByScopeAsync(grant.Scopes);
 
-                    var item = new GrantViewModel()
-                    {
-                        ClientId = client.ClientId,
-                        ClientName = client.ClientName ?? client.ClientId,
-                        ClientLogoUrl = client.LogoUri,
-                        ClientUrl = client.ClientUri,
-                        Created = grant.CreationTime,
-                        Expires = grant.Expiration,
-                        IdentityGrantNames = resources.IdentityResources.Select(x => x.DisplayName ?? x.Name).ToArray(),
-                        ApiGrantNames = resources.ApiResources.Select(x => x.DisplayName ?? x.Name).ToArray()
-                    };
+            //        var item = new GrantViewModel()
+            //        {
+            //            ClientId = client.ClientId,
+            //            ClientName = client.ClientName ?? client.ClientId,
+            //            ClientLogoUrl = client.LogoUri,
+            //            ClientUrl = client.ClientUri,
+            //            Created = grant.CreationTime,
+            //            Expires = grant.Expiration,
+            //            IdentityGrantNames = resources.IdentityResources.Select(x => x.DisplayName ?? x.Name).ToArray(),
+            //            ApiGrantNames = resources.ApiResources.Select(x => x.DisplayName ?? x.Name).ToArray()
+            //        };
 
-                    list.Add(item);
-                }
-            }
+            //        list.Add(item);
+            //    }
+            //}
 
             return new GrantsViewModel
             {

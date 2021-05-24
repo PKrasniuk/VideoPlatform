@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
 using VideoPlatform.Common.Infrastructure.Filters;
 
 namespace VideoPlatform.NotificationService.Infrastructure.Extensions
@@ -14,14 +14,14 @@ namespace VideoPlatform.NotificationService.Infrastructure.Extensions
             services.AddSwaggerGen(
                 c =>
                 {
-                    c.SwaggerDoc("v1", new Info {Title = "Video Platform Notification API", Version = "v1"});
+                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Video Platform Notification API", Version = "v1"});
                     c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
                         $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
                     c.EnableAnnotations();
                     c.SchemaFilter<NullableTypeSchemaFilter>();
                     c.SchemaFilter<DefaultValueSchemaFilter>();
                     c.OperationFilter<FormFileSwaggerFilter>();
-                    c.DescribeAllEnumsAsStrings();
+                    //c.DescribeAllEnumsAsStrings();
                 });
 
             return services;

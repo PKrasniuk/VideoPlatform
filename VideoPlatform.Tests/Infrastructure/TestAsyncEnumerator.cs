@@ -18,11 +18,21 @@ namespace VideoPlatform.Tests.Infrastructure
             _inner.Dispose();
         }
 
+        public ValueTask<bool> MoveNextAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public T Current => _inner.Current;
 
         public Task<bool> MoveNext(CancellationToken cancellationToken)
         {
             return Task.FromResult(_inner.MoveNext());
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

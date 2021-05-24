@@ -86,10 +86,10 @@ namespace IdentityServer4.Quickstart.UI.Device
             // user clicked 'no' - send back the standard 'access_denied' response
             if (model.Button == "no")
             {
-                grantedConsent = ConsentResponse.Denied;
+                //grantedConsent = ConsentResponse.Denied;
 
-                // emit event
-                await _events.RaiseAsync(new ConsentDeniedEvent(User.GetSubjectId(), request.ClientId, request.ScopesRequested));
+                //// emit event
+                //await _events.RaiseAsync(new ConsentDeniedEvent(User.GetSubjectId(), request.ClientId, request.ScopesRequested));
             }
             // user clicked 'yes' - validate the data
             else if (model.Button == "yes")
@@ -106,11 +106,11 @@ namespace IdentityServer4.Quickstart.UI.Device
                     grantedConsent = new ConsentResponse
                     {
                         RememberConsent = model.RememberConsent,
-                        ScopesConsented = scopes.ToArray()
+                        //ScopesConsented = scopes.ToArray()
                     };
 
                     // emit event
-                    await _events.RaiseAsync(new ConsentGrantedEvent(User.GetSubjectId(), request.ClientId, request.ScopesRequested, grantedConsent.ScopesConsented, grantedConsent.RememberConsent));
+                    //await _events.RaiseAsync(new ConsentGrantedEvent(User.GetSubjectId(), request.ClientId, request.ScopesRequested, grantedConsent.ScopesConsented, grantedConsent.RememberConsent));
                 }
                 else
                 {
@@ -129,7 +129,7 @@ namespace IdentityServer4.Quickstart.UI.Device
 
                 // indicate that's it ok to redirect back to authorization endpoint
                 result.RedirectUri = model.ReturnUrl;
-                result.ClientId = request.ClientId;
+                //result.ClientId = request.ClientId;
             }
             else
             {
@@ -145,23 +145,23 @@ namespace IdentityServer4.Quickstart.UI.Device
             var request = await _interaction.GetAuthorizationContextAsync(userCode);
             if (request != null)
             {
-                var client = await _clientStore.FindEnabledClientByIdAsync(request.ClientId);
-                if (client != null)
-                {
-                    var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.ScopesRequested);
-                    if (resources != null && (resources.IdentityResources.Any() || resources.ApiResources.Any()))
-                    {
-                        return CreateConsentViewModel(userCode, model, client, resources);
-                    }
-                    else
-                    {
-                        _logger.LogError("No scopes matching: {0}", request.ScopesRequested.Aggregate((x, y) => x + ", " + y));
-                    }
-                }
-                else
-                {
-                    _logger.LogError("Invalid client id: {0}", request.ClientId);
-                }
+                //var client = await _clientStore.FindEnabledClientByIdAsync(request.ClientId);
+                //if (client != null)
+                //{
+                //    var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.ScopesRequested);
+                //    if (resources != null && (resources.IdentityResources.Any() || resources.ApiResources.Any()))
+                //    {
+                //        return CreateConsentViewModel(userCode, model, client, resources);
+                //    }
+                //    else
+                //    {
+                //        _logger.LogError("No scopes matching: {0}", request.ScopesRequested.Aggregate((x, y) => x + ", " + y));
+                //    }
+                //}
+                //else
+                //{
+                //    _logger.LogError("Invalid client id: {0}", request.ClientId);
+                //}
             }
 
             return null;
@@ -183,7 +183,7 @@ namespace IdentityServer4.Quickstart.UI.Device
             };
 
             vm.IdentityScopes = resources.IdentityResources.Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
-            vm.ResourceScopes = resources.ApiResources.SelectMany(x => x.Scopes).Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
+            //vm.ResourceScopes = resources.ApiResources.SelectMany(x => x.Scopes).Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
             if (ConsentOptions.EnableOfflineAccess && resources.OfflineAccess)
             {
                 vm.ResourceScopes = vm.ResourceScopes.Union(new[]
@@ -208,18 +208,18 @@ namespace IdentityServer4.Quickstart.UI.Device
             };
         }
 
-        public ScopeViewModel CreateScopeViewModel(Scope scope, bool check)
-        {
-            return new ScopeViewModel
-            {
-                Name = scope.Name,
-                DisplayName = scope.DisplayName,
-                Description = scope.Description,
-                Emphasize = scope.Emphasize,
-                Required = scope.Required,
-                Checked = check || scope.Required
-            };
-        }
+        //public ScopeViewModel CreateScopeViewModel(Scope scope, bool check)
+        //{
+        //    return new ScopeViewModel
+        //    {
+        //        Name = scope.Name,
+        //        DisplayName = scope.DisplayName,
+        //        Description = scope.Description,
+        //        Emphasize = scope.Emphasize,
+        //        Required = scope.Required,
+        //        Checked = check || scope.Required
+        //    };
+        //}
         private ScopeViewModel GetOfflineAccessScope(bool check)
         {
             return new ScopeViewModel

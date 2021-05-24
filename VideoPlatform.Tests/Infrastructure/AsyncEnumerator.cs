@@ -12,6 +12,11 @@ namespace VideoPlatform.Tests.Infrastructure
         public AsyncEnumerator(IEnumerator<T> enumerator) =>
             this.enumerator = enumerator ?? throw new ArgumentNullException();
 
+        public ValueTask<bool> MoveNextAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public T Current => enumerator.Current;
 
         public void Dispose()
@@ -19,5 +24,9 @@ namespace VideoPlatform.Tests.Infrastructure
         }
 
         public Task<bool> MoveNext(CancellationToken cancellationToken) => Task.FromResult(enumerator.MoveNext());
+        public ValueTask DisposeAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

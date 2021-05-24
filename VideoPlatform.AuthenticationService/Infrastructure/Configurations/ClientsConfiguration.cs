@@ -45,11 +45,11 @@ namespace VideoPlatform.AuthenticationService.Infrastructure.Configurations
             {
                 Name = _appConfiguration["Security:ApiResources:Name"],
                 DisplayName = _appConfiguration["Security:ApiResources:DisplayName"],
-                Scopes = new[]
-                {
-                    new Scope("readAccess", "Access read operations"),
-                    new Scope("writeAccess", "Access write operations")
-                }
+                //Scopes = new[]
+                //{
+                //    //new Scope("readAccess", "Access read operations"),
+                //    //new Scope("writeAccess", "Access write operations")
+                //}
             };
         }
 
