@@ -14,34 +14,34 @@ namespace VideoPlatform.BLL.Infrastructure.Extensions
 {
     public static class BusinessInfrastructureExtension
     {
-        public static IServiceCollection AddBusinessInfrastructureConfiguration(this IServiceCollection services, IConfigurationRoot appConfiguration)
+        public static IServiceCollection AddBusinessInfrastructureConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddOptions();
 
-            services.AddDatabaseConfiguration(appConfiguration);
+            services.AddDatabaseConfiguration(configuration);
 
             services.AddRepositoriesCollection();
             services.AddManagersCollection();
 
             services.AddCQRS(AppDomain.CurrentDomain.Load("VideoPlatform.CQRS"));
 
-            services.AddElasticSearchConfiguration(appConfiguration);
+            services.AddElasticSearchConfiguration(configuration);
             services.AddIndexingManagersCollection();
 
-            services.AddSettingsConfiguration(appConfiguration);
-            services.AddCacheConfiguration(appConfiguration);
+            services.AddSettingsConfiguration(configuration);
+            services.AddCacheConfiguration(configuration);
             services.AddCacheService();
 
             services.AddSchedulerConfiguration();
 
-            services.AddMessenger(appConfiguration);
-            services.AddEventBus(appConfiguration);
+            services.AddMessenger(configuration);
+            services.AddEventBus(configuration);
             services.RegisteringEventHandlers();
 
-            services.AddKafkaMessenger(appConfiguration);
+            services.AddKafkaMessenger(configuration);
 
-            services.AddExternalServicesCollection(appConfiguration);
-            services.AddMachineLearningConfiguration(appConfiguration);
+            services.AddExternalServicesCollection(configuration);
+            services.AddMachineLearningConfiguration(configuration);
 
             return services;
         }

@@ -11,7 +11,7 @@ namespace VideoPlatform.DAL.Infrastructure.Extensions
 {
     public static partial class ConfigurationExtension
     {
-        public static IServiceCollection AddDatabaseConfiguration(this IServiceCollection services, IConfigurationRoot configuration)
+        public static IServiceCollection AddDatabaseConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddEntityFrameworkSqlServer();
 

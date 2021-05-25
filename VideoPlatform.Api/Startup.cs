@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using VideoPlatform.Api.Infrastructure.Extensions;
@@ -19,15 +21,15 @@ namespace VideoPlatform.Api
     /// </summary>
     public class Startup
     {
-        private readonly IConfigurationRoot _appConfiguration;
+        private IConfiguration Configuration { get; }
 
         /// <summary>
         /// Startup constructor
         /// </summary>
-        /// <param name="env"></param>
-        public Startup(IHostingEnvironment env)
+        /// <param name="configuration"></param>
+        public Startup(IConfiguration configuration)
         {
-            _appConfiguration = env.GetAppConfiguration();
+            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         /// <summary>
@@ -36,7 +38,7 @@ namespace VideoPlatform.Api
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLoggerConfiguration(_appConfiguration);
+            services.AddLoggerConfiguration(Configuration);
 
             //services.AddMvc(options => options.Filters.Add(new CorsAuthorizationFilterFactory(ConfigurationConstants.DefaultCorsPolicyName)))
             //    .SetCompatibilityVersion(CompatibilityVersion.Latest)
@@ -48,18 +50,18 @@ namespace VideoPlatform.Api
 
             services.AddResponseConfiguration();
 
-            services.AddBusinessInfrastructureConfiguration(_appConfiguration);
+            services.AddBusinessInfrastructureConfiguration(Configuration);
 
-            services.AddCorsConfiguration(_appConfiguration);
+            services.AddCorsConfiguration(Configuration);
 
             services.AddValidatorsCollection();
             services.AddMappingConfiguration();
 
-            services.AddSecurityConfiguration(_appConfiguration);
-            services.AddSwaggerConfiguration(_appConfiguration);
+            services.AddSecurityConfiguration(Configuration);
+            services.AddSwaggerConfiguration(Configuration);
 
-            services.AddHealthCheck(_appConfiguration);
-            services.AddAppMetrics(_appConfiguration);
+            services.AddHealthCheck(Configuration);
+            services.AddAppMetrics(Configuration);
         }
 
         /// <summary>
@@ -70,7 +72,7 @@ namespace VideoPlatform.Api
         /// <param name="loggerFactory"></param>
         /// <param name="userManager"></param>
         /// <param name="roleManager"></param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory,
             UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
         {
             app.UseMiddleware<ExceptionHandlerMiddleware>();
@@ -80,8 +82,6 @@ namespace VideoPlatform.Api
             }
             else
             {
-                // The default HSTS value is 30 days. You may want to change
-                // this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -92,9 +92,9 @@ namespace VideoPlatform.Api
             app.UseStaticFiles();
             app.UseAuthentication();
 
-            app.AddBusinessInfrastructureBuilder(_appConfiguration, userManager, roleManager);
+            app.AddBusinessInfrastructureBuilder(Configuration, userManager, roleManager);
 
-            app.AddSwaggerBuilder(_appConfiguration);
+            app.AddSwaggerBuilder(Configuration);
             app.AddHealthChecksBuilder();
             if (!env.IsDevelopment())
             {
@@ -103,7 +103,7 @@ namespace VideoPlatform.Api
             app.UseMetricsAllMiddleware();
             app.UseMetricsAllEndpoints();
             app.UseHealthAllEndpoints();
-            app.UseMvc();
+            //app.UseMvc();
         }
     }
 }

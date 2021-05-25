@@ -10,15 +10,15 @@ namespace VideoPlatform.AuthenticationService.Infrastructure.Configurations
     /// </summary>
     public class ClientsConfiguration
     {
-        private readonly IConfiguration _appConfiguration;
+        private IConfiguration Configuration { get; }
 
         /// <summary>
         /// Clients Configuration Constructor
         /// </summary>
-        /// <param name="appConfiguration"></param>
-        public ClientsConfiguration(IConfiguration appConfiguration)
+        /// <param name="configuration"></param>
+        public ClientsConfiguration(IConfiguration configuration)
         {
-            _appConfiguration = appConfiguration ?? throw new ArgumentNullException(nameof(appConfiguration));
+            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         /// <summary>
@@ -43,8 +43,8 @@ namespace VideoPlatform.AuthenticationService.Infrastructure.Configurations
         {
             yield return new ApiResource
             {
-                Name = _appConfiguration["Security:ApiResources:Name"],
-                DisplayName = _appConfiguration["Security:ApiResources:DisplayName"],
+                Name = Configuration["Security:ApiResources:Name"],
+                DisplayName = Configuration["Security:ApiResources:DisplayName"],
                 //Scopes = new[]
                 //{
                 //    //new Scope("readAccess", "Access read operations"),
@@ -66,10 +66,10 @@ namespace VideoPlatform.AuthenticationService.Infrastructure.Configurations
                     AllowAccessTokensViaBrowser = true,
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowedScopes = new[] { "readAccess", "writeAccess" },
-                    ClientId = _appConfiguration["Security:ApiClient:ClientId"],
-                    ClientName = _appConfiguration["Security:ApiClient:ClientName"],
-                    ClientSecrets = new[] { new Secret(_appConfiguration["Security:ApiClient:ClientSecret"].Sha256()) },
-                    RedirectUris = new [] { _appConfiguration["Security:ApiClient:RedirectUrl"] }
+                    ClientId = Configuration["Security:ApiClient:ClientId"],
+                    ClientName = Configuration["Security:ApiClient:ClientName"],
+                    ClientSecrets = new[] { new Secret(Configuration["Security:ApiClient:ClientSecret"].Sha256()) },
+                    RedirectUris = new [] { Configuration["Security:ApiClient:RedirectUrl"] }
                 }
             };
         }

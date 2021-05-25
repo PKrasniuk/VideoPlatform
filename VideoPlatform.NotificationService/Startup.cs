@@ -1,9 +1,11 @@
-﻿using FluentValidation.AspNetCore;
+﻿using System;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using VideoPlatform.Common.Infrastructure.Extensions;
@@ -18,15 +20,15 @@ namespace VideoPlatform.NotificationService
     /// </summary>
     public class Startup
     {
-        private readonly IConfigurationRoot _appConfiguration;
+        private IConfiguration Configuration { get; }
 
         /// <summary>
         /// Startup constructor
         /// </summary>
-        /// <param name="env"></param>
-        public Startup(IHostingEnvironment env)
+        /// <param name="configuration"></param>
+        public Startup(IConfiguration configuration)
         {
-            _appConfiguration = env.GetAppConfiguration();
+            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         /// <summary>
@@ -35,7 +37,7 @@ namespace VideoPlatform.NotificationService
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLoggerConfiguration(_appConfiguration);
+            services.AddLoggerConfiguration(Configuration);
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
@@ -45,7 +47,7 @@ namespace VideoPlatform.NotificationService
 
             services.AddRouting(options => options.LowercaseUrls = true);
 
-            services.AddEventBus(_appConfiguration);
+            services.AddEventBus(Configuration);
             services.AddSubscribes();
 
             services.AddValidatorsCollection();
@@ -61,7 +63,7 @@ namespace VideoPlatform.NotificationService
         /// <param name="app"></param>
         /// <param name="env"></param>
         /// <param name="loggerFactory"></param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseMiddleware<ExceptionHandlerMiddleware>();
 
@@ -80,7 +82,7 @@ namespace VideoPlatform.NotificationService
             app.AddSwaggerBuilder();
             app.AddCorsBuilder();
             app.AddSignalRBuilder();
-            app.UseMvc();
+            //app.UseMvc();
         }
     }
 }
