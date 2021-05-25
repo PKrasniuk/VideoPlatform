@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using VideoPlatform.Common.Models.ResponseModels;
 
@@ -14,7 +15,7 @@ namespace VideoPlatform.Common.Infrastructure.Middleware
     public class ExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IHostingEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
         private static readonly ILogger Logger = Log.ForContext<ExceptionHandlerMiddleware>();
 
         /// <summary>
@@ -22,7 +23,7 @@ namespace VideoPlatform.Common.Infrastructure.Middleware
         /// </summary>
         /// <param name="next"></param>
         /// <param name="environment"></param>
-        public ExceptionHandlerMiddleware(RequestDelegate next, IHostingEnvironment environment)
+        public ExceptionHandlerMiddleware(RequestDelegate next, IWebHostEnvironment environment)
         {
             _next = next;
             _environment = environment;
@@ -46,7 +47,7 @@ namespace VideoPlatform.Common.Infrastructure.Middleware
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception, IHostingEnvironment environment)
+        private static Task HandleExceptionAsync(HttpContext context, Exception exception, IWebHostEnvironment environment)
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;

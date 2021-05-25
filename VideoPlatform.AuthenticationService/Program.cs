@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Serilog;
+using VideoPlatform.Common.Infrastructure.Extensions;
+using VideoPlatform.Common.Models.ConfigurationModels;
 
 namespace VideoPlatform.AuthenticationService
 {
@@ -13,14 +16,11 @@ namespace VideoPlatform.AuthenticationService
         /// Main
         /// </summary>
         /// <param name="args"></param>
-        public static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).Build().Run();
-        }
+        public static async Task Main(string[] args) => await CreateWebHostBuilder(args).Build().RunAsync();
 
-        private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseSerilog();
+        private static IHostBuilder CreateWebHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .InitAppConfiguration(new TransientFaultHandlingOptions())
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>().UseSerilog());
     }
 }
