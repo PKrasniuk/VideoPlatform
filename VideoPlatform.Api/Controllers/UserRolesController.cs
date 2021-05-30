@@ -42,12 +42,9 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<ICollection<UserRoleModel>>> GetUserRolesAsync()
         {
             var result = await _userRolesManager.GetUserRolesAsync();
-            if (result != null && result.Any())
-            {
-                return result.Select(x => _mapper.Map<UserRoleModel>(x)).ToList();
-            }
-
-            return NotFound();
+            return result != null && result.Any()
+                ? result.Select(x => _mapper.Map<UserRoleModel>(x)).ToList()
+                : NotFound();
         }
 
         /// <summary>
@@ -60,12 +57,9 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<ICollection<UserRoleModel>>> GetUserRolesAlternativeAsync()
         {
             var result = await _userRolesManager.GetUserRolesAlternativeAsync();
-            if (result != null && result.Any())
-            {
-                return result.Select(x => _mapper.Map<UserRoleModel>(x)).ToList();
-            }
-
-            return NotFound();
+            return result != null && result.Any()
+                ? result.Select(x => _mapper.Map<UserRoleModel>(x)).ToList()
+                : NotFound();
         }
     }
 }

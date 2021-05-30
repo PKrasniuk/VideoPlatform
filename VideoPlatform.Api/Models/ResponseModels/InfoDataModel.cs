@@ -13,31 +13,31 @@ namespace VideoPlatform.Api.Models.ResponseModels
         /// <summary>
         /// Id
         /// </summary>
-        [JsonProperty(propertyName: "id")]
+        [JsonProperty("id")]
         public string Id { get; set; }
 
         /// <summary>
         /// Name
         /// </summary>
-        [JsonProperty(propertyName: "name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Description
         /// </summary>
-        [JsonProperty(propertyName: "description")]
+        [JsonProperty("description")]
         public string Description { get; set; }
 
         /// <summary>
         /// Value
         /// </summary>
-        [JsonProperty(propertyName: "value")]
+        [JsonProperty("value")]
         public string Value { get; set; }
 
         /// <summary>
         /// Type
         /// </summary>
-        [JsonProperty(propertyName: "type")]
+        [JsonProperty("type")]
         [EnumDataType(typeof(InfoType))]
         [JsonConverter(typeof(StringEnumConverter))]
         public InfoType Type { get; set; }

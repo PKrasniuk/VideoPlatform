@@ -53,12 +53,9 @@ namespace VideoPlatform.Api.Controllers
             _logger.LogInformation("The method GetInfoDataAsync");
 
             var entities = await _infoDataManager.GetInfoDataAsync();
-            if (entities != null && entities.Any())
-            {
-                return _mapper.Map<Collection<InfoDataModel>>(entities);
-            }
-
-            return NotFound();
+            return entities != null && entities.Any()
+                ? _mapper.Map<Collection<InfoDataModel>>(entities)
+                : NotFound();
         }
 
         /// <summary>
@@ -74,12 +71,7 @@ namespace VideoPlatform.Api.Controllers
             _logger.LogInformation("The method GetInfoDataByIdAsync");
 
             var item = await _infoDataManager.GetInfoDataByIdAsync(new Guid(id));
-            if (item != null)
-            {
-                return _mapper.Map<InfoDataModel>(item);
-            }
-
-            return NotFound();
+            return item != null ? _mapper.Map<InfoDataModel>(item) : NotFound();
         }
 
         /// <summary>
@@ -96,17 +88,10 @@ namespace VideoPlatform.Api.Controllers
             _logger.LogInformation("The method AddInfoDataAsync");
 
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             var item = await _infoDataManager.SaveInfoDataAsync(_mapper.Map<InfoData>(model));
-            if (item != null)
-            {
-                return _mapper.Map<InfoDataModel>(item);
-            }
-
-            return UnprocessableEntity();
+            return item != null ? _mapper.Map<InfoDataModel>(item) : UnprocessableEntity();
         }
 
         /// <summary>
@@ -122,9 +107,7 @@ namespace VideoPlatform.Api.Controllers
             _logger.LogInformation("The method UpdateInfoDataAsync");
 
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             await _infoDataManager.SaveInfoDataAsync(_mapper.Map<InfoData>(model));
 
@@ -147,9 +130,7 @@ namespace VideoPlatform.Api.Controllers
 
             var item = await _infoDataManager.GetInfoDataByIdAsync(entityId);
             if (item == null)
-            {
                 return NotFound();
-            }
 
             await _infoDataManager.RemoveInfoDataAsync(entityId);
 

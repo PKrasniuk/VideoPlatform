@@ -10,13 +10,13 @@ namespace VideoPlatform.Api.Models.ResponseModels
         /// <summary>
         /// Id
         /// </summary>
-        [JsonProperty(propertyName: "id")]
+        [JsonProperty("id")]
         public int Id { get; set; }
 
         /// <summary>
         /// Name
         /// </summary>
-        [JsonProperty(propertyName: "name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
     }
 }

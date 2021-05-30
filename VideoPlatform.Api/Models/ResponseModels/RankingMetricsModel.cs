@@ -11,13 +11,13 @@ namespace VideoPlatform.Api.Models.ResponseModels
         /// <summary>
         /// NormalizedDiscountedCumulativeGains
         /// </summary>
-        [JsonProperty(propertyName: "normalizedDiscountedCumulativeGains")]
+        [JsonProperty("normalizedDiscountedCumulativeGains")]
         public IList<double> NormalizedDiscountedCumulativeGains { get; set; }
 
         /// <summary>
         /// DiscountedCumulativeGains
         /// </summary>
-        [JsonProperty(propertyName: "discountedCumulativeGains")]
+        [JsonProperty("discountedCumulativeGains")]
         public IList<double> DiscountedCumulativeGains { get; set; }
     }
 }

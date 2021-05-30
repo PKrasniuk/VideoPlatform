@@ -64,12 +64,7 @@ namespace VideoPlatform.Api.Controllers
             _logger.LogInformation("The method BuildTripRegressionModelAsync");
 
             var result = _regressionManager.BuildRegressionModel();
-            if (result != null)
-            {
-                return _mapper.Map<RegressionMetricsModel>(result);
-            }
-
-            return UnprocessableEntity();
+            return result != null ? _mapper.Map<RegressionMetricsModel>(result) : UnprocessableEntity();
         }
 
         /// <summary>
@@ -86,12 +81,7 @@ namespace VideoPlatform.Api.Controllers
             _logger.LogInformation("The method BuildSearchResultRankingModelAsync");
 
             var result = _rankingManager.BuildRankingModel();
-            if (result != null)
-            {
-                return _mapper.Map<RankingMetricsModel>(result);
-            }
-
-            return UnprocessableEntity();
+            return result != null ? _mapper.Map<RankingMetricsModel>(result) : UnprocessableEntity();
         }
 
         /// <summary>
@@ -110,21 +100,16 @@ namespace VideoPlatform.Api.Controllers
             _logger.LogInformation("The method CalculateTripRegressionAsync");
 
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             var result = _regressionManager.CalculatePrediction(_mapper.Map<ICollection<TripModel>>(new List<InputTripModel>
             {
                 model
             }), model.RebuildModel);
 
-            if (result != null && result.Any())
-            {
-                return _mapper.Map<Collection<OutputTripFarePredictionModel>>(result);
-            }
-
-            return UnprocessableEntity();
+            return result != null && result.Any()
+                ? _mapper.Map<Collection<OutputTripFarePredictionModel>>(result)
+                : UnprocessableEntity();
         }
 
         /// <summary>
@@ -149,12 +134,9 @@ namespace VideoPlatform.Api.Controllers
             // ------------------------------------
 
             var result = _rankingManager.CalculatePrediction(data);
-            if (result != null)
-            {
-                return _mapper.Map<Collection<OutputSearchResultPredictionModel>>(result);
-            }
-
-            return UnprocessableEntity();
+            return result != null
+                ? _mapper.Map<Collection<OutputSearchResultPredictionModel>>(result)
+                : UnprocessableEntity();
         }
     }
 }

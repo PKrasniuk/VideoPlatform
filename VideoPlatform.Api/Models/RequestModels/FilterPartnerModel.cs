@@ -16,7 +16,7 @@ namespace VideoPlatform.Api.Models.RequestModels
         /// </summary>
         [EnumDataType(typeof(PartnerSortedProperty))]
         [JsonConverter(typeof(StringEnumConverter))]
-        [JsonProperty(propertyName: "sortedProperty")]
+        [JsonProperty("sortedProperty")]
         [DefaultValue(PartnerSortedProperty.Id)]
         [Required]
         public PartnerSortedProperty SortedProperty { get; set; }

@@ -23,14 +23,10 @@ namespace VideoPlatform.Api.Infrastructure.HealthCheck
             var percentUsed = 100 * metrics.Used / metrics.Total;
 
             var status = HealthStatus.Healthy;
-            if (percentUsed > 80)
-            {
+            if (percentUsed > 80) 
                 status = HealthStatus.Degraded;
-            }
-            if (percentUsed > 90)
-            {
+            if (percentUsed > 90) 
                 status = HealthStatus.Unhealthy;
-            }
 
             var data = new Dictionary<string, object>
             {
@@ -40,9 +36,7 @@ namespace VideoPlatform.Api.Infrastructure.HealthCheck
                 {"Duration", metrics.Duration}
             };
 
-            var result = new HealthCheckResult(status, null, null, data);
-
-            return await Task.FromResult(result);
+            return await Task.FromResult(new HealthCheckResult(status, null, null, data));
         }
     }
 }

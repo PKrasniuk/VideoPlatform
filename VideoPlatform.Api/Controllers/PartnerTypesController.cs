@@ -107,17 +107,10 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<PartnerTypesModel>> AddPartnerTypeAsync([FromForm] AddPartnerTypesModel model)
         {
             if(!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             var partnerTypes = await _partnerTypesManager.AddPartnerTypeAsync(model.PartnerId, model.Type);
-            if (partnerTypes != null)
-            {
-                return _mapper.Map<PartnerTypesModel>(partnerTypes);
-            }
-
-            return UnprocessableEntity();
+            return partnerTypes != null ? _mapper.Map<PartnerTypesModel>(partnerTypes) : UnprocessableEntity();
         }
 
         /// <summary>
@@ -131,9 +124,7 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult> RemovePartnerTypeAsync([FromForm] RemovePartnerTypesModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             await _partnerTypesManager.RemovePartnerTypeAsync(model.PartnerId, model.Type);
 

@@ -27,10 +27,8 @@ namespace VideoPlatform.Api.Infrastructure.HealthCheck
             return metrics;
         }
 
-        private static bool IsUnix()
-        {
-            return RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-        }
+        private static bool IsUnix() => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ||
+                                        RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
         private static MemoryMetrics GetWindowsMetrics()
         {
@@ -43,13 +41,9 @@ namespace VideoPlatform.Api.Infrastructure.HealthCheck
                 RedirectStandardOutput = true
             };
 
-            using (var process = Process.Start(info))
-            {
-                if (process != null)
-                {
-                    output = process.StandardOutput.ReadToEnd();
-                }
-            }
+            using var process = Process.Start(info);
+            if (process != null) 
+                output = process.StandardOutput.ReadToEnd();
 
             var lines = output.Trim().Split("\n");
             var freeMemoryParts = lines[0].Split("=", StringSplitOptions.RemoveEmptyEntries);
@@ -71,16 +65,16 @@ namespace VideoPlatform.Api.Infrastructure.HealthCheck
 
             var info = new ProcessStartInfo("free -m")
             {
-                FileName = "/bin/bash", Arguments = "-c \"free -m\"", RedirectStandardOutput = true
+                FileName = "/bin/bash",
+                Arguments = "-c \"free -m\"",
+                RedirectStandardOutput = true
             };
 
-            using (var process = Process.Start(info))
+            using var process = Process.Start(info);
+            if (process != null)
             {
-                if (process != null)
-                {
-                    output = process.StandardOutput.ReadToEnd();
-                    Console.WriteLine(output);
-                }
+                output = process.StandardOutput.ReadToEnd();
+                Console.WriteLine(output);
             }
 
             var lines = output.Split("\n");

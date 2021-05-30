@@ -19,7 +19,8 @@ namespace VideoPlatform.Api.Controllers
         /// <param name="subscriptionSeriesManager"></param>
         public SubscriptionSeriesController(ISubscriptionSeriesManager subscriptionSeriesManager)
         {
-            _subscriptionSeriesManager = subscriptionSeriesManager ?? throw new ArgumentNullException(nameof(subscriptionSeriesManager));
+            _subscriptionSeriesManager = subscriptionSeriesManager ??
+                                         throw new ArgumentNullException(nameof(subscriptionSeriesManager));
         }
     }
 }

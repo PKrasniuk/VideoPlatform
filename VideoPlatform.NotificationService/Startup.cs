@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using VideoPlatform.Common.Infrastructure.Configurations;
 using VideoPlatform.Common.Infrastructure.Extensions;
 using VideoPlatform.Common.Infrastructure.Middleware;
 using VideoPlatform.MessageService.Infrastructure.Extensions;
@@ -55,6 +56,9 @@ namespace VideoPlatform.NotificationService
 
             services.AddCors();
             services.AddSignalRConfiguration();
+
+            services.AddHsts(AdditionalConfig.ConfigureHsts);
+            services.AddHttpsRedirection(AdditionalConfig.ConfigureHttpsRedirection);
         }
 
         /// <summary>
@@ -67,22 +71,18 @@ namespace VideoPlatform.NotificationService
         {
             app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-            if (env.IsDevelopment())
-            {
-            }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change
-                // this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
             loggerFactory.AddSerilog();
 
             app.AddSwaggerBuilder();
             app.AddCorsBuilder();
             app.AddSignalRBuilder();
-            //app.UseMvc();
+            if (!env.IsDevelopment())
+            {
+                app.UseHsts();
+                app.UseHttpsRedirection();
+            }
+
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

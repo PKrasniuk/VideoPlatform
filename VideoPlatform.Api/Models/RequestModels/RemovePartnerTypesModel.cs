@@ -14,7 +14,7 @@ namespace VideoPlatform.Api.Models.RequestModels
         /// <summary>
         /// PartnerId
         /// </summary>
-        [JsonProperty(propertyName: "partnerId")]
+        [JsonProperty("partnerId")]
         [Required]
         public int PartnerId { get; set; }
 
@@ -23,7 +23,7 @@ namespace VideoPlatform.Api.Models.RequestModels
         /// </summary>
         [EnumDataType(typeof(PartnerType))]
         [JsonConverter(typeof(StringEnumConverter))]
-        [JsonProperty(propertyName: "type")]
+        [JsonProperty("type")]
         [DefaultValue(PartnerType.Content)]
         [Required]
         public PartnerType Type { get; set; } = PartnerType.Content;

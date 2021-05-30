@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using VideoPlatform.Api.Infrastructure.Extensions;
 using VideoPlatform.BLL.Infrastructure.Extensions;
+using VideoPlatform.Common.Infrastructure.Configurations;
 using VideoPlatform.Common.Infrastructure.Constants;
 using VideoPlatform.Common.Infrastructure.Extensions;
 using VideoPlatform.Common.Infrastructure.Middleware;
@@ -27,10 +28,8 @@ namespace VideoPlatform.Api
         /// Startup constructor
         /// </summary>
         /// <param name="configuration"></param>
-        public Startup(IConfiguration configuration)
-        {
+        public Startup(IConfiguration configuration) =>
             Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        }
 
         /// <summary>
         /// ConfigureServices
@@ -46,6 +45,10 @@ namespace VideoPlatform.Api
             //    .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
             //    .AddJsonOptions(options => { options.SerializerSettings.Converters.Add(new StringEnumConverter()); });
 
+            services.AddControllers(options =>
+            {
+                options.EnableEndpointRouting = true;
+            });
             services.AddRouting(options => options.LowercaseUrls = true);
 
             services.AddResponseConfiguration();
@@ -62,6 +65,9 @@ namespace VideoPlatform.Api
 
             services.AddHealthCheck(Configuration);
             services.AddAppMetrics(Configuration);
+
+            services.AddHsts(AdditionalConfig.ConfigureHsts);
+            services.AddHttpsRedirection(AdditionalConfig.ConfigureHttpsRedirection);
         }
 
         /// <summary>
@@ -77,19 +83,12 @@ namespace VideoPlatform.Api
         {
             app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-            if (env.IsDevelopment())
-            {
-            }
-            else
-            {
-                app.UseHsts();
-            }
-
             loggerFactory.AddSerilog();
 
             app.UseCors(ConfigurationConstants.DefaultCorsPolicyName);
             app.UseResponseCompression();
             app.UseStaticFiles();
+            app.UseRouting();
             app.UseAuthentication();
 
             app.AddBusinessInfrastructureBuilder(Configuration, userManager, roleManager);
@@ -98,12 +97,14 @@ namespace VideoPlatform.Api
             app.AddHealthChecksBuilder();
             if (!env.IsDevelopment())
             {
+                app.UseHsts();
                 app.UseHttpsRedirection();
             }
+
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             app.UseMetricsAllMiddleware();
             app.UseMetricsAllEndpoints();
             app.UseHealthAllEndpoints();
-            //app.UseMvc();
         }
     }
 }

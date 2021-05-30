@@ -48,12 +48,7 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<TagModel>> GetTagAsync(int id)
         {
             var item = await _tagManager.GetTagByIdAsync(id);
-            if (item != null)
-            {
-                return _mapper.Map<TagModel>(item);
-            }
-
-            return NotFound();
+            return item != null ? _mapper.Map<TagModel>(item) : NotFound();
         }
 
         /// <summary>
@@ -67,12 +62,7 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<TagModel>> GetTagByNameAsync([FromQuery(Name = "tagName")] string tagName)
         {
             var item = await _tagManager.GetTagByNameAsync(tagName);
-            if (item != null)
-            {
-                return _mapper.Map<TagModel>(item);
-            }
-
-            return NotFound();
+            return item != null ? _mapper.Map<TagModel>(item) : NotFound();
         }
 
         /// <summary>
@@ -85,12 +75,9 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<ICollection<TagModel>>> GetTagsAsync()
         {
             var result = await _tagManager.GetTagsAsync();
-            if (result != null && result.Any())
-            {
-                return result.Select(x => _mapper.Map<TagModel>(x)).ToList();
-            }
-
-            return NotFound();
+            return result != null && result.Any()
+                ? result.Select(x => _mapper.Map<TagModel>(x)).ToList()
+                : NotFound();
         }
 
         /// <summary>
@@ -105,9 +92,7 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<FilterResultModel<TagModel>>> GetPartnersByFilterAsync([FromForm] FilterTagModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             var filter = new Paging<Tag>
             {
@@ -119,9 +104,7 @@ namespace VideoPlatform.Api.Controllers
             };
 
             if (!string.IsNullOrEmpty(model.FilterQuery))
-            {
                 filter.FilterExpression = x => x.Name.StartsWith(model.FilterQuery);
-            }
 
             filter.SortedProperty = model.SortedProperty switch
             {
@@ -131,16 +114,13 @@ namespace VideoPlatform.Api.Controllers
 
             var result = await _tagManager.GetTagsAsync(filter);
 
-            if (result?.Items == null || result.TotalCount == 0)
-            {
-                return NotFound();
-            }
-
-            return new FilterResultModel<TagModel>
-            {
-                TotalCount = result.TotalCount,
-                Items = new List<TagModel>(result.Items.Select(x => _mapper.Map<TagModel>(x)))
-            };
+            return result?.Items == null || result.TotalCount == 0
+                ? NotFound()
+                : new FilterResultModel<TagModel>
+                {
+                    TotalCount = result.TotalCount,
+                    Items = new List<TagModel>(result.Items.Select(x => _mapper.Map<TagModel>(x)))
+                };
         }
 
         /// <summary>
@@ -155,17 +135,10 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<TagModel>> AddTagAsync([FromForm] AddTagModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             var item = await _tagManager.SaveTagAsync(_mapper.Map<Tag>(model));
-            if (item != null)
-            {
-                return _mapper.Map<TagModel>(item);
-            }
-
-            return UnprocessableEntity();
+            return item != null ? _mapper.Map<TagModel>(item) : UnprocessableEntity();
         }
 
         /// <summary>
@@ -180,18 +153,13 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<ICollection<TagModel>>> AddTagsAsync([FromBody] AddTagsModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             var items = await _tagManager.AddTagsAsync(
                 model.Tags.Select(modelTag => _mapper.Map<Tag>(modelTag)).ToList());
-            if (items != null && items.Any())
-            {
-                return items.Select(item => _mapper.Map<TagModel>(item)).ToList();
-            }
-
-            return UnprocessableEntity();
+            return items != null && items.Any()
+                ? items.Select(item => _mapper.Map<TagModel>(item)).ToList()
+                : UnprocessableEntity();
         }
 
         /// <summary>
@@ -206,17 +174,10 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<TagModel>> UpdateTagAsync([FromForm] UpdateTagModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             var item = await _tagManager.SaveTagAsync(_mapper.Map<Tag>(model));
-            if (item != null)
-            {
-                return _mapper.Map<TagModel>(item);
-            }
-
-            return UnprocessableEntity();
+            return item != null ? _mapper.Map<TagModel>(item) : UnprocessableEntity();
         }
 
         /// <summary>
@@ -230,9 +191,7 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult> UpdateTagsAsync([FromBody] UpdateTagsModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             await _tagManager.UpdateTagsAsync(model.Tags.Select(modelTag => _mapper.Map<Tag>(modelTag)).ToList());
 
@@ -251,9 +210,7 @@ namespace VideoPlatform.Api.Controllers
         {
             var item = await _tagManager.GetTagByIdAsync(id);
             if (item == null)
-            {
                 return NotFound();
-            }
 
             await _tagManager.RemoveTagAsync(id);
 
@@ -271,9 +228,7 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult> RemoveTagsAsync([FromBody] RemoveTagsModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             await _tagManager.RemoteTagsAsync(model.Ids);
 

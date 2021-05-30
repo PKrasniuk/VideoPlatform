@@ -45,12 +45,7 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<ICollection<SettingModel>>> GetSettingsAsync()
         {
             var items = await _settingManager.GetSettingsCQRSAsync();
-            if (items.Any())
-            {
-                return _mapper.Map<Collection<SettingModel>>(items);
-            }
-
-            return NotFound();
+            return items.Any() ? _mapper.Map<Collection<SettingModel>>(items) : NotFound();
         }
 
         /// <summary>
@@ -64,12 +59,7 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<SettingModel>> GetSettingAsync(short id)
         {
             var item = await _settingManager.GetSettingCQRSAsync(id);
-            if (item != null)
-            {
-                return _mapper.Map<SettingModel>(item);
-            }
-
-            return NotFound();
+            return item != null ? _mapper.Map<SettingModel>(item) : NotFound();
         }
 
         /// <summary>
@@ -84,17 +74,10 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<SettingModel>> AddSettingAsync([FromForm] AddSettingModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             var item = await _settingManager.AddSettingCQRSAsync(_mapper.Map<Setting>(model));
-            if (item != null)
-            {
-                return _mapper.Map<SettingModel>(item);
-            }
-
-            return UnprocessableEntity();
+            return item != null ? _mapper.Map<SettingModel>(item) : UnprocessableEntity();
         }
 
         /// <summary>
@@ -108,9 +91,7 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult> UpdateSettingAsync([FromForm] UpdateSettingModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             await _settingManager.UpdateSettingCQRSAsync(_mapper.Map<Setting>(model));
 
@@ -129,9 +110,7 @@ namespace VideoPlatform.Api.Controllers
         {
             var item = await _settingManager.GetSettingCQRSAsync(id);
             if (item == null)
-            {
                 return NotFound();
-            }
 
             await _settingManager.RemoveSettingCQRSAsync(id);
 

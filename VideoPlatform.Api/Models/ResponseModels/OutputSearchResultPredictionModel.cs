@@ -10,25 +10,25 @@ namespace VideoPlatform.Api.Models.ResponseModels
         /// <summary>
         /// GroupId
         /// </summary>
-        [JsonProperty(propertyName: "groupId")]
+        [JsonProperty("groupId")]
         public uint GroupId { get; set; }
 
         /// <summary>
         /// Label
         /// </summary>
-        [JsonProperty(propertyName: "label")]
+        [JsonProperty("label")]
         public uint Label { get; set; }
 
         /// <summary>
         /// Score
         /// </summary>
-        [JsonProperty(propertyName: "score")]
+        [JsonProperty("score")]
         public float Score { get; set; }
 
         /// <summary>
         /// Features
         /// </summary>
-        [JsonProperty(propertyName: "features")]
+        [JsonProperty("features")]
         public float[] Features { get; set; }
     }
 }

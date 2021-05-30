@@ -16,7 +16,7 @@ namespace VideoPlatform.Api.Infrastructure.HealthCheck
         private readonly int _pingInterval;
         private DateTime _lastPingTime = DateTime.MinValue;
         private HealthCheckResult _lastPingResult = HealthCheckResult.Healthy();
-        private readonly object _locker = new object();
+        private readonly object _locker = new();
 
         /// <summary>
         /// PingHealthCheck Constructor
@@ -31,10 +31,7 @@ namespace VideoPlatform.Api.Infrastructure.HealthCheck
             _pingInterval = pingInterval;
         }
 
-        private bool IsCacheExpired()
-        {
-            return _pingInterval == 0 || _lastPingTime.AddSeconds(_pingInterval) <= DateTime.Now;
-        }
+        private bool IsCacheExpired() => _pingInterval == 0 || _lastPingTime.AddSeconds(_pingInterval) <= DateTime.Now;
 
         /// <summary>
         /// CheckHealth
@@ -42,19 +39,15 @@ namespace VideoPlatform.Api.Infrastructure.HealthCheck
         /// <param name="context"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
+        public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new())
         {
             if (!IsCacheExpired())
-            {
                 return await Task.FromResult(_lastPingResult);
-            }
 
             if (Monitor.TryEnter(_locker))
-            {
                 try
                 {
                     if (IsCacheExpired())
-                    {
                         try
                         {
                             using var ping = new Ping();
@@ -62,29 +55,21 @@ namespace VideoPlatform.Api.Infrastructure.HealthCheck
 
                             var reply = ping.Send(_host, _timeout);
                             if (reply != null && reply.Status != IPStatus.Success)
-                            {
                                 _lastPingResult = HealthCheckResult.Unhealthy();
-                            }
                             else if (reply != null && reply.RoundtripTime >= _timeout)
-                            {
                                 _lastPingResult = HealthCheckResult.Degraded();
-                            }
                             else
-                            {
                                 _lastPingResult = HealthCheckResult.Healthy();
-                            }
                         }
                         catch
                         {
                             _lastPingResult = HealthCheckResult.Unhealthy();
                         }
-                    }
                 }
                 finally
                 {
                     Monitor.Exit(_locker);
                 }
-            }
 
             return await Task.FromResult(_lastPingResult);
         }

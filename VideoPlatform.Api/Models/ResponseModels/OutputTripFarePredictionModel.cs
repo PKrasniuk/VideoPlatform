@@ -10,7 +10,7 @@ namespace VideoPlatform.Api.Models.ResponseModels
         /// <summary>
         /// FareAmount
         /// </summary>
-        [JsonProperty(propertyName: "fareAmount")]
+        [JsonProperty("fareAmount")]
         public float FareAmount { get; set; }
     }
 }

@@ -14,28 +14,28 @@ namespace VideoPlatform.Api.Models.RequestModels
         /// <summary>
         /// Name
         /// </summary>
-        [JsonProperty(propertyName: "name")]
+        [JsonProperty("name")]
         [Required]
         public string Name { get; set; }
 
         /// <summary>
         /// Description
         /// </summary>
-        [JsonProperty(propertyName: "description")]
+        [JsonProperty("description")]
         [Required]
         public string Description { get; set; }
 
         /// <summary>
         /// Value
         /// </summary>
-        [JsonProperty(propertyName: "value")]
+        [JsonProperty("value")]
         [Required]
         public string Value { get; set; }
 
         /// <summary>
         /// Type
         /// </summary>
-        [JsonProperty(propertyName: "type")]
+        [JsonProperty("type")]
         [EnumDataType(typeof(InfoType))]
         [JsonConverter(typeof(StringEnumConverter))]
         [DefaultValue(InfoType.BaseDocument)]

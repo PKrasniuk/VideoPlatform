@@ -10,31 +10,31 @@ namespace VideoPlatform.Api.Models.ResponseModels
         /// <summary>
         /// MeanAbsoluteError
         /// </summary>
-        [JsonProperty(propertyName: "meanAbsoluteError")]
+        [JsonProperty("meanAbsoluteError")]
         public double MeanAbsoluteError { get; set; }
 
         /// <summary>
         /// MeanSquaredError
         /// </summary>
-        [JsonProperty(propertyName: "meanSquaredError")]
+        [JsonProperty("meanSquaredError")]
         public double MeanSquaredError { get; set; }
 
         /// <summary>
         /// RootMeanSquaredError
         /// </summary>
-        [JsonProperty(propertyName: "rootMeanSquaredError")]
+        [JsonProperty("rootMeanSquaredError")]
         public double RootMeanSquaredError { get; set; }
 
         /// <summary>
         /// LossFunction
         /// </summary>
-        [JsonProperty(propertyName: "lossFunction")]
+        [JsonProperty("lossFunction")]
         public double LossFunction { get; set; }
 
         /// <summary>
         /// RSquared
         /// </summary>
-        [JsonProperty(propertyName: "rSquared")]
+        [JsonProperty("rSquared")]
         public double RSquared { get; set; }
     }
 }

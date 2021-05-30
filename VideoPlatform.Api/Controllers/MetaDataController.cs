@@ -54,12 +54,9 @@ namespace VideoPlatform.Api.Controllers
             _logger.LogInformation("The method GetMetaDataAsync");
 
             var entities = await _metaDataManager.GetMetaDataAsync();
-            if (entities != null && entities.Any())
-            {
-                return _mapper.Map<Collection<MetaDataModel>>(entities);
-            }
-
-            return NotFound();
+            return entities != null && entities.Any()
+                ? _mapper.Map<Collection<MetaDataModel>>(entities)
+                : NotFound();
         }
 
         /// <summary>
@@ -75,12 +72,7 @@ namespace VideoPlatform.Api.Controllers
             _logger.LogInformation("The method GetMetaDataByIdAsync");
 
             var item = await _metaDataManager.GetMetaDataByIdAsync(new ObjectId(id));
-            if (item != null)
-            {
-                return _mapper.Map<MetaDataModel>(item);
-            }
-
-            return NotFound();
+            return item != null ? _mapper.Map<MetaDataModel>(item) : NotFound();
         }
 
         /// <summary>
@@ -97,17 +89,10 @@ namespace VideoPlatform.Api.Controllers
             _logger.LogInformation("The method AddMetaDataAsync");
 
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             var item = await _metaDataManager.SaveMetaDataAsync(_mapper.Map<MetaData>(model));
-            if (item != null)
-            {
-                return _mapper.Map<MetaDataModel>(item);
-            }
-
-            return UnprocessableEntity();
+            return item != null ? _mapper.Map<MetaDataModel>(item) : UnprocessableEntity();
         }
 
         /// <summary>
@@ -123,9 +108,7 @@ namespace VideoPlatform.Api.Controllers
             _logger.LogInformation("The method UpdateMetaDataAsync");
 
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             await _metaDataManager.SaveMetaDataAsync(_mapper.Map<MetaData>(model));
 
@@ -148,9 +131,7 @@ namespace VideoPlatform.Api.Controllers
 
             var item = await _metaDataManager.GetMetaDataByIdAsync(entityId);
             if (item == null)
-            {
                 return NotFound();
-            }
 
             await _metaDataManager.RemoveMetaDataAsync(entityId);
 

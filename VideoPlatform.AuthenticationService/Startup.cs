@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using VideoPlatform.AuthenticationService.Infrastructure.Extensions;
+using VideoPlatform.Common.Infrastructure.Configurations;
 using VideoPlatform.Common.Infrastructure.Extensions;
 
 namespace VideoPlatform.AuthenticationService
@@ -39,6 +40,9 @@ namespace VideoPlatform.AuthenticationService
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
 
             services.AddIdentityServerConfiguration(Configuration);
+
+            services.AddHsts(AdditionalConfig.ConfigureHsts);
+            services.AddHttpsRedirection(AdditionalConfig.ConfigureHttpsRedirection);
         }
 
         /// <summary>
@@ -50,12 +54,11 @@ namespace VideoPlatform.AuthenticationService
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
             else
             {
                 app.UseHsts();
+                app.UseHttpsRedirection();
             }
 
             loggerFactory.AddSerilog();
@@ -63,7 +66,6 @@ namespace VideoPlatform.AuthenticationService
             app.UseIdentityServer();
 
             app.UseStaticFiles();
-            //app.UseMvcWithDefaultRoute();
         }
     }
 }

@@ -11,14 +11,14 @@ namespace VideoPlatform.Api.Models.RequestModels
         /// <summary>
         /// Id
         /// </summary>
-        [JsonProperty(propertyName: "id")]
+        [JsonProperty("id")]
         [Required]
         public int Id { get; set; }
 
         /// <summary>
         /// Name
         /// </summary>
-        [JsonProperty(propertyName: "name")]
+        [JsonProperty("name")]
         [Required]
         public string Name { get; set; }
     }

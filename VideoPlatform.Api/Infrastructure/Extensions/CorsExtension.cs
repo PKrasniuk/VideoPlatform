@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VideoPlatform.Common.Infrastructure.Constants;
+using VideoPlatform.Common.Infrastructure.Helpers;
 
 namespace VideoPlatform.Api.Infrastructure.Extensions
 {
@@ -17,7 +18,7 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
                         .WithOrigins(
                             configuration["App:CorsOrigins"]
                                 .Split(",", StringSplitOptions.RemoveEmptyEntries)
-                                //.Select(o => o.RemovePostFix("/"))
+                                .Select(o => o.RemoveFromEnd("/"))
                                 .ToArray()
                         )
                         .AllowAnyHeader()

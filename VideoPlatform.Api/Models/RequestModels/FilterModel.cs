@@ -15,7 +15,7 @@ namespace VideoPlatform.Api.Models.RequestModels
         /// <summary>
         /// PageNumber
         /// </summary>
-        [JsonProperty(propertyName: "pageNumber")]
+        [JsonProperty("pageNumber")]
         [Required]
         [DefaultValue(FilterConstants.DefaultPageNumber)]
         public int PageNumber { get; set; } = FilterConstants.DefaultPageNumber;
@@ -23,7 +23,7 @@ namespace VideoPlatform.Api.Models.RequestModels
         /// <summary>
         /// PageSize
         /// </summary>
-        [JsonProperty(propertyName: "pageSize")]
+        [JsonProperty("pageSize")]
         [Required]
         [DefaultValue(FilterConstants.DefaultPageSize)]
         public int PageSize { get; set; } = FilterConstants.DefaultPageSize;
@@ -33,7 +33,7 @@ namespace VideoPlatform.Api.Models.RequestModels
         /// </summary>
         [EnumDataType(typeof(SortOrder))]
         [JsonConverter(typeof(StringEnumConverter))]
-        [JsonProperty(propertyName: "sortOrder")]
+        [JsonProperty("sortOrder")]
         [DefaultValue(SortOrder.Ascending)]
         [Required]
         public SortOrder SortOrder { get; set; } = SortOrder.Ascending;
@@ -41,7 +41,7 @@ namespace VideoPlatform.Api.Models.RequestModels
         /// <summary>
         /// FilterQuery
         /// </summary>
-        [JsonProperty(propertyName: "filterQuery")]
+        [JsonProperty("filterQuery")]
         public string FilterQuery { get; set; }
     }
 }

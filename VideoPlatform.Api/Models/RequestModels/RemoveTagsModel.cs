@@ -12,7 +12,7 @@ namespace VideoPlatform.Api.Models.RequestModels
         /// <summary>
         /// Ids
         /// </summary>
-        [JsonProperty(propertyName: "ids")]
+        [JsonProperty("ids")]
         [Required]
         public IList<int> Ids { get; set; }
     }

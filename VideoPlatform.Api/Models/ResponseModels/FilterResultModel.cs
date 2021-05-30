@@ -12,13 +12,13 @@ namespace VideoPlatform.Api.Models.ResponseModels
         /// <summary>
         /// Items
         /// </summary>
-        [JsonProperty(propertyName: "items")]
+        [JsonProperty("items")]
         public ICollection<TEntity> Items { get; set; }
 
         /// <summary>
         /// TotalCount
         /// </summary>
-        [JsonProperty(propertyName: "totalCount")]
+        [JsonProperty("totalCount")]
         public long TotalCount { get; set; }
     }
 }

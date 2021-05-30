@@ -16,7 +16,7 @@ namespace VideoPlatform.Api.Models.RequestModels
         /// </summary>
         [EnumDataType(typeof(TagSortedProperty))]
         [JsonConverter(typeof(StringEnumConverter))]
-        [JsonProperty(propertyName: "sortedProperty")]
+        [JsonProperty("sortedProperty")]
         [DefaultValue(TagSortedProperty.Id)]
         [Required]
         public TagSortedProperty SortedProperty { get; set; }

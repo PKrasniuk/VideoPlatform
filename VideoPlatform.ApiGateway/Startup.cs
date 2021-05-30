@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using VideoPlatform.ApiGateway.Infrastructure.Extensions;
+using VideoPlatform.Common.Infrastructure.Configurations;
 using VideoPlatform.Common.Infrastructure.Middleware;
 
 namespace VideoPlatform.ApiGateway
@@ -41,6 +42,9 @@ namespace VideoPlatform.ApiGateway
             services.AddRouting(options => options.LowercaseUrls = true);
 
             services.AddOcelotConfiguration(Configuration);
+
+            services.AddHsts(AdditionalConfig.ConfigureHsts);
+            services.AddHttpsRedirection(AdditionalConfig.ConfigureHttpsRedirection);
         }
 
         /// <summary>
@@ -53,17 +57,14 @@ namespace VideoPlatform.ApiGateway
         {
             app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-            if (env.IsDevelopment())
-            {
-            }
-            else
-            {
-                app.UseHsts();
-            }
-
             loggerFactory.AddSerilog();
 
             app.AddSwaggerBuilder(Configuration);
+            if (!env.IsDevelopment())
+            {
+                app.UseHsts();
+                app.UseHttpsRedirection();
+            }
             //app.UseMvc();
         }
     }

@@ -19,7 +19,8 @@ namespace VideoPlatform.Api.Controllers
         /// <param name="subscriptionTopicManager"></param>
         public SubscriptionTopicsController(ISubscriptionTopicManager subscriptionTopicManager)
         {
-            _subscriptionTopicManager = subscriptionTopicManager ?? throw new ArgumentNullException(nameof(subscriptionTopicManager));
+            _subscriptionTopicManager = subscriptionTopicManager ??
+                                        throw new ArgumentNullException(nameof(subscriptionTopicManager));
         }
     }
 }

@@ -12,7 +12,7 @@ namespace VideoPlatform.Api.Models.RequestModels
         /// <summary>
         /// Tags
         /// </summary>
-        [JsonProperty(propertyName: "tags")]
+        [JsonProperty("tags")]
         [Required]
         public IList<AddTagModel> Tags { get; set; }
     }

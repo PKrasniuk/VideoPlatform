@@ -62,12 +62,7 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<PartnerModel>> GetPartnerAsync(int id)
         {
             var partner = await _partnerManager.GetPartnerByIdAsync(id);
-            if (partner != null)
-            {
-                return _mapper.Map<PartnerModel>(partner);
-            }
-
-            return NotFound();
+            return partner != null ? _mapper.Map<PartnerModel>(partner) : NotFound();
         }
 
         /// <summary>
@@ -83,9 +78,7 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<FilterResultModel<PartnerModel>>> GetPartnersSearchAsync([FromForm] FilterPartnerModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             var filter = new Filter<Partner>
             {
@@ -107,17 +100,13 @@ namespace VideoPlatform.Api.Controllers
             };
 
             var result = await _indexingPartnerManager.Find(filter);
-
-            if (result?.Items == null || result.TotalCount == 0)
-            {
-                return NotFound();
-            }
-
-            return new FilterResultModel<PartnerModel>
-            {
-                TotalCount = result.TotalCount,
-                Items = new List<PartnerModel>(result.Items.Select(x => _mapper.Map<PartnerModel>(x)))
-            };
+            return result?.Items == null || result.TotalCount == 0
+                ? NotFound()
+                : new FilterResultModel<PartnerModel>
+                {
+                    TotalCount = result.TotalCount,
+                    Items = new List<PartnerModel>(result.Items.Select(x => _mapper.Map<PartnerModel>(x)))
+                };
         }
 
         /// <summary>
@@ -133,9 +122,7 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<FilterResultModel<PartnerModel>>> GetPartnersByFilterAsync([FromForm] FilterPartnerModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             var filter = new Paging<Partner>
             {
@@ -165,17 +152,13 @@ namespace VideoPlatform.Api.Controllers
             };
 
             var result = await _partnerManager.GetPartnersAsync(filter);
-
-            if (result?.Items == null || result.TotalCount == 0)
-            {
-                return NotFound();
-            }
-
-            return new FilterResultModel<PartnerModel>
-            {
-                TotalCount = result.TotalCount,
-                Items = new List<PartnerModel>(result.Items.Select(x => _mapper.Map<PartnerModel>(x)))
-            };
+            return result?.Items == null || result.TotalCount == 0
+                ? NotFound()
+                : new FilterResultModel<PartnerModel>
+                {
+                    TotalCount = result.TotalCount,
+                    Items = new List<PartnerModel>(result.Items.Select(x => _mapper.Map<PartnerModel>(x)))
+                };
         }
 
         /// <summary>
@@ -189,12 +172,9 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<ICollection<PartnerModel>>> GetCachedPartnersAsync()
         {
             var result = await _partnerManager.GetCachedPartnersAsync(_cacheSettings.PartnersExpirationMinutes);
-            if (result != null && result.Any())
-            {
-                return result.Select(x => _mapper.Map<PartnerModel>(x)).ToList();
-            }
-
-            return NotFound();
+            return result != null && result.Any()
+                ? result.Select(x => _mapper.Map<PartnerModel>(x)).ToList()
+                : NotFound();
         }
 
         /// <summary>
@@ -210,17 +190,10 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<PartnerModel>> AddPartnerAsync([FromForm] AddPartnerModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             var partner = await _partnerManager.SavePartnerAsync(_mapper.Map<Partner>(model));
-            if (partner != null)
-            {
-                return _mapper.Map<PartnerModel>(partner);
-            }
-
-            return UnprocessableEntity();
+            return partner != null ? _mapper.Map<PartnerModel>(partner) : UnprocessableEntity();
         }
 
         /// <summary>
@@ -236,17 +209,10 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<PartnerModel>> UpdatePartnerAsync([FromForm] UpdatePartnerModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             var partner = await _partnerManager.SavePartnerAsync(_mapper.Map<Partner>(model));
-            if (partner != null)
-            {
-                return _mapper.Map<PartnerModel>(partner);
-            }
-
-            return UnprocessableEntity();
+            return partner != null ? _mapper.Map<PartnerModel>(partner) : UnprocessableEntity();
         }
 
         /// <summary>
@@ -262,9 +228,7 @@ namespace VideoPlatform.Api.Controllers
         {
             var item = await _partnerManager.GetPartnerByIdAsync(id);
             if (item == null)
-            {
                 return NotFound();
-            }
 
             await _partnerManager.RemovePartnerAsync(id);
 

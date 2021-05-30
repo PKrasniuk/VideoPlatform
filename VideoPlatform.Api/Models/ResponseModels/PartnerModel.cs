@@ -11,38 +11,38 @@ namespace VideoPlatform.Api.Models.ResponseModels
         /// <summary>
         /// Id
         /// </summary>
-        [JsonProperty(propertyName: "id")]
+        [JsonProperty("id")]
         public int Id { get; set; }
 
         /// <summary>
         /// Name
         /// </summary>
-        [JsonProperty(propertyName: "name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Description
         /// </summary>
-        [JsonProperty(propertyName: "description")]
+        [JsonProperty("description")]
         public string Description { get; set; }
 
         /// <summary>
         /// Logo
         /// </summary>
-        [JsonProperty(propertyName: "logo")]
+        [JsonProperty("logo")]
         public string Logo { get; set; }
 
         /// <summary>
         /// ShowOnPartnerPage
         /// </summary>
-        [JsonProperty(propertyName: "showOnPartnerPage")]
+        [JsonProperty("showOnPartnerPage")]
         [DefaultValue(true)]
         public bool ShowOnPartnerPage { get; set; }
 
         /// <summary>
         /// IsArchived
         /// </summary>
-        [JsonProperty(propertyName: "isArchived")]
+        [JsonProperty("isArchived")]
         [DefaultValue(false)]
         public bool IsArchived { get; set; }
     }

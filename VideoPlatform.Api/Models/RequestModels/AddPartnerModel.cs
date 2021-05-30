@@ -12,28 +12,28 @@ namespace VideoPlatform.Api.Models.RequestModels
         /// <summary>
         /// Name
         /// </summary>
-        [JsonProperty(propertyName: "name")]
+        [JsonProperty("name")]
         [Required]
         public string Name { get; set; }
 
         /// <summary>
         /// Description
         /// </summary>
-        [JsonProperty(propertyName: "description")]
+        [JsonProperty("description")]
         [Required]
         public string Description { get; set; }
 
         /// <summary>
         /// Logo
         /// </summary>
-        [JsonProperty(propertyName: "logo")]
+        [JsonProperty("logo")]
         [Required]
         public string Logo { get; set; }
 
         /// <summary>
         /// ShowOnPartnerPage
         /// </summary>
-        [JsonProperty(propertyName: "showOnPartnerPage")]
+        [JsonProperty("showOnPartnerPage")]
         [Required]
         [DefaultValue(true)]
         public bool ShowOnPartnerPage { get; set; }
@@ -41,7 +41,7 @@ namespace VideoPlatform.Api.Models.RequestModels
         /// <summary>
         /// IsArchived
         /// </summary>
-        [JsonProperty(propertyName: "isArchived")]
+        [JsonProperty("isArchived")]
         [Required]
         [DefaultValue(false)]
         public bool IsArchived { get; set; }
