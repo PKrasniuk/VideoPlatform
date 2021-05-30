@@ -59,13 +59,12 @@ namespace VideoPlatform.ApiGateway
 
             loggerFactory.AddSerilog();
 
-            app.AddSwaggerBuilder(Configuration);
+            app.AddSwaggerBuilder();
             if (!env.IsDevelopment())
             {
                 app.UseHsts();
                 app.UseHttpsRedirection();
             }
-            //app.UseMvc();
         }
     }
 }

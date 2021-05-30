@@ -176,9 +176,7 @@ namespace VideoPlatform.BLL.Managers
         {
             var partnerTypes = await _partnerTypesRepository.GetEntitiesAsync(null, cancellationToken);
             if (partnerTypes != null && partnerTypes.Any())
-            {
                 await _indexingPartnerTypesManager.ReIndex(partnerTypes, cancellationToken);
-            }
         }
     }
 }

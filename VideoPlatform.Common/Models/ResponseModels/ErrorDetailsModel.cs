@@ -10,31 +10,31 @@ namespace VideoPlatform.Common.Models.ResponseModels
         /// <summary>
         /// Type
         /// </summary>
-        [JsonProperty(propertyName: "type")]
+        [JsonProperty("type")]
         public string Type { get; set; }
 
         /// <summary>
         /// Title
         /// </summary>
-        [JsonProperty(propertyName: "title")]
+        [JsonProperty("title")]
         public string Title { get; set; }
 
         /// <summary>
         /// Status
         /// </summary>
-        [JsonProperty(propertyName: "status")]
+        [JsonProperty("status")]
         public int Status { get; set; }
 
         /// <summary>
         /// Errors
         /// </summary>
-        [JsonProperty(propertyName: "errors")]
+        [JsonProperty("errors")]
         public string Errors { get; set; }
 
         /// <summary>
         /// TraceId
         /// </summary>
-        [JsonProperty(propertyName: "traceId")]
+        [JsonProperty("traceId")]
         public string TraceId { get; set; }
 
         /// <summary>

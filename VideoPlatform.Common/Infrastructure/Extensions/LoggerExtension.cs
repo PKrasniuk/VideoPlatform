@@ -11,7 +11,7 @@ namespace VideoPlatform.Common.Infrastructure.Extensions
         {
             Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
 
-            AppDomain.CurrentDomain.ProcessExit += (s, e) => Log.CloseAndFlush();
+            AppDomain.CurrentDomain.ProcessExit += (_, _) => Log.CloseAndFlush();
 
             services.AddSingleton(Log.Logger);
 

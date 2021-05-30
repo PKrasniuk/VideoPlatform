@@ -91,7 +91,7 @@ namespace VideoPlatform.Api
             app.UseRouting();
             app.UseAuthentication();
 
-            app.AddBusinessInfrastructureBuilder(Configuration, userManager, roleManager);
+            app.AddBusinessInfrastructureBuilder(userManager, roleManager);
 
             app.AddSwaggerBuilder(Configuration);
             app.AddHealthChecksBuilder();

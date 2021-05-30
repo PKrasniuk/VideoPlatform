@@ -65,10 +65,8 @@ namespace VideoPlatform.BLL.Managers
         public async Task RemoveTagAsync(int id, CancellationToken cancellationToken)
         {
             var entity = await _tagsRepository.GetEntityByIdAsync(id, cancellationToken);
-            if (entity != null)
-            {
+            if (entity != null) 
                 await _tagsRepository.RemoveEntityAsync(id, cancellationToken);
-            }
         }
 
         public async Task RemoteTagsAsync(IList<int> tagIds, CancellationToken cancellationToken)

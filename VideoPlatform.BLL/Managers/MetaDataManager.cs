@@ -42,9 +42,7 @@ namespace VideoPlatform.BLL.Managers
         public async Task<MetaData> SaveMetaDataAsync(MetaData entity, CancellationToken cancellationToken)
         {
             if (entity.Id == ObjectId.Empty)
-            {
                 return await _metaDataRepository.CreateMetaEntityAsync(entity, cancellationToken);
-            }
 
             var updateStatus = await _metaDataRepository.UpdateMetaEntityAsync(entity, cancellationToken);
 
@@ -64,10 +62,8 @@ namespace VideoPlatform.BLL.Managers
         public async Task RemoveMetaDataAsync(ObjectId id, CancellationToken cancellationToken)
         {
             var entity = await _metaDataRepository.GetMetaEntityByIdAsync(id, cancellationToken);
-            if (entity != null)
-            {
+            if (entity != null) 
                 await _metaDataRepository.RemoveMetaEntityAsync(id, cancellationToken);
-            }
         }
 
         public async Task RemoveMetaDataAsync(IList<ObjectId> ids, CancellationToken cancellationToken)

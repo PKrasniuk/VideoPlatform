@@ -15,7 +15,7 @@ namespace VideoPlatform.BLL.Managers
             //TODO: Need to implementation upload file to file storage
             //TODO: and generate thumbnailPath and logoPath
 
-            await Task.Delay(10);
+            await Task.Delay(10, cancellationToken);
 
             return result;
         }
@@ -27,7 +27,7 @@ namespace VideoPlatform.BLL.Managers
             //TODO: Need to implementation upload file to files storage
             //TODO: by file type
 
-            await Task.Delay(10);
+            await Task.Delay(10, cancellationToken);
 
             return result;
         }
@@ -39,7 +39,7 @@ namespace VideoPlatform.BLL.Managers
             //TODO: Need to implementation remove file from files storage
             //TODO: by file type
 
-            await Task.Delay(10);
+            await Task.Delay(10, cancellationToken);
 
             return result;
         }

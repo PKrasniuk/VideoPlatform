@@ -58,15 +58,11 @@ namespace VideoPlatform.BLL.Managers
         {
             var isCacheExist = await _cacheRepository.ExistObjectAsync(PartnersCacheKey, cancellationToken);
             if (isCacheExist)
-            {
                 return await _cacheRepository.GetObjectAsync<Collection<Partner>>(PartnersCacheKey, cancellationToken);
-            }
 
             var items = await _partnersRepository.GetEntitiesAsync(null, cancellationToken);
             if (items != null && items.Any())
-            {
                 await _cacheRepository.SetObjectAsync(PartnersCacheKey, items, expirationMinutes, cancellationToken);
-            }
 
             return items;
         }
@@ -103,10 +99,8 @@ namespace VideoPlatform.BLL.Managers
         public async Task ReIndexingPartnersAsync(CancellationToken cancellationToken)
         {
             var partners = await _partnersRepository.GetEntitiesAsync(null, cancellationToken);
-            if (partners != null && partners.Any())
-            {
+            if (partners != null && partners.Any()) 
                 await _indexingPartnerManager.ReIndex(partners, cancellationToken);
-            }
         }
     }
 }

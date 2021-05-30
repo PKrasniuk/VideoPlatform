@@ -15,7 +15,7 @@ namespace VideoPlatform.Common.Infrastructure.Helpers
         {
             get
             {
-                var uri = new UriBuilder(Assembly.GetExecutingAssembly().CodeBase);
+                var uri = new UriBuilder(Assembly.GetExecutingAssembly().Location);
                 return Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
             }
         }

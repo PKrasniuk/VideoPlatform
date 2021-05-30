@@ -64,10 +64,8 @@ namespace VideoPlatform.BLL.Managers
         public async Task RemoveInfoDataAsync(Guid id, CancellationToken cancellationToken)
         {
             var entity = await _infoDataRepository.GetEntityByIdAsync(id, cancellationToken);
-            if (entity != null)
-            {
+            if (entity != null) 
                 await _infoDataRepository.RemoveEntityAsync(id, cancellationToken);
-            }
         }
 
         public async Task RemoveInfoDataAsync(IList<Guid> ids, CancellationToken cancellationToken)
