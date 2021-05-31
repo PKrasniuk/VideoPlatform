@@ -1,7 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using VideoPlatform.Common.Infrastructure.Constants;
 
 namespace VideoPlatform.Api.Infrastructure.Filters
 {
@@ -26,16 +29,20 @@ namespace VideoPlatform.Api.Infrastructure.Filters
                 var requiredScopes = controllerScopes.Union(actionScopes).Distinct().ToList();
                 if (requiredScopes.Any())
                 {
-                    //operation.Responses.Add(((int) HttpStatusCode.Unauthorized).ToString(),
-                    //    new Response {Description = HttpStatusCode.Unauthorized.ToString()});
-                    //operation.Responses.Add(((int) HttpStatusCode.Forbidden).ToString(),
-                    //    new Response {Description = HttpStatusCode.Forbidden.ToString()});
-
-                    //operation.Security = new List<IDictionary<string, IEnumerable<string>>>
-                    //{
-                    //    new Dictionary<string, IEnumerable<string>>
-                    //        {{ConfigurationConstants.SecurityDefinitionName, requiredScopes}}
-                    //};
+                    operation.Responses.Add(((int) HttpStatusCode.Unauthorized).ToString(),
+                        new OpenApiResponse {Description = HttpStatusCode.Unauthorized.ToString()});
+                    operation.Responses.Add(((int) HttpStatusCode.Forbidden).ToString(),
+                        new OpenApiResponse {Description = HttpStatusCode.Forbidden.ToString()});
+                    operation.Security = new List<OpenApiSecurityRequirement>
+                    {
+                        new()
+                        {
+                            {
+                                new OpenApiSecurityScheme {Name = ConfigurationConstants.SecurityDefinitionName},
+                                requiredScopes
+                            }
+                        }
+                    };
                 }
             }
         }

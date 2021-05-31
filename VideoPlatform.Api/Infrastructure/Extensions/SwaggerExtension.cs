@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using VideoPlatform.Api.Infrastructure.Filters;
+using VideoPlatform.Common.Infrastructure.Constants;
 using VideoPlatform.Common.Infrastructure.Filters;
 
 namespace VideoPlatform.Api.Infrastructure.Extensions
@@ -24,17 +26,24 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
                     c.SchemaFilter<DefaultValueSchemaFilter>();
                     c.OperationFilter<FormFileSwaggerFilter>();
 
-                    //c.AddSecurityDefinition(ConfigurationConstants.SecurityDefinitionName, new OAuth2Scheme
-                    //{
-                    //    Type = configuration["Security:SwaggerSecurityDefinition:Type"],
-                    //    Flow = configuration["Security:SwaggerSecurityDefinition:Flow"],
-                    //    AuthorizationUrl = configuration["Security:SwaggerSecurityDefinition:AuthorizationUrl"],
-                    //    Scopes = new Dictionary<string, string>
-                    //    {
-                    //        {"readAccess", "Access read operations"},
-                    //        {"writeAccess", "Access write operations"}
-                    //    }
-                    //});
+                    c.AddSecurityDefinition(ConfigurationConstants.SecurityDefinitionName, new OpenApiSecurityScheme
+                    {
+                        Type = SecuritySchemeType.OAuth2,
+                        Flows = new OpenApiOAuthFlows
+                        {
+                            AuthorizationCode = new OpenApiOAuthFlow
+                            {
+                                AuthorizationUrl =
+                                    new Uri(configuration["Security:SwaggerSecurityDefinition:AuthorizationUrl"]),
+                                TokenUrl = new Uri(configuration["Security:SwaggerSecurityDefinition:TokenUrl"]),
+                                Scopes = new Dictionary<string, string>
+                                {
+                                    {"readAccess", "Access read operations"},
+                                    {"writeAccess", "Access write operations"}
+                                }
+                            }
+                        }
+                    });
 
                     c.OperationFilter<SecurityRequirementsOperationFilter>();
                 });

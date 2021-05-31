@@ -1,9 +1,9 @@
-﻿using FluentValidation;
+﻿using System.Linq;
+using FluentValidation;
 using VideoPlatform.Api.Models.RequestModels;
 using VideoPlatform.BLL.Interfaces;
 using VideoPlatform.Common.Infrastructure.Constants;
 using VideoPlatform.Common.Infrastructure.Helpers;
-using VideoPlatform.Domain.Entities;
 
 namespace VideoPlatform.Api.Models.Validators
 {
@@ -15,7 +15,7 @@ namespace VideoPlatform.Api.Models.Validators
 
             RuleFor(x => x.Id).NotNull().NotEmpty().GreaterThan(0);
             RuleFor(x => x.Name).NotNull().NotEmpty().MaximumLength(FieldConstants.HalfFieldLength);
-            RuleFor(x => x.Name).SetValidator(new UniqueValidator<Tag>(tags)).WithMessage("Name must be unique");
+            RuleFor(x => x.Name).Must((_, name) => tags.All(p => p.Name != name)).WithMessage("Name must be unique");
         }
     }
 }
