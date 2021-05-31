@@ -34,10 +34,8 @@ namespace VideoPlatform.MessageService.Managers
                 {
                     var partnerTypes = await repository.GetEntityAsync(x =>
                         x.PartnerId == model.PartnerId && x.Type.Equals(model.Type));
-                    if (partnerTypes != null)
-                    {
+                    if (partnerTypes != null) 
                         await repository.RemoveEntityAsync(partnerTypes.Id);
-                    }
                 });
 
                 return true;

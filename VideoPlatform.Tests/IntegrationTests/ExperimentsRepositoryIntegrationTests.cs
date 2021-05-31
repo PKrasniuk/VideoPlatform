@@ -19,7 +19,7 @@ namespace VideoPlatform.Tests.IntegrationTests
         public void TestInit()
         {
             var options = new DbContextOptionsBuilder<VideoPlatformContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
             var context = new VideoPlatformContext(options);

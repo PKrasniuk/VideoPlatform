@@ -38,7 +38,7 @@ namespace VideoPlatform.MessageService.Infrastructure.Extensions
         {
             services.AddCap(options =>
             {
-                //options.UseDashboard();
+                options.UseDashboard();
                 options.UseSqlServer(configuration["ConnectionStrings:Default"]);
 
                 options.UseRabbitMQ(conf =>
@@ -51,7 +51,7 @@ namespace VideoPlatform.MessageService.Infrastructure.Extensions
                 });
 
                 options.FailedRetryCount = int.Parse(configuration["RabbitMQ:MessengerRetryCount"]);
-                //options.DefaultGroup = configuration["RabbitMQ:MessengerClientName"];
+                options.DefaultGroupName = configuration["RabbitMQ:MessengerClientName"];
             });
 
             return services;

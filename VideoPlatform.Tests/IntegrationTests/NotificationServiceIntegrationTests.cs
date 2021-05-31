@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.AspNetCore.TestHost;
@@ -23,7 +24,7 @@ namespace VideoPlatform.Tests.IntegrationTests
                 })
                 .Configure(app =>
                 {
-                    //app.UseSignalR(routes => routes.MapHub<NotificationHub>("/api/notification"));
+                    app.UseEndpoints(routes => routes.MapHub<NotificationHub>("/api/notification"));
                 });
 
             var server = new TestServer(webHostBuilder);

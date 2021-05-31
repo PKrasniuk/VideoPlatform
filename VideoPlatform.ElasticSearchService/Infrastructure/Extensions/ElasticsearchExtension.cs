@@ -17,12 +17,15 @@ namespace VideoPlatform.ElasticSearchService.Infrastructure.Extensions
                 .DisableDirectStreaming()
                 .PrettyJson()
                 .DefaultMappingFor<Partner>(m => m.IndexName($"{indexName}_{nameof(Partner).ToLowerInvariant()}"))
-                .DefaultMappingFor<PartnerTypes>(m => m.IndexName($"{indexName}_{nameof(PartnerTypes).ToLowerInvariant()}"));
+                .DefaultMappingFor<PartnerTypes>(m =>
+                    m.IndexName($"{indexName}_{nameof(PartnerTypes).ToLowerInvariant()}"));
 
             var client = new ElasticClient(settings);
 
-            client.Indices.Create($"{indexName}_{nameof(Partner).ToLowerInvariant()}", m => m.Map<Partner>(x => x.AutoMap()));//TODO
-            client.Indices.Create($"{indexName}_{nameof(PartnerTypes).ToLowerInvariant()}", m => m.Map<PartnerTypes>(x => x.AutoMap()));
+            client.Indices.Create($"{indexName}_{nameof(Partner).ToLowerInvariant()}",
+                m => m.Map<Partner>(x => x.AutoMap()));
+            client.Indices.Create($"{indexName}_{nameof(PartnerTypes).ToLowerInvariant()}",
+                m => m.Map<PartnerTypes>(x => x.AutoMap()));
 
             services.AddSingleton<IElasticClient>(client);
         }

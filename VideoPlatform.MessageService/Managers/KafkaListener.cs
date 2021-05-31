@@ -11,6 +11,7 @@ namespace VideoPlatform.MessageService.Managers
     public abstract class KafkaListener : BackgroundService
     {
         private readonly IConsumerWrapper _consumerWrapper;
+        private bool _disposed;
 
         protected KafkaListener(IConsumerWrapper consumerWrapper)
         {
@@ -38,10 +39,22 @@ namespace VideoPlatform.MessageService.Managers
             throw new NotImplementedException();
         }
 
-        public override void Dispose()
+        public override void Dispose() => Dispose(true);
+
+        protected virtual void Dispose(bool disposing)
         {
-            base.Dispose();
-            _consumerWrapper.Dispose();
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                base.Dispose();
+                _consumerWrapper.Dispose();
+            }
+
+            _disposed = true;
         }
     }
 }

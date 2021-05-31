@@ -8,25 +8,22 @@ namespace VideoPlatform.MessageService.Infrastructure.Helpers
     {
         public static MessageParameters GetMessageParameters(MessageType type)
         {
-            switch (type)
+            return type switch
             {
-                case MessageType.PartnerTypesAdd:
-                    return new MessageParameters
-                    {
-                        ExchangeName = "videoplatform.exchange",
-                        QueueName = "videoplatform.queue.partnertypesadd",
-                        RouteKey = "videoplatform.queue.*"
-                    };
-                case MessageType.PartnerTypesRemove:
-                    return new MessageParameters
-                    {
-                        ExchangeName = "videoplatform.exchange",
-                        QueueName = "videoplatform.queue.partnertypesremove",
-                        RouteKey = "videoplatform.queue.*"
-                    };
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
+                MessageType.PartnerTypesAdd => new MessageParameters
+                {
+                    ExchangeName = "videoplatform.exchange",
+                    QueueName = "videoplatform.queue.partnertypesadd",
+                    RouteKey = "videoplatform.queue.*"
+                },
+                MessageType.PartnerTypesRemove => new MessageParameters
+                {
+                    ExchangeName = "videoplatform.exchange",
+                    QueueName = "videoplatform.queue.partnertypesremove",
+                    RouteKey = "videoplatform.queue.*"
+                },
+                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            };
         }
     }
 }

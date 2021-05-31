@@ -80,10 +80,8 @@ namespace VideoPlatform.DAL.Repositories
         public async Task<PagingResult<TEntity>> GetPagingEntitiesAsync(Paging<TEntity> pagingModel, CancellationToken cancellationToken)
         {
             var query = DatabaseContext.Set<TEntity>().AsQueryable();
-            if (pagingModel.FilterExpression != null)
-            {
+            if (pagingModel.FilterExpression != null) 
                 query = query.Where(pagingModel.FilterExpression);
-            }
 
             query = pagingModel.SortOrder switch
             {
@@ -149,7 +147,6 @@ namespace VideoPlatform.DAL.Repositories
 
                 var reloadIteration = 0;
                 while (reloadIteration < MaxReloadIteration)
-                {
                     try
                     {
                         await DatabaseContext.SaveChangesAsync(cancellationToken);
@@ -160,7 +157,6 @@ namespace VideoPlatform.DAL.Repositories
                         await ex.Entries.Single().ReloadAsync(cancellationToken);
                         reloadIteration++;
                     }
-                }
             }
 
             scope.Complete();
@@ -175,10 +171,8 @@ namespace VideoPlatform.DAL.Repositories
                 foreach (var entity in entities)
                 {
                     var dbEntity = dbEntities.SingleOrDefault(x => x.Id.Equals(entity.Id));
-                    if (dbEntity != null)
-                    {
+                    if (dbEntity != null) 
                         entity.RowVersion = dbEntity.RowVersion;
-                    }
                 }
 
                 await using var transaction = await DatabaseContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted, cancellationToken);
@@ -202,7 +196,6 @@ namespace VideoPlatform.DAL.Repositories
 
                 var reloadIteration = 0;
                 while (reloadIteration < MaxReloadIteration)
-                {
                     try
                     {
                         await DatabaseContext.SaveChangesAsync(cancellationToken);
@@ -213,7 +206,6 @@ namespace VideoPlatform.DAL.Repositories
                         await ex.Entries.Single().ReloadAsync(cancellationToken);
                         reloadIteration++;
                     }
-                }
             }
 
             scope.Complete();
@@ -225,7 +217,7 @@ namespace VideoPlatform.DAL.Repositories
             if (entities != null)
             {
                 await using var transaction = await DatabaseContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted, cancellationToken);
-                await DatabaseContext.BulkDeleteAsync(entities, config => { }, obj => { }, null, cancellationToken);
+                await DatabaseContext.BulkDeleteAsync(entities, _ => { }, _ => { }, null, cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
             }
         }

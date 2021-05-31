@@ -29,9 +29,7 @@ namespace VideoPlatform.DAL.Repositories
                 MetaDatabase = metaContext.MetaDatabase;
             }
             else
-            {
                 throw new ArgumentNullException(nameof(metaContext));
-            }
         }
 
         protected MetaEntityRepository(MetaContext metaContext, string collectionName)
@@ -43,9 +41,7 @@ namespace VideoPlatform.DAL.Repositories
                 _collection = MetaDatabase.GetCollection<TEntity>(collectionName);
             }
             else
-            {
                 throw new ArgumentNullException(nameof(metaContext));
-            }
         }
 
         public async Task<TEntity> GetMetaEntityByIdAsync(ObjectId id, CancellationToken cancellationToken)
@@ -224,9 +220,7 @@ namespace VideoPlatform.DAL.Repositories
                         operationStatus = operationStatus && result.IsAcknowledged;
                     }
                     else
-                    {
                         operationStatus = false;
-                    }
                 }
 
                 await session.CommitTransactionAsync(cancellationToken);

@@ -23,7 +23,6 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
                     c.SchemaFilter<NullableTypeSchemaFilter>();
                     c.SchemaFilter<DefaultValueSchemaFilter>();
                     c.OperationFilter<FormFileSwaggerFilter>();
-                    //c.DescribeAllEnumsAsStrings();
 
                     //c.AddSecurityDefinition(ConfigurationConstants.SecurityDefinitionName, new OAuth2Scheme
                     //{
@@ -39,6 +38,8 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
 
                     c.OperationFilter<SecurityRequirementsOperationFilter>();
                 });
+
+            services.AddSwaggerGenNewtonsoftSupport();
 
             return services;
         }

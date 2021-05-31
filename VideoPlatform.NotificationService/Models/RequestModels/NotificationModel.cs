@@ -11,14 +11,14 @@ namespace VideoPlatform.NotificationService.Models.RequestModels
         /// <summary>
         /// Key
         /// </summary>
-        [JsonProperty(propertyName: "key")]
+        [JsonProperty("key")]
         [Required]
         public string Key { get; set; }
 
         /// <summary>
         /// Message
         /// </summary>
-        [JsonProperty(propertyName: "message")]
+        [JsonProperty("message")]
         [Required]
         public string Message { get; set; }
     }

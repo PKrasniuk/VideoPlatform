@@ -21,8 +21,9 @@ namespace VideoPlatform.NotificationService.Infrastructure.Extensions
                     c.SchemaFilter<NullableTypeSchemaFilter>();
                     c.SchemaFilter<DefaultValueSchemaFilter>();
                     c.OperationFilter<FormFileSwaggerFilter>();
-                    //c.DescribeAllEnumsAsStrings();
                 });
+
+            services.AddSwaggerGenNewtonsoftSupport();
 
             return services;
         }

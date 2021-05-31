@@ -38,9 +38,7 @@ namespace VideoPlatform.NotificationService.Controllers
         public async Task<ActionResult> NotifyAsync([FromForm] NotificationModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             await _hub.Clients.All.SendAsync(model.Key, model.Message);
 

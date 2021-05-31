@@ -20,10 +20,8 @@ namespace VideoPlatform.MessageService.IntegrationEvents.EventHandling
         {
             var partnerTypes =
                 await _repository.GetEntityAsync(x => x.PartnerId == @event.PartnerId && x.Type.Equals(@event.Type));
-            if (partnerTypes != null)
-            {
+            if (partnerTypes != null) 
                 await _repository.RemoveEntityAsync(partnerTypes.Id);
-            }
         }
     }
 }

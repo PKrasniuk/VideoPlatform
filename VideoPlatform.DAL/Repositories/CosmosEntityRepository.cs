@@ -34,9 +34,7 @@ namespace VideoPlatform.DAL.Repositories
                 _container = containerResponse.Container;
             }
             else
-            {
                 throw new ArgumentNullException(nameof(dbContext));
-            }
         }
         
         public async Task<TEntity> GetEntityByIdAsync(Guid id, CancellationToken cancellationToken = default)
@@ -65,9 +63,7 @@ namespace VideoPlatform.DAL.Repositories
         {
             var query = _container.GetItemLinqQueryable<TEntity>();
             if (pagingModel.FilterExpression != null)
-            {
                 query = (IOrderedQueryable<TEntity>) query.Where(pagingModel.FilterExpression);
-            }
 
             query = pagingModel.SortOrder switch
             {
@@ -89,7 +85,8 @@ namespace VideoPlatform.DAL.Repositories
 
         public async Task<bool> IsEntityExistAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
-            var result = await _container.ReadItemAsync<TEntity>(entity.Id.ToString(), new PartitionKey(entity.Id.ToString()), null, cancellationToken);
+            var result = await _container.ReadItemAsync<TEntity>(entity.Id.ToString(),
+                new PartitionKey(entity.Id.ToString()), null, cancellationToken);
             return result.Resource != null;
         }
 
@@ -104,10 +101,8 @@ namespace VideoPlatform.DAL.Repositories
             if (firstEntity != null)
             {
                 var transactionalBatch = _container.CreateTransactionalBatch(new PartitionKey($"create{firstEntity.GetType()}_{firstEntity.Id}"));
-                foreach (var entity in entities)
-                {
+                foreach (var entity in entities) 
                     transactionalBatch.CreateItem(entity);
-                }
 
                 await transactionalBatch.ExecuteAsync(cancellationToken);
             }
@@ -126,10 +121,8 @@ namespace VideoPlatform.DAL.Repositories
             if (firstEntity != null)
             {
                 var transactionalBatch = _container.CreateTransactionalBatch(new PartitionKey($"update{firstEntity.GetType()}_{firstEntity.Id}"));
-                foreach (var entity in entities)
-                {
+                foreach (var entity in entities) 
                     transactionalBatch.UpsertItem(entity);
-                }
 
                 await transactionalBatch.ExecuteAsync(cancellationToken);
             }
@@ -146,10 +139,8 @@ namespace VideoPlatform.DAL.Repositories
             if (firstId != Guid.Empty)
             {
                 var transactionalBatch = _container.CreateTransactionalBatch(new PartitionKey($"removeEntity_{firstId}"));
-                foreach (var id in ids)
-                {
+                foreach (var id in ids) 
                     transactionalBatch.DeleteItem(id.ToString());
-                }
 
                 await transactionalBatch.ExecuteAsync(cancellationToken);
             }

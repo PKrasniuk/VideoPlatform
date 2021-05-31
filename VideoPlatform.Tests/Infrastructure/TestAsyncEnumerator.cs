@@ -7,15 +7,28 @@ namespace VideoPlatform.Tests.Infrastructure
     internal class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
     {
         private readonly IEnumerator<T> _inner;
+        private bool _disposed;
 
         public TestAsyncEnumerator(IEnumerator<T> inner)
         {
             _inner = inner;
         }
 
-        public void Dispose()
+        public void Dispose() => Dispose(true);
+
+        protected virtual void Dispose(bool disposing)
         {
-            _inner.Dispose();
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                _inner?.Dispose();
+            }
+
+            _disposed = true;
         }
 
         public ValueTask<bool> MoveNextAsync()

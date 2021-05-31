@@ -21,10 +21,8 @@ namespace VideoPlatform.ElasticSearchService.Managers
         public async Task IndexEntityAsync(TEntity entity, CancellationToken cancellationToken)
         {
             var status = await _elasticClient.DocumentExistsAsync<TEntity>(entity, null, cancellationToken);
-            if (!status.Exists)
-            {
+            if (!status.Exists) 
                 await _elasticClient.IndexDocumentAsync(entity, cancellationToken);
-            }
         }
 
         public async Task UpdateEntityAsync(TEntity entity, CancellationToken cancellationToken)
@@ -48,26 +46,24 @@ namespace VideoPlatform.ElasticSearchService.Managers
             {
                 await _elasticClient.DeleteByQueryAsync<TEntity>(q => q.MatchAll(), cancellationToken);
 
-                foreach (var entity in entities)
-                {
+                foreach (var entity in entities) 
                     await _elasticClient.IndexDocumentAsync(entity, cancellationToken);
-                }
             }
         }
 
         public async Task<FilterResult<TEntity>> Find(Filter<TEntity> model, CancellationToken cancellationToken)
         {
             var fullResult = await _elasticClient.SearchAsync<TEntity>(s =>
-                s.Query(q => q.MultiMatch(x => x.Query(model.FilterQuery))), cancellationToken); // TODO
+                s.Query(q => q.MultiMatch(x => x.Query(model.FilterQuery))), cancellationToken);
 
             var sortedProperty = model.SortedProperty.Body.Type.Name.ToLower().Equals("string")
                 ? model.SortedProperty.AppendSuffix("keyword")
                 : model.SortedProperty;
 
             var result = await _elasticClient.SearchAsync<TEntity>(s =>
-                s.From((model.PageNumber - 1) * model.PageSize).Size(model.PageSize) // +
-                    .Query(q => q.MultiMatch(x => x.Query(model.FilterQuery))) // TODO
-                    .Sort(x => model.SortOrder == SortOrder.Ascending // +
+                s.From((model.PageNumber - 1) * model.PageSize).Size(model.PageSize)
+                    .Query(q => q.MultiMatch(x => x.Query(model.FilterQuery)))
+                    .Sort(x => model.SortOrder == SortOrder.Ascending
                         ? x.Ascending(sortedProperty)
                         : x.Descending(sortedProperty)), cancellationToken);
 

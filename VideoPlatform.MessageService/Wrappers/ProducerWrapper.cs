@@ -10,7 +10,7 @@ namespace VideoPlatform.MessageService.Wrappers
     public class ProducerWrapper : IProducerWrapper
     {
         private readonly ProducerConfig _config;
-        private static readonly Random Rand = new Random();
+        private static readonly Random Rand = new();
 
         public ProducerWrapper(ProducerConfig config)
         {
@@ -20,7 +20,7 @@ namespace VideoPlatform.MessageService.Wrappers
         public async Task<DeliveryResult<string, string>> WriteMessage(string message, MessageType messageType, CancellationToken cancellationToken)
         {
             using var producer = new ProducerBuilder<string, string>(_config).Build();
-            return await producer.ProduceAsync(messageType.ToString(), new Message<string, string>()
+            return await producer.ProduceAsync(messageType.ToString(), new Message<string, string>
             {
                 Key = Rand.Next(5).ToString(),
                 Value = message

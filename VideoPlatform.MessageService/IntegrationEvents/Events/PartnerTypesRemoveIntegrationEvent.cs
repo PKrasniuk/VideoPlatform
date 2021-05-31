@@ -5,10 +5,10 @@ namespace VideoPlatform.MessageService.IntegrationEvents.Events
 {
     public class PartnerTypesRemoveIntegrationEvent
     {
-        [JsonProperty(propertyName: "partnerId")]
+        [JsonProperty("partnerId")]
         public int PartnerId { get; }
 
-        [JsonProperty(propertyName: "partnerType")]
+        [JsonProperty("partnerType")]
         public PartnerType Type { get; }
 
         public PartnerTypesRemoveIntegrationEvent(int partnerId, PartnerType type)

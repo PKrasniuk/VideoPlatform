@@ -7,16 +7,14 @@ namespace VideoPlatform.MessageService.Wrappers
     public class ConsumerWrapper : IConsumerWrapper
     {
         private readonly IConsumer<string, string> _consumer;
+        private bool _disposed;
 
         public ConsumerWrapper(ConsumerConfig config)
         {
             _consumer = new ConsumerBuilder<string, string>(config).Build();
         }
 
-        public void Subscribe(MessageType messageType)
-        {
-            _consumer.Subscribe(messageType.ToString());
-        }
+        public void Subscribe(MessageType messageType) => _consumer?.Subscribe(messageType.ToString());
 
         public string ReadMessage()
         {
@@ -24,14 +22,23 @@ namespace VideoPlatform.MessageService.Wrappers
             return consumeResult.Message.Value;
         }
 
-        public void Close()
-        {
-            _consumer.Close();
-        }
+        public void Close() => Dispose(true);
 
-        public void Dispose()
+        public void Dispose() => Dispose(true);
+
+        protected virtual void Dispose(bool disposing)
         {
-            _consumer.Dispose();
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                _consumer?.Dispose();
+            }
+
+            _disposed = true;
         }
     }
 }

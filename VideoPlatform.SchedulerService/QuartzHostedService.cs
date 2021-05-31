@@ -51,10 +51,8 @@ namespace VideoPlatform.SchedulerService
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            if (Scheduler != null)
-            {
+            if (Scheduler != null) 
                 await Scheduler?.Shutdown(cancellationToken);
-            }
         }
 
         private static ITrigger CreateTrigger(JobSchedule schedule)

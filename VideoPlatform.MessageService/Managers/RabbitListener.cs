@@ -25,10 +25,8 @@ namespace VideoPlatform.MessageService.Managers
             if (_options != null)
             {
                 _connection = GetConnection();
-                if (_connection != null)
-                {
+                if (_connection != null) 
                     _channel = _connection.CreateModel();
-                }
             }
         }
 
@@ -86,14 +84,12 @@ namespace VideoPlatform.MessageService.Managers
                     if (message != null)
                     {
                         var result = Process(message.ToString());
-                        if (result)
-                        {
+                        if (result) 
                             _channel.BasicAck(ea.DeliveryTag, false);
-                        }
                     }
                 };
 
-                _channel.BasicConsume(queue: parameters.QueueName, autoAck: false, consumer: consumer);
+                _channel.BasicConsume(parameters.QueueName, false, consumer);
             }
         }
         

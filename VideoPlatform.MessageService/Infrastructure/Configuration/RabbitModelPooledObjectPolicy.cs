@@ -14,10 +14,8 @@ namespace VideoPlatform.MessageService.Infrastructure.Configuration
         public RabbitModelPooledObjectPolicy(IOptions<RabbitOptions> optionsAccess)
         {
             _options = optionsAccess.Value;
-            if (_options != null)
-            {
+            if (_options != null) 
                 _connection = GetConnection();
-            }
         }
 
         private IConnection GetConnection()
@@ -51,9 +49,7 @@ namespace VideoPlatform.MessageService.Infrastructure.Configuration
             if (obj != null)
             {
                 if (obj.IsOpen)
-                {
                     return true;
-                }
 
                 obj.Dispose();
             }

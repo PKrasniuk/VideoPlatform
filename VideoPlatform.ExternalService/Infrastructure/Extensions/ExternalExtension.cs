@@ -29,24 +29,16 @@ namespace VideoPlatform.ExternalService.Infrastructure.Extensions
             {
                 var externalServicesConfigCollection = configuration.GetSection("ExternalServices").Get<ICollection<ExternalServiceInfo>>();
                 if (externalServicesConfigCollection != null && externalServicesConfigCollection.Any())
-                {
                     foreach (var externalServicesConfig in externalServicesConfigCollection)
-                    {
                         services.AddHttpClient(externalServicesConfig.Name, client =>
                         {
                             client.BaseAddress = new Uri(externalServicesConfig.Url);
+
                             if (externalServicesConfig.DefaultRequestHeaders != null &&
                                 externalServicesConfig.DefaultRequestHeaders.Any())
-                            {
                                 foreach (var defaultRequestHeader in externalServicesConfig.DefaultRequestHeaders)
-                                {
-                                    client.DefaultRequestHeaders.Add(defaultRequestHeader.Name,
-                                        defaultRequestHeader.Value);
-                                }
-                            }
+                                    client.DefaultRequestHeaders.Add(defaultRequestHeader.Name, defaultRequestHeader.Value);
                         }).AddPolicyHandler(Policy.WrapAsync(fallbackPolicy, httpWaitAndRetryPolicy));
-                    }
-                }
             }
 
             return services;

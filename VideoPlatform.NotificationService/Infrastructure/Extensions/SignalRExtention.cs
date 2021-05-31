@@ -13,7 +13,7 @@ namespace VideoPlatform.NotificationService.Infrastructure.Extensions
                     hubOptions.EnableDetailedErrors = true;
                     hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(1);
                 })
-                .AddHubOptions<NotificationHub>(options => { });
+                .AddHubOptions<NotificationHub>(_ => { });
 
             return services;
         }

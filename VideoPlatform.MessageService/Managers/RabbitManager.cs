@@ -21,9 +21,7 @@ namespace VideoPlatform.MessageService.Managers
         public void Publish<T>(T message, MessageType type) where T : class
         {
             if (message == null)
-            {
                 return;
-            }
 
             var channel = _objectPool.Get();
             var parameters = MessageTypesResolver.GetMessageParameters(type);
