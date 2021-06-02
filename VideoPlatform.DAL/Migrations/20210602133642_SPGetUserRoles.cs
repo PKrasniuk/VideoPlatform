@@ -2,7 +2,7 @@
 
 namespace VideoPlatform.DAL.Migrations
 {
-    public partial class spGetUserRoles : Migration
+    public partial class SPGetUserRoles : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

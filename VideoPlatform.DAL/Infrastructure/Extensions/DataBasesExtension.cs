@@ -17,7 +17,12 @@ namespace VideoPlatform.DAL.Infrastructure.Extensions
 
             services.AddDbContextPool<VideoPlatformContext>((serviceProvider, optionsBuilder) =>
             {
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString(ConfigurationConstants.ConnectionStringName));
+                optionsBuilder.UseSqlServer(
+                    configuration.GetConnectionString(ConfigurationConstants.ConnectionStringName),
+                    builder =>
+                    {
+                        builder.MigrationsAssembly("VideoPlatform.DAL");
+                    });
                 optionsBuilder.UseInternalServiceProvider(serviceProvider);
                 optionsBuilder.UseLazyLoadingProxies(false);
             });

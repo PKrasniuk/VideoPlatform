@@ -4,64 +4,6 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Migrations\20190909101635_init.cs" />
-    <Compile Remove="Migrations\20190909135810_init.cs" />
-    <Compile Remove="Migrations\20190909143556_init.cs" />
-    <Compile Remove="Migrations\20190909143747_init.cs" />
-    <Compile Remove="Migrations\20190909144125_init.cs" />
-    <Compile Remove="Migrations\20190909144344_init.cs" />
-    <Compile Remove="Migrations\20190909145015_init.cs" />
-    <Compile Remove="Migrations\20190909145515_init.cs" />
-    <Compile Remove="Migrations\20190909145734_init.cs" />
-    <Compile Remove="Migrations\20190909145856_init.cs" />
-    <Compile Remove="Migrations\20190909150003_init.cs" />
-    <Compile Remove="Migrations\20190909150117_init.cs" />
-    <Compile Remove="Migrations\20190909150928_init.cs" />
-    <Compile Remove="Migrations\20190909151954_init.cs" />
-    <Compile Remove="Migrations\20190909152435_init.cs" />
-    <Compile Remove="Migrations\20190909152758_init.cs" />
-    <Compile Remove="Migrations\20190909152959_init.cs" />
-    <Compile Remove="Migrations\20190909153243_init.cs" />
-    <Compile Remove="Migrations\20190909153746_init.cs" />
-    <Compile Remove="Migrations\20190909154215_init.cs" />
-    <Compile Remove="Migrations\20190909155512_init.cs" />
-    <Compile Remove="Migrations\20190909155821_init.cs" />
-    <Compile Remove="Migrations\20190909160117_init.cs" />
-    <Compile Remove="Migrations\20190909160228_init.cs" />
-    <Compile Remove="Migrations\20190909160325_init.cs" />
-    <Compile Remove="Migrations\20190909160457_init.cs" />
-    <Compile Remove="Migrations\20190909160829_init.cs" />
-    <Compile Remove="Migrations\20190909161235_init.cs" />
-    <Compile Remove="Migrations\20190909161839_init.cs" />
-    <Compile Remove="Migrations\20190909165458_init.cs" />
-    <Compile Remove="Migrations\20190909165701_init.cs" />
-    <Compile Remove="Migrations\20190909170329_init.cs" />
-    <Compile Remove="Migrations\20190909170934_init.cs" />
-    <Compile Remove="Migrations\20190909171229_init.cs" />
-    <Compile Remove="Migrations\20190909171354_init.cs" />
-    <Compile Remove="Migrations\20190909172515_init.cs" />
-    <Compile Remove="Migrations\20190909173202_init.cs" />
-    <Compile Remove="Migrations\20190909173837_init.cs" />
-    <Compile Remove="Migrations\20190909175841_init.cs" />
-    <Compile Remove="Migrations\20190909180057_init.cs" />
-    <Compile Remove="Migrations\20190909180518_init.cs" />
-    <Compile Remove="Migrations\20190909180826_init.cs" />
-    <Compile Remove="Migrations\20190909181030_init.cs" />
-    <Compile Remove="Migrations\20190909181246_init.cs" />
-    <Compile Remove="Migrations\20190909181439_init.cs" />
-    <Compile Remove="Migrations\20190909181903_init.cs" />
-    <Compile Remove="Migrations\20190909182023_init.cs" />
-    <Compile Remove="Migrations\20190909192522_init.cs" />
-    <Compile Remove="Migrations\20190909193228_init.cs" />
-    <Compile Remove="Migrations\20190910065348_init.cs" />
-    <Compile Remove="Migrations\20190910110152_init.cs" />
-    <Compile Remove="Migrations\20190910110609_init.cs" />
-    <Compile Remove="Migrations\20190910110656_init.cs" />
-    <Compile Remove="Migrations\20190910110952_init.cs" />
-    <Compile Remove="Migrations\20190910111124_init.cs" />
-    <Compile Remove="Migrations\20190910132120_InitDB.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="EFCore.BulkExtensions" Version="5.2.2" />
@@ -69,6 +11,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.6" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.19.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="5.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />

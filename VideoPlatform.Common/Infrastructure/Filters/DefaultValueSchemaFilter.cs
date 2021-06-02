@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -26,7 +27,7 @@ namespace VideoPlatform.Common.Infrastructure.Filters
                     {
                         if (ToCamelCase(propertyInfo.Name) == key)
                         {
-                            //value.Example = defaultAttribute.Value;
+                            value.Example = (IOpenApiAny) defaultAttribute.Value;
                             break;
                         }
                     }
