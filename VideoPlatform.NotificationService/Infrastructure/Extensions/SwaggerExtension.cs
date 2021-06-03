@@ -19,7 +19,6 @@ namespace VideoPlatform.NotificationService.Infrastructure.Extensions
                         $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
                     c.EnableAnnotations();
                     c.SchemaFilter<NullableTypeSchemaFilter>();
-                    c.SchemaFilter<DefaultValueSchemaFilter>();
                     c.OperationFilter<FormFileSwaggerFilter>();
                 });
 

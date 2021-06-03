@@ -109,7 +109,7 @@ namespace VideoPlatform.DAL.Repositories
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
                 Timeout = TimeSpan.FromMinutes(1)
-            });
+            }, TransactionScopeAsyncFlowOption.Enabled);
             await DatabaseContext.AddAsync(entity, cancellationToken);
             await DatabaseContext.SaveChangesAsync(cancellationToken);
 
@@ -138,7 +138,7 @@ namespace VideoPlatform.DAL.Repositories
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
                 Timeout = TimeSpan.FromMinutes(1)
-            });
+            }, TransactionScopeAsyncFlowOption.Enabled);
             var dbEntity = await DatabaseContext.Set<TEntity>().AsNoTracking().SingleOrDefaultAsync(x => x.Id.Equals(entity.Id), cancellationToken);
             if (dbEntity != null)
             {
@@ -187,7 +187,7 @@ namespace VideoPlatform.DAL.Repositories
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
                 Timeout = TimeSpan.FromMinutes(1)
-            });
+            }, TransactionScopeAsyncFlowOption.Enabled);
 
             var entity = await DatabaseContext.Set<TEntity>().SingleOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
             if (entity != null)
