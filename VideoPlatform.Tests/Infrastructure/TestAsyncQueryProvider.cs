@@ -11,44 +11,24 @@ namespace VideoPlatform.Tests.Infrastructure
     {
         private readonly IQueryProvider _inner;
 
-        internal TestAsyncQueryProvider(IQueryProvider inner)
-        {
-            _inner = inner;
-        }
+        internal TestAsyncQueryProvider(IQueryProvider inner) => _inner = inner;
 
-        public IQueryable CreateQuery(Expression expression)
-        {
-            return new TestAsyncEnumerable<TEntity>(expression);
-        }
+        public IQueryable CreateQuery(Expression expression) => new TestAsyncEnumerable<TEntity>(expression);
 
-        public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
-        {
-            return new TestAsyncEnumerable<TElement>(expression);
-        }
+        public IQueryable<TElement> CreateQuery<TElement>(Expression expression) =>
+            new TestAsyncEnumerable<TElement>(expression);
 
-        public object Execute(Expression expression)
-        {
-            return _inner.Execute(expression);
-        }
+        public object Execute(Expression expression) => _inner.Execute(expression);
 
-        public TResult Execute<TResult>(Expression expression)
-        {
-            return _inner.Execute<TResult>(expression);
-        }
+        public TResult Execute<TResult>(Expression expression) => _inner.Execute<TResult>(expression);
 
-        public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(Expression expression)
-        {
-            return new TestAsyncEnumerable<TResult>(expression);
-        }
+        public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(Expression expression) =>
+            new TestAsyncEnumerable<TResult>(expression);
 
-        public async Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
-        {
-            return await Task.FromResult(Execute<TResult>(expression));
-        }
+        public async Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken) =>
+            await Task.FromResult(Execute<TResult>(expression));
 
-        TResult IAsyncQueryProvider.ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
-        {
-            throw new System.NotImplementedException();
-        }
+        TResult IAsyncQueryProvider.ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken) =>
+            Execute<TResult>(expression);
     }
 }

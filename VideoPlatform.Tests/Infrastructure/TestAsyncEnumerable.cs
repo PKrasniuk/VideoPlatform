@@ -15,15 +15,10 @@ namespace VideoPlatform.Tests.Infrastructure
         {
         }
 
-        public IAsyncEnumerator<T> GetEnumerator()
-        {
-            return new TestAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
-        }
+        public IAsyncEnumerator<T> GetEnumerator() => new TestAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
 
-        //IQueryProvider IQueryable.Provider => new TestAsyncQueryProvider<T>(this);
-        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
-        {
-            throw new System.NotImplementedException();
-        }
+        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default) => GetEnumerator();
+
+        IQueryProvider IQueryable.Provider => new TestAsyncQueryProvider<T>(this);
     }
 }

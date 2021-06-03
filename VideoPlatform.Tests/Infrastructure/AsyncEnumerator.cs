@@ -5,28 +5,28 @@ using System.Threading.Tasks;
 
 namespace VideoPlatform.Tests.Infrastructure
 {
-    internal class AsyncEnumerator<T> : IAsyncEnumerator<T>
+    internal class AsyncEnumerator<T> : IAsyncEnumerator<T>, IDisposable
     {
-        private readonly IEnumerator<T> enumerator;
+        private readonly IEnumerator<T> _enumerator;
 
         public AsyncEnumerator(IEnumerator<T> enumerator) =>
-            this.enumerator = enumerator ?? throw new ArgumentNullException();
+            _enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
 
-        public ValueTask<bool> MoveNextAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public ValueTask<bool> MoveNextAsync() => new(_enumerator.MoveNext());
 
-        public T Current => enumerator.Current;
+        public Task<bool> MoveNext(CancellationToken cancellationToken) => Task.FromResult(_enumerator.MoveNext());
+
+        public T Current => _enumerator.Current;
 
         public void Dispose()
         {
         }
 
-        public Task<bool> MoveNext(CancellationToken cancellationToken) => Task.FromResult(enumerator.MoveNext());
-        public ValueTask DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
-            throw new NotImplementedException();
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
+            Dispose();
         }
     }
 }

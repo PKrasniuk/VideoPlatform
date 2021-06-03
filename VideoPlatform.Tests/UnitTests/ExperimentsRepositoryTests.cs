@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using VideoPlatform.Common.Models.Enums;
@@ -27,7 +29,7 @@ namespace VideoPlatform.Tests.UnitTests
         {
             var dataList = new Collection<Experiment>
             {
-                new Experiment
+                new()
                 {
                     Id = 1,
                     Name = "testExperiment",
@@ -43,8 +45,8 @@ namespace VideoPlatform.Tests.UnitTests
 
             var mockSet = new Mock<DbSet<Experiment>>();
 
-            //mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m..GetEnumerator())
-            //    .Returns(new TestAsyncEnumerator<Experiment>(data.GetEnumerator()));
+            mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetAsyncEnumerator(new CancellationToken()))
+                .Returns(new TestAsyncEnumerator<Experiment>(data.GetEnumerator()));
             mockSet.As<IQueryable<Experiment>>().Setup(m => m.Provider)
                 .Returns(new TestAsyncQueryProvider<Experiment>(data.Provider));
             mockSet.As<IQueryable<Experiment>>().Setup(m => m.Expression).Returns(data.Expression);
@@ -56,14 +58,13 @@ namespace VideoPlatform.Tests.UnitTests
             mockContext.Setup(m => m.Set<Experiment>()).Returns(() => mockSet.Object);
 
             mockContext.Setup(m => m.AddAsync(It.IsAny<Experiment>(), It.IsAny<CancellationToken>()))
-                .Callback((Experiment model, CancellationToken token) =>
+                .Callback((Experiment model, CancellationToken _) =>
                 {
                     dataList.Add(model);
-                    //mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetEnumerator())
-                    //    .Returns(new TestAsyncEnumerator<Experiment>(data.GetEnumerator()));
-                });
-                //.Returns((Experiment model, CancellationToken token) =>
-                //    Task.FromResult((EntityEntry<Experiment>) null));
+                    mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetAsyncEnumerator(new CancellationToken()))
+                        .Returns(new TestAsyncEnumerator<Experiment>(data.GetEnumerator()));
+                })
+                .Returns((Experiment _, CancellationToken _) => new ValueTask<EntityEntry<Experiment>>());
 
             mockContext.Setup(m => m.Update(It.IsAny<Experiment>())).Callback((Experiment model) =>
             {
@@ -87,8 +88,8 @@ namespace VideoPlatform.Tests.UnitTests
                     dataList.Remove(item);
                 }
 
-                //mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetEnumerator())
-                //    .Returns(new TestAsyncEnumerator<Experiment>(data.GetEnumerator()));
+                mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetAsyncEnumerator(new CancellationToken()))
+                    .Returns(new TestAsyncEnumerator<Experiment>(data.GetEnumerator()));
             }).Returns<EntityState>(null);
 
             _experimentsRepository = new ExperimentsRepository(mockContext.Object);

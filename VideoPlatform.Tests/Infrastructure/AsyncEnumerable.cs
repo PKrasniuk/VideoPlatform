@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace VideoPlatform.Tests.Infrastructure
 {
-    internal class AsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
+    internal class AsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>
     {
         public AsyncEnumerable(Expression expression) : base(expression)
         {
@@ -13,9 +13,6 @@ namespace VideoPlatform.Tests.Infrastructure
 
         public IAsyncEnumerator<T> GetEnumerator() => new AsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
 
-        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new())
-        {
-            throw new System.NotImplementedException();
-        }
+        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new()) => GetEnumerator();
     }
 }

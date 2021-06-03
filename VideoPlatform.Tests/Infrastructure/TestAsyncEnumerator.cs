@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace VideoPlatform.Tests.Infrastructure
@@ -19,33 +19,25 @@ namespace VideoPlatform.Tests.Infrastructure
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed)
-            {
                 return;
-            }
 
-            if (disposing)
-            {
+            if (disposing) 
                 _inner?.Dispose();
-            }
 
             _disposed = true;
         }
 
-        public ValueTask<bool> MoveNextAsync()
-        {
-            throw new System.NotImplementedException();
-        }
+        public Task<bool> MoveNext() => Task.FromResult(_inner.MoveNext());
+
+        public ValueTask<bool> MoveNextAsync() => new(_inner.MoveNext());
 
         public T Current => _inner.Current;
 
-        public Task<bool> MoveNext(CancellationToken cancellationToken)
+        public async ValueTask DisposeAsync()
         {
-            return Task.FromResult(_inner.MoveNext());
-        }
+            await Task.Delay(TimeSpan.FromSeconds(1));
 
-        public ValueTask DisposeAsync()
-        {
-            throw new System.NotImplementedException();
+            Dispose();
         }
     }
 }
