@@ -37,8 +37,6 @@ namespace VideoPlatform.ApiGateway
         {
             Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(Configuration).CreateLogger();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
-
             services.AddRouting(options => options.LowercaseUrls = true);
 
             services.AddOcelotConfiguration(Configuration);

@@ -25,10 +25,8 @@ namespace VideoPlatform.NotificationService
         /// Startup constructor
         /// </summary>
         /// <param name="configuration"></param>
-        public Startup(IConfiguration configuration)
-        {
+        public Startup(IConfiguration configuration) =>
             Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        }
 
         /// <summary>
         /// ConfigureServices

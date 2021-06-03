@@ -29,14 +29,10 @@ namespace VideoPlatform.MessageService.Wrappers
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed)
-            {
                 return;
-            }
 
-            if (disposing)
-            {
+            if (disposing) 
                 _consumer?.Dispose();
-            }
 
             _disposed = true;
         }
