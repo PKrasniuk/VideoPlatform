@@ -7,12 +7,11 @@ namespace VideoPlatform.Tests.Infrastructure
     internal class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
     {
         private readonly IEnumerator<T> _inner;
+
         private bool _disposed;
 
-        public TestAsyncEnumerator(IEnumerator<T> inner)
-        {
-            _inner = inner;
-        }
+        public TestAsyncEnumerator(IEnumerator<T> inner) =>
+            _inner = inner ?? throw new ArgumentNullException(nameof(inner));
 
         public void Dispose() => Dispose(true);
 
@@ -33,11 +32,11 @@ namespace VideoPlatform.Tests.Infrastructure
 
         public T Current => _inner.Current;
 
-        public async ValueTask DisposeAsync()
+        public ValueTask DisposeAsync()
         {
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            _inner.Dispose();
 
-            Dispose();
+            return new ValueTask(Task.CompletedTask);
         }
     }
 }
