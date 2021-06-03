@@ -39,17 +39,7 @@ namespace VideoPlatform.Api
         {
             services.AddLoggerConfiguration(Configuration);
 
-            //services.AddMvc(options => options.Filters.Add(new CorsAuthorizationFilterFactory(ConfigurationConstants.DefaultCorsPolicyName)))
-            //    .SetCompatibilityVersion(CompatibilityVersion.Latest)
-            //    .AddFluentValidation()
-            //    .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
-            //    .AddJsonOptions(options => { options.SerializerSettings.Converters.Add(new StringEnumConverter()); });
-
-            services.AddControllers(options =>
-            {
-                options.EnableEndpointRouting = true;
-            });
-            services.AddRouting(options => options.LowercaseUrls = true);
+            services.AddControllersConfiguration();
 
             services.AddResponseConfiguration();
 

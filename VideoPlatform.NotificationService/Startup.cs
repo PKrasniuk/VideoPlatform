@@ -1,8 +1,6 @@
 ﻿using System;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -40,13 +38,7 @@ namespace VideoPlatform.NotificationService
         {
             services.AddLoggerConfiguration(Configuration);
 
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Latest)
-                .AddFluentValidation();
-                //.AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
-                //.AddJsonOptions(options => { options.SerializerSettings.Converters.Add(new StringEnumConverter()); });
-
-            services.AddRouting(options => options.LowercaseUrls = true);
+            services.AddControllersConfiguration();
 
             services.AddEventBus(Configuration);
             services.AddSubscribes();
