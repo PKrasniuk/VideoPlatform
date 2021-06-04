@@ -25,8 +25,8 @@ namespace VideoPlatform.Tests.Infrastructure
         public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(Expression expression) =>
             new TestAsyncEnumerable<TResult>(expression);
 
-        public async Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken) =>
-            await Task.FromResult(Execute<TResult>(expression));
+        public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken) =>
+            _inner.Execute<TResult>(expression);
 
         TResult IAsyncQueryProvider.ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {

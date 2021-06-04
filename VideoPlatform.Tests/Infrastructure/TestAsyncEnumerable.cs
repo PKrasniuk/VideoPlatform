@@ -17,8 +17,7 @@ namespace VideoPlatform.Tests.Infrastructure
 
         public IAsyncEnumerator<T> GetEnumerator() => new TestAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
 
-        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default) =>
-            new TestAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
+        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default) => GetEnumerator();
 
         IQueryProvider IQueryable.Provider => new TestAsyncQueryProvider<T>(this);
     }

@@ -45,23 +45,23 @@ namespace VideoPlatform.Tests.UnitTests
 
             var mockSet = new Mock<DbSet<Experiment>>();
 
-            mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetAsyncEnumerator(new CancellationToken()))
+            mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetAsyncEnumerator(default))
                 .Returns(new TestAsyncEnumerator<Experiment>(data.GetEnumerator()));
             mockSet.As<IQueryable<Experiment>>().Setup(m => m.Provider)
                 .Returns(new TestAsyncQueryProvider<Experiment>(data.Provider));
             mockSet.As<IQueryable<Experiment>>().Setup(m => m.Expression).Returns(data.Expression);
             mockSet.As<IQueryable<Experiment>>().Setup(m => m.ElementType).Returns(data.ElementType);
-            mockSet.As<IQueryable<Experiment>>().Setup(m => m.GetEnumerator()).Returns(() => data.GetEnumerator());
+            mockSet.As<IQueryable<Experiment>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
 
-            var contextOptions = new DbContextOptions<VideoPlatformContext>();
-            var mockContext = new Mock<VideoPlatformContext>(contextOptions);
-            mockContext.Setup(m => m.Set<Experiment>()).Returns(() => mockSet.Object);
+            var mockContext = new Mock<VideoPlatformContext>(new DbContextOptions<VideoPlatformContext>());
+
+            mockContext.Setup(m => m.Set<Experiment>()).Returns(mockSet.Object);
 
             mockContext.Setup(m => m.AddAsync(It.IsAny<Experiment>(), It.IsAny<CancellationToken>()))
                 .Callback((Experiment model, CancellationToken _) =>
                 {
                     dataList.Add(model);
-                    mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetAsyncEnumerator(new CancellationToken()))
+                    mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetAsyncEnumerator(default))
                         .Returns(new TestAsyncEnumerator<Experiment>(data.GetEnumerator()));
                 })
                 .Returns((Experiment _, CancellationToken _) => new ValueTask<EntityEntry<Experiment>>());
@@ -88,7 +88,7 @@ namespace VideoPlatform.Tests.UnitTests
                     dataList.Remove(item);
                 }
 
-                mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetAsyncEnumerator(new CancellationToken()))
+                mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetAsyncEnumerator(default))
                     .Returns(new TestAsyncEnumerator<Experiment>(data.GetEnumerator()));
             }).Returns<EntityState>(null);
 
@@ -147,54 +147,6 @@ namespace VideoPlatform.Tests.UnitTests
             var result = await _experimentsRepository.GetEntitiesAsync(x => x.Name.Equals("test"));
             Assert.IsNotNull(result);
             Assert.AreEqual(0, result.Count);
-        }
-
-        [TestMethod]
-        public async Task GetPagingEntitiesTest1Async()
-        {
-            var result = await _experimentsRepository.GetPagingEntitiesAsync(new Paging<Experiment>
-            {
-                PageNumber = 1,
-                PageSize = 1,
-                SortOrder = SortOrder.Ascending,
-                SortedProperty = x => x.Name,
-                FilterExpression = x => x.Name.Equals("testExperiment")
-            });
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.TotalCount);
-            Assert.AreEqual(1, result.Items.Count);
-        }
-
-        [TestMethod]
-        public async Task GetPagingEntitiesTest2Async()
-        {
-            var result = await _experimentsRepository.GetPagingEntitiesAsync(new Paging<Experiment>
-            {
-                PageNumber = 2,
-                PageSize = 1,
-                SortOrder = SortOrder.Ascending,
-                SortedProperty = x => x.Name,
-                FilterExpression = x => x.Name.Equals("testExperiment")
-            });
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.TotalCount);
-            Assert.AreEqual(0, result.Items.Count);
-        }
-
-        [TestMethod]
-        public async Task GetPagingEntitiesTest3Async()
-        {
-            var result = await _experimentsRepository.GetPagingEntitiesAsync(new Paging<Experiment>
-            {
-                PageNumber = 1,
-                PageSize = 1,
-                SortOrder = SortOrder.Ascending,
-                SortedProperty = x => x.Name,
-                FilterExpression = x => x.Name.Equals("test")
-            });
-            Assert.IsNotNull(result);
-            Assert.AreEqual(0, result.TotalCount);
-            Assert.AreEqual(0, result.Items.Count);
         }
 
         [TestMethod]

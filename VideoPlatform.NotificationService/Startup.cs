@@ -63,6 +63,8 @@ namespace VideoPlatform.NotificationService
 
             loggerFactory.AddSerilog();
 
+            app.UseRouting();
+
             app.AddSwaggerBuilder();
             app.AddCorsBuilder();
             app.AddSignalRBuilder();
