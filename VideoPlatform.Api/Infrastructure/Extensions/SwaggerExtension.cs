@@ -23,7 +23,6 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
                         $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
                     c.EnableAnnotations();
                     c.SchemaFilter<NullableTypeSchemaFilter>();
-                    c.OperationFilter<FormFileSwaggerFilter>();
 
                     c.AddSecurityDefinition(ConfigurationConstants.SecurityDefinitionName, new OpenApiSecurityScheme
                     {

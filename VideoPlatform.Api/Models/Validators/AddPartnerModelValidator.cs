@@ -17,7 +17,6 @@ namespace VideoPlatform.Api.Models.Validators
             RuleFor(x => x.Name).Must((_, name) => partners.All(p => p.Name != name))
                 .WithMessage("Name must be unique");
             RuleFor(x => x.Description).NotNull().NotEmpty().MaximumLength(FieldConstants.HalfFieldLength);
-            RuleFor(x => x.Logo).NotNull().NotEmpty().MaximumLength(FieldConstants.BaseFieldLength);
             RuleFor(x => x.ShowOnPartnerPage).NotNull();
             RuleFor(x => x.IsArchived).NotNull();
         }

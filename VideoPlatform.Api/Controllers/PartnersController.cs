@@ -192,7 +192,9 @@ namespace VideoPlatform.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var partner = await _partnerManager.SavePartnerAsync(_mapper.Map<Partner>(model));
+            var partnerModel = _mapper.Map<Partner>(model);
+            partnerModel.Logo = model.Logo.FileName;
+            var partner = await _partnerManager.SavePartnerAsync(partnerModel);
             return partner != null ? _mapper.Map<PartnerModel>(partner) : UnprocessableEntity();
         }
 
@@ -211,7 +213,9 @@ namespace VideoPlatform.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var partner = await _partnerManager.SavePartnerAsync(_mapper.Map<Partner>(model));
+            var partnerModel = _mapper.Map<Partner>(model);
+            partnerModel.Logo = model.Logo.FileName;
+            var partner = await _partnerManager.SavePartnerAsync(partnerModel);
             return partner != null ? _mapper.Map<PartnerModel>(partner) : UnprocessableEntity();
         }
 

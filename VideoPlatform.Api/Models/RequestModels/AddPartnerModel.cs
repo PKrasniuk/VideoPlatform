@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
 namespace VideoPlatform.Api.Models.RequestModels
@@ -28,7 +29,7 @@ namespace VideoPlatform.Api.Models.RequestModels
         /// </summary>
         [JsonProperty("logo")]
         [Required]
-        public string Logo { get; set; }
+        public IFormFile Logo { get; set; }
 
         /// <summary>
         /// ShowOnPartnerPage
