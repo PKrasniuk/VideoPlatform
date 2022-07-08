@@ -6,7 +6,7 @@ namespace VideoPlatform.BLL.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtension
     {
-        public static IServiceCollection AddManagersCollection(this IServiceCollection services)
+        public static void AddManagersCollection(this IServiceCollection services)
         {
             services.AddTransient<IExperimentManager, ExperimentManager>();
             services.AddTransient<IFavoriteManager, FavoriteManager>();
@@ -33,8 +33,6 @@ namespace VideoPlatform.BLL.Infrastructure.Extensions
 
             services.AddTransient<IRegressionManager, RegressionManager>();
             services.AddTransient<IRankingManager, RankingManager>();
-
-            return services;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace VideoPlatform.ExternalService.Infrastructure.Extensions
 {
     public static class ExternalExtension
     {
-        public static IServiceCollection AddExternalServicesCollection(this IServiceCollection services, IConfiguration configuration)
+        public static void AddExternalServicesCollection(this IServiceCollection services, IConfiguration configuration)
         {
             IAsyncPolicy<HttpResponseMessage> httpWaitAndRetryPolicy = Policy
                 .HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode).WaitAndRetryAsync(
@@ -40,8 +40,6 @@ namespace VideoPlatform.ExternalService.Infrastructure.Extensions
                                     client.DefaultRequestHeaders.Add(defaultRequestHeader.Name, defaultRequestHeader.Value);
                         }).AddPolicyHandler(Policy.WrapAsync(fallbackPolicy, httpWaitAndRetryPolicy));
             }
-
-            return services;
         }
 
         private static Task OnFallbackAsync(DelegateResult<HttpResponseMessage> response, Context context)

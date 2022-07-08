@@ -8,7 +8,7 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
 {
     internal static partial class ConfigurationExtension
     {
-        internal static IServiceCollection AddResponseConfiguration(this IServiceCollection services)
+        internal static void AddResponseConfiguration(this IServiceCollection services)
         {
             services.AddResponseCompression(options =>
             {
@@ -34,8 +34,6 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
             {
                 options.Level = CompressionLevel.Optimal;
             });
-
-            return services;
         }
     }
 }

@@ -11,7 +11,8 @@ namespace VideoPlatform.AuthenticationService.Infrastructure.Extensions
 {
     internal static class ConfigurationExtension
     {
-        public static IServiceCollection AddIdentityServerConfiguration(this IServiceCollection services, IConfiguration configuration)
+        public static void AddIdentityServerConfiguration(this IServiceCollection services,
+            IConfiguration configuration)
         {
             services.AddEntityFrameworkSqlServer();
 
@@ -40,8 +41,6 @@ namespace VideoPlatform.AuthenticationService.Infrastructure.Extensions
                 .AddInMemoryApiResources(clientsConfiguration.GetApiResources())
                 .AddInMemoryClients(clientsConfiguration.GetClients())
                 .AddAspNetIdentity<AppUser>();
-
-            return services;
         }
     }
 }

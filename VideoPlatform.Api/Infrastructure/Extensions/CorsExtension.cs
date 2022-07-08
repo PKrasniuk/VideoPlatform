@@ -9,7 +9,7 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
 {
     internal static partial class ConfigurationExtension
     {
-        internal static IServiceCollection AddCorsConfiguration(this IServiceCollection services, IConfiguration configuration)
+        internal static void AddCorsConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddCors(
                 options => options.AddPolicy(
@@ -25,8 +25,6 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
                         .AllowAnyMethod()
                 )
             );
-
-            return services;
         }
     }
 }

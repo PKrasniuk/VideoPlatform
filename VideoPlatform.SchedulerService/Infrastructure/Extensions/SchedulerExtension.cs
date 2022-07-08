@@ -8,7 +8,7 @@ namespace VideoPlatform.SchedulerService.Infrastructure.Extensions
 {
     public static class SchedulerExtension
     {
-        public static IServiceCollection AddSchedulerConfiguration(this IServiceCollection services)
+        public static void AddSchedulerConfiguration(this IServiceCollection services)
         {
             services.AddSingleton<IJobFactory, JobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
@@ -17,8 +17,6 @@ namespace VideoPlatform.SchedulerService.Infrastructure.Extensions
             services.AddSingleton<BasedJob>();
 
             services.AddSingleton(new JobSchedule(jobType: typeof(BasedJob), cronExpression: "0/10 * * * * ?"));
-
-            return services;
         }
     }
 }

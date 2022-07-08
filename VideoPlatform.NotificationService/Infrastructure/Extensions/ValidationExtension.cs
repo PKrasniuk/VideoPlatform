@@ -15,11 +15,9 @@ namespace VideoPlatform.NotificationService.Infrastructure.Extensions
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddValidatorsCollection(this IServiceCollection services)
+        public static void AddValidatorsCollection(this IServiceCollection services)
         {
             services.AddTransient<IValidator<NotificationModel>, NotificationModelValidator>();
-
-            return services;
         }
     }
 }

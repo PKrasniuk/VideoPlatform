@@ -6,7 +6,7 @@ namespace VideoPlatform.DAL.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtension
     {
-        public static IServiceCollection AddRepositoriesCollection(this IServiceCollection services)
+        public static void AddRepositoriesCollection(this IServiceCollection services)
         {
             services.AddTransient<IExperimentsRepository, ExperimentsRepository>();
             services.AddTransient<IFavoritesRepository, FavoritesRepository>();
@@ -27,7 +27,6 @@ namespace VideoPlatform.DAL.Infrastructure.Extensions
             services.AddTransient<IUserRolesRepository, UserRolesRepository>();
             services.AddTransient<IMetaDataRepository, MetaDataRepository>();
             services.AddTransient<IInfoDataRepository, InfoDataRepository>();
-            return services;
         }
     }
 }

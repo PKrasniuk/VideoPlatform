@@ -62,7 +62,7 @@ namespace VideoPlatform.Api.Controllers
         public async Task<ActionResult<PartnerModel>> GetPartnerAsync(int id)
         {
             var partner = await _partnerManager.GetPartnerByIdAsync(id);
-            return partner != null ? _mapper.Map<PartnerModel>(partner) : NotFound();
+            return partner == null ? NotFound() : _mapper.Map<PartnerModel>(partner);
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace VideoPlatform.Api.Controllers
             var partnerModel = _mapper.Map<Partner>(model);
             partnerModel.Logo = model.Logo.FileName;
             var partner = await _partnerManager.SavePartnerAsync(partnerModel);
-            return partner != null ? _mapper.Map<PartnerModel>(partner) : UnprocessableEntity();
+            return partner == null ? UnprocessableEntity() : _mapper.Map<PartnerModel>(partner);
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <UserSecretsId>d6dc5efb-cd66-471a-89ca-58c77b3aecf0</UserSecretsId>
@@ -13,22 +13,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="App.Metrics" Version="4.2.0" />
+    <PackageReference Include="App.Metrics" Version="4.3.0" />
     <PackageReference Include="App.Metrics.AspNetCore.Health" Version="3.2.0" />
     <PackageReference Include="App.Metrics.AspNetCore.Health.Endpoints" Version="3.2.0" />
-    <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="4.2.0" />
+    <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="4.3.0" />
     <PackageReference Include="App.Metrics.AspNetCore.Reporting" Version="4.0.0" />
-    <PackageReference Include="App.Metrics.AspNetCore.Tracking" Version="4.2.0" />
-    <PackageReference Include="App.Metrics.Formatters.Json" Version="4.2.0" />
-    <PackageReference Include="App.Metrics.Reporting.InfluxDB" Version="4.2.0" />
-    <PackageReference Include="AutoMapper" Version="10.1.1" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="App.Metrics.AspNetCore.Tracking" Version="4.3.0" />
+    <PackageReference Include="App.Metrics.Formatters.Json" Version="4.3.0" />
+    <PackageReference Include="App.Metrics.Reporting.InfluxDB" Version="4.3.0" />
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.6" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.1.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.6" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.3.1" />
   </ItemGroup>
 
   <ItemGroup>

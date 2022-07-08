@@ -41,7 +41,7 @@ namespace VideoPlatform.MessageService.Managers
 
         public override void Dispose() => Dispose(true);
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_disposed)
                 return;

@@ -35,10 +35,12 @@ namespace VideoPlatform.CacheService.Repositories
             }
         }
 
-        public async Task SetObjectAsync<T>(string key, T value, int expirationMinutes = ConfigurationConstants.DefaultExpirationMinutes, CancellationToken cancellationToken = default)
+        public async Task SetObjectAsync<T>(string key, T value,
+            int expirationMinutes = ConfigurationConstants.DefaultExpirationMinutes,
+            CancellationToken cancellationToken = default)
         {
             await _cache.SetStringAsync(key, JsonConvert.SerializeObject(value),
-                new DistributedCacheEntryOptions {AbsoluteExpiration = DateTime.Now.AddMinutes(expirationMinutes)},
+                new DistributedCacheEntryOptions { AbsoluteExpiration = DateTime.Now.AddMinutes(expirationMinutes) },
                 cancellationToken);
         }
 

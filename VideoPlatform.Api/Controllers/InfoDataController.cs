@@ -91,7 +91,7 @@ namespace VideoPlatform.Api.Controllers
                 return BadRequest(ModelState);
 
             var item = await _infoDataManager.SaveInfoDataAsync(_mapper.Map<InfoData>(model));
-            return item != null ? _mapper.Map<InfoDataModel>(item) : UnprocessableEntity();
+            return item == null ? UnprocessableEntity() : _mapper.Map<InfoDataModel>(item);
         }
 
         /// <summary>

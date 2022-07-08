@@ -6,7 +6,7 @@ namespace VideoPlatform.Common.Infrastructure.Extensions
 {
     public static class ControllersExtension
     {
-        public static IServiceCollection AddControllersConfiguration(this IServiceCollection services)
+        public static void AddControllersConfiguration(this IServiceCollection services)
         {
             services.AddControllers(options =>
             {
@@ -14,8 +14,6 @@ namespace VideoPlatform.Common.Infrastructure.Extensions
             }).AddFluentValidation().AddNewtonsoftJson(options =>
                 options.SerializerSettings.Converters.Add(new StringEnumConverter()));
             services.AddRouting(options => options.LowercaseUrls = true);
-
-            return services;
         }
     }
 }

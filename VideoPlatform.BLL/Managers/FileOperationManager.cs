@@ -22,26 +22,22 @@ namespace VideoPlatform.BLL.Managers
 
         public async Task<string> UploadFileByTypeToStorageAsync(IFormFile file, FileTypeEnum fileType, CancellationToken cancellationToken)
         {
-            var result = default(string);
-
             //TODO: Need to implementation upload file to files storage
             //TODO: by file type
 
             await Task.Delay(10, cancellationToken);
 
-            return result;
+            return string.Empty;
         }
 
         public async Task<bool> RemoveFileByTypeFromStorageAsync(string filePath, FileTypeEnum fileType, CancellationToken cancellationToken)
         {
-            var result = true;
-
             //TODO: Need to implementation remove file from files storage
             //TODO: by file type
 
             await Task.Delay(10, cancellationToken);
 
-            return result;
+            return true;
         }
     }
 }

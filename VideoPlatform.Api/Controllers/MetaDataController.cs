@@ -72,7 +72,7 @@ namespace VideoPlatform.Api.Controllers
             _logger.LogInformation("The method GetMetaDataByIdAsync");
 
             var item = await _metaDataManager.GetMetaDataByIdAsync(new ObjectId(id));
-            return item != null ? _mapper.Map<MetaDataModel>(item) : NotFound();
+            return item == null ? NotFound() : _mapper.Map<MetaDataModel>(item);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace VideoPlatform.Api.Controllers
                 return BadRequest(ModelState);
 
             var item = await _metaDataManager.SaveMetaDataAsync(_mapper.Map<MetaData>(model));
-            return item != null ? _mapper.Map<MetaDataModel>(item) : UnprocessableEntity();
+            return item == null ? UnprocessableEntity() : _mapper.Map<MetaDataModel>(item);
         }
 
         /// <summary>

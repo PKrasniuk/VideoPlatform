@@ -26,23 +26,26 @@ namespace VideoPlatform.Api.Infrastructure.Filters
             {
                 var actionScopes = context.MethodInfo?.GetCustomAttributes(true).OfType<AuthorizeAttribute>()
                     .Select(attr => attr.Policy).ToList();
-                var requiredScopes = controllerScopes.Union(actionScopes).Distinct().ToList();
-                if (requiredScopes.Any())
+                if (actionScopes != null)
                 {
-                    operation.Responses.Add(((int) HttpStatusCode.Unauthorized).ToString(),
-                        new OpenApiResponse {Description = HttpStatusCode.Unauthorized.ToString()});
-                    operation.Responses.Add(((int) HttpStatusCode.Forbidden).ToString(),
-                        new OpenApiResponse {Description = HttpStatusCode.Forbidden.ToString()});
-                    operation.Security = new List<OpenApiSecurityRequirement>
+                    var requiredScopes = controllerScopes.Union(actionScopes).Distinct().ToList();
+                    if (requiredScopes.Any())
                     {
-                        new()
+                        operation.Responses.Add(((int) HttpStatusCode.Unauthorized).ToString(),
+                            new OpenApiResponse {Description = HttpStatusCode.Unauthorized.ToString()});
+                        operation.Responses.Add(((int) HttpStatusCode.Forbidden).ToString(),
+                            new OpenApiResponse {Description = HttpStatusCode.Forbidden.ToString()});
+                        operation.Security = new List<OpenApiSecurityRequirement>
                         {
+                            new()
                             {
-                                new OpenApiSecurityScheme {Name = ConfigurationConstants.SecurityDefinitionName},
-                                requiredScopes
+                                {
+                                    new OpenApiSecurityScheme {Name = ConfigurationConstants.SecurityDefinitionName},
+                                    requiredScopes
+                                }
                             }
-                        }
-                    };
+                        };
+                    }
                 }
             }
         }

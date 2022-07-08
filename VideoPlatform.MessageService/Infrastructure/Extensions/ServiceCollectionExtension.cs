@@ -14,7 +14,7 @@ namespace VideoPlatform.MessageService.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtension
     {
-        public static IServiceCollection AddMessenger(this IServiceCollection services, IConfiguration configuration)
+        public static void AddMessenger(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<RabbitOptions>(options =>
             {
@@ -30,11 +30,9 @@ namespace VideoPlatform.MessageService.Infrastructure.Extensions
 
             services.AddSingleton<IRabbitManager, RabbitManager>();
             services.AddHostedService<PartnerTypesRemoveListener>();
-
-            return services;
         }
 
-        public static IServiceCollection AddEventBus(this IServiceCollection services, IConfiguration configuration)
+        public static void AddEventBus(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddCap(options =>
             {
@@ -53,19 +51,15 @@ namespace VideoPlatform.MessageService.Infrastructure.Extensions
                 options.FailedRetryCount = int.Parse(configuration["RabbitMQ:MessengerRetryCount"]);
                 options.DefaultGroupName = configuration["RabbitMQ:MessengerClientName"];
             });
-
-            return services;
         }
 
-        public static IServiceCollection RegisteringEventHandlers(this IServiceCollection services)
+        public static void RegisteringEventHandlers(this IServiceCollection services)
         {
             services.AddTransient<PartnerTypesAddIntegrationEventHandler>();
             services.AddTransient<PartnerTypesRemoveIntegrationEventHandler>();
-
-            return services;
         }
 
-        public static IServiceCollection AddKafkaMessenger(this IServiceCollection services, IConfiguration configuration)
+        public static void AddKafkaMessenger(this IServiceCollection services, IConfiguration configuration)
         {
             var producerConfig = new ProducerConfig();
             configuration.Bind("Kafka:Producer", producerConfig);
@@ -79,8 +73,6 @@ namespace VideoPlatform.MessageService.Infrastructure.Extensions
             services.AddTransient<IConsumerWrapper, ConsumerWrapper>();
 
             services.AddHostedService<PartnerTypesRemoveKafkaListener>();
-
-            return services;
         }
     }
 }

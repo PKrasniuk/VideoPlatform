@@ -4,7 +4,7 @@ namespace VideoPlatform.NotificationService.Infrastructure.Extensions
 {
     internal static partial class BuilderExtension
     {
-        internal static IApplicationBuilder AddCorsBuilder(this IApplicationBuilder app)
+        internal static void AddCorsBuilder(this IApplicationBuilder app)
         {
             app.UseCors(options =>
                 options
@@ -12,8 +12,6 @@ namespace VideoPlatform.NotificationService.Infrastructure.Extensions
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
-
-            return app;
         }
     }
 }

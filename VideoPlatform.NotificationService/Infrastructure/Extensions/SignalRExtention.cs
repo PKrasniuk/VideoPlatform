@@ -6,7 +6,7 @@ namespace VideoPlatform.NotificationService.Infrastructure.Extensions
 {
     internal static partial class ConfigurationExtension
     {
-        internal static IServiceCollection AddSignalRConfiguration(this IServiceCollection services)
+        internal static void AddSignalRConfiguration(this IServiceCollection services)
         {
             services.AddSignalR(hubOptions =>
                 {
@@ -14,8 +14,6 @@ namespace VideoPlatform.NotificationService.Infrastructure.Extensions
                     hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(1);
                 })
                 .AddHubOptions<NotificationHub>(_ => { });
-
-            return services;
         }
     }
 }

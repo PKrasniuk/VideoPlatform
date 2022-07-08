@@ -9,7 +9,8 @@ namespace VideoPlatform.AIL.Infrastructure.Extensions
 {
     public static class MachineLearningExtension
     {
-        public static IServiceCollection AddMachineLearningConfiguration(this IServiceCollection services, IConfiguration configuration)
+        public static void AddMachineLearningConfiguration(this IServiceCollection services,
+            IConfiguration configuration)
         {
             services.AddTransient<IManager<TripModel, TripFarePredictionModel, RegressionMetrics>, TripManager>(
                 _ => new TripManager(configuration["AIConfiguration:Trip:DataSetsPath"],
@@ -19,8 +20,6 @@ namespace VideoPlatform.AIL.Infrastructure.Extensions
                 SearchResultManager>(_ =>
                 new SearchResultManager(configuration["AIConfiguration:SearchResult:DataSetsPath"],
                     configuration["AIConfiguration:SearchResult:ModelsPath"]));
-
-            return services;
         }
     }
 }

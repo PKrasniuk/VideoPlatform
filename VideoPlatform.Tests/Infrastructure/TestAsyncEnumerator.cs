@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace VideoPlatform.Tests.Infrastructure
 {
-    internal class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
+    internal sealed class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
     {
         private readonly IEnumerator<T> _inner;
 
@@ -15,7 +15,7 @@ namespace VideoPlatform.Tests.Infrastructure
 
         public void Dispose() => Dispose(true);
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_disposed)
                 return;

@@ -6,11 +6,9 @@ namespace VideoPlatform.CacheService.Infrastructure.Extensions
 {
     public static partial class ConfigurationExtension
     {
-        public static IServiceCollection AddSettingsConfiguration(this IServiceCollection services, IConfiguration configuration)
+        public static void AddSettingsConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<CacheSettings>(configuration.GetSection("Cache"));
-
-            return services;
         }
     }
 }

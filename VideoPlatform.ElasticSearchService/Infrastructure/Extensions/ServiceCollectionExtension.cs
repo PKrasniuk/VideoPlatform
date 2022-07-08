@@ -6,7 +6,7 @@ namespace VideoPlatform.ElasticSearchService.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtension
     {
-        public static IServiceCollection AddIndexingManagersCollection(this IServiceCollection services)
+        public static void AddIndexingManagersCollection(this IServiceCollection services)
         {
             services.AddTransient<IIndexingExperimentManager, IndexingExperimentManager>();
             services.AddTransient<IIndexingFavoriteManager, IndexingFavoriteManager>();
@@ -24,8 +24,6 @@ namespace VideoPlatform.ElasticSearchService.Infrastructure.Extensions
             services.AddTransient<IIndexingTagManager, IndexingTagManager>();
             services.AddTransient<IIndexingToolManager, IndexingToolManager>();
             services.AddTransient<IIndexingTopicManager, IndexingTopicManager>();
-
-            return services;
         }
     }
 }

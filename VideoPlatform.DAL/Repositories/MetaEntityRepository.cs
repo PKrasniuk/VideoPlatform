@@ -15,9 +15,9 @@ namespace VideoPlatform.DAL.Repositories
 {
     public abstract class MetaEntityRepository<TEntity> : IMetaEntityRepository<TEntity> where TEntity : MetaEntity
     {
-        public MongoClient Client { get; }
+        private MongoClient Client { get; }
 
-        public IMongoDatabase MetaDatabase { get; }
+        private IMongoDatabase MetaDatabase { get; }
 
         private readonly IMongoCollection<TEntity> _collection;
 

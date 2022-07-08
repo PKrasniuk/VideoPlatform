@@ -6,7 +6,7 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
 {
     internal static class MappingProfileExtension
     {
-        internal static IServiceCollection AddMappingConfiguration(this IServiceCollection services)
+        internal static void AddMappingConfiguration(this IServiceCollection services)
         {
             var mappingConfig = new MapperConfiguration(mc =>
             {
@@ -14,8 +14,6 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
             });
 
             services.AddSingleton(mappingConfig.CreateMapper());
-
-            return services;
         }
     }
 }

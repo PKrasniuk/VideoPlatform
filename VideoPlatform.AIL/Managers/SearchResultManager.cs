@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using VideoPlatform.AIL.Models.SearchResultModels;
@@ -142,52 +143,28 @@ namespace VideoPlatform.AIL.Managers
             }
 
             if (!File.Exists(TrainDataSetPath))
-            {
-                using var client = new WebClient();
-                client.DownloadFileAsync(new Uri(trainDataSetUrl), TrainDataSetPath);
-                client.DownloadFileCompleted += DownloadTrainDataSetCompleted;
-            }
-            else
-            {
-                _trainDataSetFileExists = true;
-            }
+                AsyncHelper.RunSync(async () => await DownloadFileAsync(new Uri(trainDataSetUrl), TrainDataSetPath));
+
+            _trainDataSetFileExists = true;
 
             if (!File.Exists(ValidationDataSetPath))
-            {
-                using var client = new WebClient();
-                client.DownloadFileAsync(new Uri(validationDataSetUrl), ValidationDataSetPath);
-                client.DownloadFileCompleted += DownloadValidationDataSetCompleted;
-            }
-            else
-            {
-                _validationDataSetFileExists = true;
-            }
+                AsyncHelper.RunSync(async () =>
+                    await DownloadFileAsync(new Uri(validationDataSetUrl), ValidationDataSetPath));
+
+            _validationDataSetFileExists = true;
 
             if (!File.Exists(TestDataSetPath))
-            {
-                using var client = new WebClient();
-                client.DownloadFileAsync(new Uri(testDataSetUrl), TestDataSetPath);
-                client.DownloadFileCompleted += DownloadTestDataSetCompleted;
-            }
-            else
-            {
-                _testDataSetFileExists = true;
-            }
-        }
+                AsyncHelper.RunSync(async () => await DownloadFileAsync(new Uri(testDataSetUrl), TestDataSetPath));
 
-        private void DownloadTrainDataSetCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
-        {
-            _trainDataSetFileExists = true;
-        }
-
-        private void DownloadValidationDataSetCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
-        {
-            _validationDataSetFileExists = true;
-        }
-
-        private void DownloadTestDataSetCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
-        {
             _testDataSetFileExists = true;
+        }
+
+        private static async Task DownloadFileAsync(Uri uri, string outputPath)
+        {
+            using var client = new HttpClient();
+            var response = await client.GetAsync(uri);
+            await using var fs = new FileStream(outputPath, FileMode.CreateNew);
+            await response.Content.CopyToAsync(fs);
         }
 
         private IEstimator<ITransformer> CreatePipeline(IDataView dataView)

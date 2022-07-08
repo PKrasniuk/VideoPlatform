@@ -15,7 +15,7 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddValidatorsCollection(this IServiceCollection services)
+        public static void AddValidatorsCollection(this IServiceCollection services)
         {
             services.AddTransient<IValidator<AddPartnerTypesModel>, AddPartnerTypesModelValidator>();
             services.AddTransient<IValidator<AddPartnerModel>, AddPartnerModelValidator>();
@@ -34,8 +34,6 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
             services.AddTransient<IValidator<AddInfoDataModel>, AddInfoDataModelValidator>();
             services.AddTransient<IValidator<UpdateInfoDataModel>, UpdateInfoDataModelValidator>();
             services.AddTransient<IValidator<InputTripModel>, InputTripModelValidator>();
-
-            return services;
         }
     }
 }

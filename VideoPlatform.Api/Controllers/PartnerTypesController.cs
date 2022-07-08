@@ -110,7 +110,7 @@ namespace VideoPlatform.Api.Controllers
                 return BadRequest(ModelState);
 
             var partnerTypes = await _partnerTypesManager.AddPartnerTypeAsync(model.PartnerId, model.Type);
-            return partnerTypes != null ? _mapper.Map<PartnerTypesModel>(partnerTypes) : UnprocessableEntity();
+            return partnerTypes == null ? UnprocessableEntity() : _mapper.Map<PartnerTypesModel>(partnerTypes);
         }
 
         /// <summary>

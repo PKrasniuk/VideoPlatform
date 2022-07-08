@@ -6,7 +6,7 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
 {
     internal static partial class ConfigurationExtension
     {
-        public static IServiceCollection AddHealthCheck(this IServiceCollection services, IConfiguration configuration)
+        public static void AddHealthCheck(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHealthChecks()
                 .AddCheck("ElasticSearch", new PingHealthCheck(configuration["ElasticSearch:url"], 100))
@@ -14,8 +14,6 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
                 .AddCheck("Authorization",
                     new PingHealthCheck(configuration["Security:SwaggerSecurityDefinition:AuthorizationUrl"], 100))
                 .AddCheck<SystemMemoryHealthCheck>("Memory");
-
-            return services;
         }
     }
 }

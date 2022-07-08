@@ -18,9 +18,13 @@ namespace VideoPlatform.ApiGateway
         /// <param name="args"></param>
         public static async Task Main(string[] args) => await CreateWebHostBuilder(args).Build().RunAsync();
 
-        private static IHostBuilder CreateWebHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+        private static IHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            var host = Host.CreateDefaultBuilder(args)
                 .InitAppConfiguration(new TransientFaultHandlingOptions())
-                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>().UseSerilog());
+                .ConfigureWebHostDefaults(hostBuilder => hostBuilder.UseStartup<Startup>());
+            host.UseSerilog();
+            return host;
+        }
     }
 }

@@ -7,15 +7,13 @@ namespace VideoPlatform.Common.Infrastructure.Extensions
 {
     public static class LoggerExtension
     {
-        public static IServiceCollection AddLoggerConfiguration(this IServiceCollection services, IConfiguration configuration)
+        public static void AddLoggerConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
 
             AppDomain.CurrentDomain.ProcessExit += (_, _) => Log.CloseAndFlush();
 
             services.AddSingleton(Log.Logger);
-
-            return services;
         }
     }
 }

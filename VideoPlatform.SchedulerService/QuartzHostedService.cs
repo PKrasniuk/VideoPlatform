@@ -30,7 +30,7 @@ namespace VideoPlatform.SchedulerService
             _jobFactory = jobFactory;
         }
 
-        public IScheduler Scheduler { get; set; }
+        private IScheduler Scheduler { get; set; }
         
         public async Task StartAsync(CancellationToken cancellationToken)
         {
@@ -52,7 +52,7 @@ namespace VideoPlatform.SchedulerService
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             if (Scheduler != null) 
-                await Scheduler?.Shutdown(cancellationToken);
+                await Scheduler.Shutdown(cancellationToken);
         }
 
         private static ITrigger CreateTrigger(JobSchedule schedule)

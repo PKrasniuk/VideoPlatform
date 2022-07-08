@@ -13,7 +13,7 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
 {
     internal static partial class ConfigurationExtension
     {
-        internal static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services, IConfiguration configuration)
+        internal static void AddSwaggerConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSwaggerGen(
                 c =>
@@ -47,8 +47,6 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
                 });
 
             services.AddSwaggerGenNewtonsoftSupport();
-
-            return services;
         }
     }
 }

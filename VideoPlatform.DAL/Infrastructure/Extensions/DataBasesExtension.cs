@@ -9,9 +9,9 @@ using VideoPlatform.Domain.Entities;
 
 namespace VideoPlatform.DAL.Infrastructure.Extensions
 {
-    public static partial class ConfigurationExtension
+    public static class ConfigurationExtension
     {
-        public static IServiceCollection AddDatabaseConfiguration(this IServiceCollection services, IConfiguration configuration)
+        public static void AddDatabaseConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddEntityFrameworkSqlServer();
 
@@ -40,8 +40,6 @@ namespace VideoPlatform.DAL.Infrastructure.Extensions
 
             services.AddTransient(serviceProvider =>
                 new CosmosContext(serviceProvider.GetService<IOptions<CosmosDataAccessConfiguration>>()));
-
-            return services;
         }
     }
 }

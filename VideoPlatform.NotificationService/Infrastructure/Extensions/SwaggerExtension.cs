@@ -9,7 +9,7 @@ namespace VideoPlatform.NotificationService.Infrastructure.Extensions
 {
     internal static partial class ConfigurationExtension
     {
-        internal static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
+        internal static void AddSwaggerConfiguration(this IServiceCollection services)
         {
             services.AddSwaggerGen(
                 c =>
@@ -22,8 +22,6 @@ namespace VideoPlatform.NotificationService.Infrastructure.Extensions
                 });
 
             services.AddSwaggerGenNewtonsoftSupport();
-
-            return services;
         }
     }
 }

@@ -13,7 +13,6 @@ using VideoPlatform.DAL.Interfaces;
 using VideoPlatform.Domain.Entities;
 using VideoPlatform.Domain.Enums;
 using VideoPlatform.ElasticSearchService.Interfaces;
-using VideoPlatform.MessageService.IntegrationEvents.Events;
 using VideoPlatform.MessageService.Interfaces;
 using VideoPlatform.MessageService.Models;
 using VideoPlatform.MessageService.Models.Enums;
@@ -59,7 +58,8 @@ namespace VideoPlatform.BLL.Managers
 
         public async Task<ICollection<ListItem<byte>>> GetPartnerTypesByPartnerIdAsync(int partnerId, CancellationToken cancellationToken)
         {
-            var partnerTypes = await _partnerTypesRepository.GetEntitiesAsync(x => x.PartnerId == partnerId, cancellationToken);
+            var partnerTypes =
+                await _partnerTypesRepository.GetEntitiesAsync(x => x.PartnerId == partnerId, cancellationToken);
             if (partnerTypes != null && partnerTypes.Any())
             {
                 var result = new Collection<ListItem<byte>>();
@@ -86,7 +86,8 @@ namespace VideoPlatform.BLL.Managers
 
         public async Task<ICollection<PartnerTypes>> GetPartnerTypesCollectionAsync(int partnerId, CancellationToken cancellationToken)
         {
-            var partnerTypes = await _partnerTypesRepository.GetEntitiesAsync(x => x.PartnerId == partnerId, cancellationToken);
+            var partnerTypes =
+                await _partnerTypesRepository.GetEntitiesAsync(x => x.PartnerId == partnerId, cancellationToken);
             return partnerTypes != null && partnerTypes.Any() ? partnerTypes : null;
         }
 

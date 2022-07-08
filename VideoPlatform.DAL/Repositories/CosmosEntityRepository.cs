@@ -39,7 +39,8 @@ namespace VideoPlatform.DAL.Repositories
         
         public async Task<TEntity> GetEntityByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var result = await _container.ReadItemAsync<TEntity>(id.ToString(), new PartitionKey(id.ToString()), null, cancellationToken);
+            var result = await _container.ReadItemAsync<TEntity>(id.ToString(), new PartitionKey(id.ToString()), null,
+                cancellationToken);
             return result.Resource;
         }
 

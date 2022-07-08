@@ -6,11 +6,9 @@ namespace VideoPlatform.NotificationService.Infrastructure.Extensions
 {
     internal static partial class ConfigurationExtension
     {
-        internal static IServiceCollection AddSubscribes(this IServiceCollection services)
+        internal static void AddSubscribes(this IServiceCollection services)
         {
             services.AddTransient<ISubscriberManager, SubscriberManager>();
-
-            return services;
         }
     }
 }

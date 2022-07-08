@@ -10,7 +10,9 @@ namespace VideoPlatform.CacheService.Interfaces
 
         Task<bool> ExistObjectAsync(string key, CancellationToken cancellationToken = default);
 
-        Task SetObjectAsync<T>(string key, T value, int expirationMinutes = ConfigurationConstants.DefaultExpirationMinutes, CancellationToken cancellationToken = default);
+        Task SetObjectAsync<T>(string key, T value,
+            int expirationMinutes = ConfigurationConstants.DefaultExpirationMinutes,
+            CancellationToken cancellationToken = default);
 
         Task<T> GetObjectAsync<T>(string key, CancellationToken cancellationToken = default);
 

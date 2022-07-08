@@ -16,7 +16,7 @@ namespace VideoPlatform.DAL.Repositories
 {
     public abstract class EntityRepository<TEntity, TKey> : IEntityRepository<TEntity, TKey> where TEntity : Entity<TKey>
     {
-        public DbContext DatabaseContext { get; }
+        private DbContext DatabaseContext { get; }
 
         private const int MaxReloadIteration = 10;
 
@@ -53,7 +53,7 @@ namespace VideoPlatform.DAL.Repositories
 
         public Task DisposeTransaction()
         {
-            DatabaseContext.Database.CurrentTransaction.Dispose();
+            DatabaseContext.Database.CurrentTransaction?.Dispose();
 
             return Task.CompletedTask;
         }
@@ -166,19 +166,17 @@ namespace VideoPlatform.DAL.Repositories
         {
             var ids = entities.Select(x => x.Id).ToList();
             var dbEntities = await DatabaseContext.Set<TEntity>().AsNoTracking().Where(x => ids.Contains(x.Id)).ToListAsync(cancellationToken);
-            if (dbEntities != null)
-            {
-                foreach (var entity in entities)
-                {
-                    var dbEntity = dbEntities.SingleOrDefault(x => x.Id.Equals(entity.Id));
-                    if (dbEntity != null) 
-                        entity.RowVersion = dbEntity.RowVersion;
-                }
 
-                await using var transaction = await DatabaseContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted, cancellationToken);
-                await DatabaseContext.BulkUpdateAsync(entities, _ => { }, _ => { }, null, cancellationToken);
-                await transaction.CommitAsync(cancellationToken);
+            foreach (var entity in entities)
+            {
+                var dbEntity = dbEntities.SingleOrDefault(x => x.Id.Equals(entity.Id));
+                if (dbEntity != null)
+                    entity.RowVersion = dbEntity.RowVersion;
             }
+
+            await using var transaction = await DatabaseContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted, cancellationToken);
+            await DatabaseContext.BulkUpdateAsync(entities, _ => { }, _ => { }, null, cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
         }
 
         public async Task RemoveEntityAsync(TKey id, CancellationToken cancellationToken)
@@ -214,12 +212,10 @@ namespace VideoPlatform.DAL.Repositories
         public async Task RemoveEntitiesAsync(IList<TKey> ids, CancellationToken cancellationToken)
         {
             var entities = await DatabaseContext.Set<TEntity>().Where(x => ids.Contains(x.Id)).ToListAsync(cancellationToken);
-            if (entities != null)
-            {
-                await using var transaction = await DatabaseContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted, cancellationToken);
-                await DatabaseContext.BulkDeleteAsync(entities, _ => { }, _ => { }, null, cancellationToken);
-                await transaction.CommitAsync(cancellationToken);
-            }
+
+            await using var transaction = await DatabaseContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted, cancellationToken);
+            await DatabaseContext.BulkDeleteAsync(entities, _ => { }, _ => { }, null, cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
         }
     }
 }

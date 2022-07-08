@@ -24,13 +24,13 @@ namespace VideoPlatform.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class AIController : ControllerBase
+    public class AiController : ControllerBase
     {
         private readonly IRegressionManager _regressionManager;
         private readonly IRankingManager _rankingManager;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        private readonly ILogger<AIController> _logger;
+        private readonly ILogger<AiController> _logger;
 
         /// <summary>
         /// AIController constructor
@@ -40,8 +40,8 @@ namespace VideoPlatform.Api.Controllers
         /// <param name="mapper"></param>
         /// <param name="configuration"></param>
         /// <param name="logger"></param>
-        public AIController(IRegressionManager regressionManager, IRankingManager rankingManager, IMapper mapper,
-            IConfiguration configuration, ILogger<AIController> logger)
+        public AiController(IRegressionManager regressionManager, IRankingManager rankingManager, IMapper mapper,
+            IConfiguration configuration, ILogger<AiController> logger)
         {
             _regressionManager = regressionManager ?? throw new ArgumentNullException(nameof(regressionManager));
             _rankingManager = rankingManager ?? throw new ArgumentNullException(nameof(rankingManager));

@@ -14,7 +14,8 @@ namespace VideoPlatform.BLL.Infrastructure.Extensions
 {
     public static class BusinessInfrastructureExtension
     {
-        public static IServiceCollection AddBusinessInfrastructureConfiguration(this IServiceCollection services, IConfiguration configuration)
+        public static void AddBusinessInfrastructureConfiguration(this IServiceCollection services,
+            IConfiguration configuration)
         {
             services.AddOptions();
 
@@ -42,8 +43,6 @@ namespace VideoPlatform.BLL.Infrastructure.Extensions
 
             services.AddExternalServicesCollection(configuration);
             services.AddMachineLearningConfiguration(configuration);
-
-            return services;
         }
     }
 }

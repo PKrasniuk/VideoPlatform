@@ -9,7 +9,7 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
 {
     internal static partial class ConfigurationExtension
     {
-        public static IServiceCollection AddAppMetrics(this IServiceCollection services, IConfiguration configuration)
+        public static void AddAppMetrics(this IServiceCollection services, IConfiguration configuration)
         {
             var metrics = AppMetrics.CreateDefaultBuilder().Configuration.Configure(options =>
                 {
@@ -36,8 +36,6 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
                 .AddMetricsReportingHostedService()
                 .AddMetricsEndpoints()
                 .AddHealth();
-
-            return services;
         }
     }
 }

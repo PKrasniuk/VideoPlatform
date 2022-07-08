@@ -6,7 +6,7 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
 {
     internal static partial class BuilderExtension
     {
-        internal static IApplicationBuilder AddSwaggerBuilder(this IApplicationBuilder app, IConfiguration configuration)
+        internal static void AddSwaggerBuilder(this IApplicationBuilder app, IConfiguration configuration)
         {
             app.UseSwagger();
 
@@ -20,8 +20,6 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
                 options.OAuthScopeSeparator(configuration["Security:ApiClient:ScopeSeparator"]);
                 options.OAuthUseBasicAuthenticationWithAccessCodeGrant();
             });
-
-            return app;
         }
     }
 }

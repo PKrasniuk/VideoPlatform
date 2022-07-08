@@ -4,7 +4,7 @@ using VideoPlatform.MessageService.Models.Enums;
 
 namespace VideoPlatform.MessageService.Wrappers
 {
-    public class ConsumerWrapper : IConsumerWrapper
+    public sealed class ConsumerWrapper : IConsumerWrapper
     {
         private readonly IConsumer<string, string> _consumer;
         private bool _disposed;
@@ -26,7 +26,7 @@ namespace VideoPlatform.MessageService.Wrappers
 
         public void Dispose() => Dispose(true);
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_disposed)
                 return;

@@ -10,7 +10,7 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
 {
     internal static partial class BuilderExtension
     {
-        internal static IApplicationBuilder AddHealthChecksBuilder(this IApplicationBuilder app)
+        internal static void AddHealthChecksBuilder(this IApplicationBuilder app)
         {
             app.UseHealthChecks("/hc", new HealthCheckOptions
             {
@@ -35,8 +35,6 @@ namespace VideoPlatform.Api.Infrastructure.Extensions
                     await c.Response.WriteAsync(JsonConvert.SerializeObject(result));
                 }
             });
-
-            return app;
         }
     }
 }

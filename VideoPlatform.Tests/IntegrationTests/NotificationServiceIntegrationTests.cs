@@ -18,27 +18,24 @@ namespace VideoPlatform.Tests.IntegrationTests
 
         public NotificationServiceIntegrationTests()
         {
-            if (_connection == null)
-            {
-                var webHostBuilder = new WebHostBuilder()
-                    .ConfigureServices(services =>
+            var webHostBuilder = new WebHostBuilder()
+                .ConfigureServices(services =>
+                {
+                    services.AddSignalR(hubOptions =>
                     {
-                        services.AddSignalR(hubOptions =>
-                        {
-                            hubOptions.EnableDetailedErrors = true;
-                            hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(1);
-                        }).AddHubOptions<NotificationHub>(_ => { });
-                    })
-                    .Configure(app =>
-                    {
-                        app.UseRouting();
-                        app.UseEndpoints(routes => routes.MapHub<NotificationHub>("/api/notification"));
-                    });
+                        hubOptions.EnableDetailedErrors = true;
+                        hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(1);
+                    }).AddHubOptions<NotificationHub>(_ => { });
+                })
+                .Configure(app =>
+                {
+                    app.UseRouting();
+                    app.UseEndpoints(routes => routes.MapHub<NotificationHub>("/api/notification"));
+                });
 
-                var server = new TestServer(webHostBuilder);
-                _connection = new HubConnectionBuilder().WithUrl("http://localhost/api/notification",
-                    o => o.HttpMessageHandlerFactory = _ => server.CreateHandler()).WithAutomaticReconnect().Build();
-            }
+            var server = new TestServer(webHostBuilder);
+            _connection = new HubConnectionBuilder().WithUrl("http://localhost/api/notification",
+                o => o.HttpMessageHandlerFactory = _ => server.CreateHandler()).WithAutomaticReconnect().Build();
         }
 
         [Fact]

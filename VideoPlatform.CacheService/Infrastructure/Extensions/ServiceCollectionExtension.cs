@@ -6,11 +6,9 @@ namespace VideoPlatform.CacheService.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtension
     {
-        public static IServiceCollection AddCacheService(this IServiceCollection services)
+        public static void AddCacheService(this IServiceCollection services)
         {
             services.AddTransient<ICacheRepository, CacheRepository>();
-
-            return services;
         }
     }
 }

@@ -4,7 +4,7 @@ namespace VideoPlatform.NotificationService.Infrastructure.Extensions
 {
     internal static partial class BuilderExtension
     {
-        internal static IApplicationBuilder AddSwaggerBuilder(this IApplicationBuilder app)
+        internal static void AddSwaggerBuilder(this IApplicationBuilder app)
         {
             app.UseSwagger();
 
@@ -12,8 +12,6 @@ namespace VideoPlatform.NotificationService.Infrastructure.Extensions
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "Video Platform Notification V1");
             });
-
-            return app;
         }
     }
 }

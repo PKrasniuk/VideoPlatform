@@ -6,7 +6,7 @@ using VideoPlatform.Domain.Entities;
 
 namespace VideoPlatform.ElasticSearchService.Infrastructure.Extensions
 {
-    public static partial class ConfigurationExtension
+    public static class ConfigurationExtension
     {
         public static void AddElasticSearchConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
