@@ -1,24 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <UserSecretsId>d5ab8c0b-ca7a-4e31-810a-c0b6916c550d</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>obj\Debug\net5.0\VideoPlatform.NotificationService.xml</DocumentationFile>
+    <DocumentationFile>obj\Debug\net7.0\VideoPlatform.NotificationService.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetCore.CAP" Version="6.1.0" />
-    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="6.1.0" />
-    <PackageReference Include="DotNetCore.CAP.SqlServer" Version="6.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="6.0.6" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.3.1" />
+    <PackageReference Include="DotNetCore.CAP" Version="7.1.4" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="7.1.4" />
+    <PackageReference Include="DotNetCore.CAP.SqlServer" Version="7.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="7.0.8" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
