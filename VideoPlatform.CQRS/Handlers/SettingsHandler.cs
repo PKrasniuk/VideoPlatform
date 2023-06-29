@@ -8,49 +8,48 @@ using VideoPlatform.CQRS.Queries;
 using VideoPlatform.DAL.Interfaces;
 using VideoPlatform.Domain.Entities;
 
-namespace VideoPlatform.CQRS.Handlers
+namespace VideoPlatform.CQRS.Handlers;
+
+public class SettingsHandler :
+    IRequestHandler<GetSettingQuery, Setting>,
+    IRequestHandler<SettingsQuery, IEnumerable<Setting>>,
+    IRequestHandler<CreateSettingCommand, Setting>,
+    IRequestHandler<UpdateSettingCommand>,
+    IRequestHandler<RemoveSettingCommand>
 {
-    public class SettingsHandler : 
-        IRequestHandler<GetSettingQuery, Setting>,
-        IRequestHandler<SettingsQuery, IEnumerable<Setting>>,
-        IRequestHandler<CreateSettingCommand, Setting>,
-        IRequestHandler<UpdateSettingCommand>,
-        IRequestHandler<RemoveSettingCommand>
+    private readonly ISettingsRepository _settingsRepository;
+
+    public SettingsHandler(ISettingsRepository settingsRepository)
     {
-        private readonly ISettingsRepository _settingsRepository;
+        _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+    }
 
-        public SettingsHandler(ISettingsRepository settingsRepository)
-        {
-            _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
-        }
+    public async Task<Setting> Handle(CreateSettingCommand request, CancellationToken cancellationToken)
+    {
+        return await _settingsRepository.CreateEntityAsync(request.Entity, cancellationToken);
+    }
 
-        public async Task<Setting> Handle(GetSettingQuery request, CancellationToken cancellationToken)
-        {
-            return await _settingsRepository.GetEntityByIdAsync(request.SettingId, cancellationToken);
-        }
+    public async Task<Setting> Handle(GetSettingQuery request, CancellationToken cancellationToken)
+    {
+        return await _settingsRepository.GetEntityByIdAsync(request.SettingId, cancellationToken);
+    }
 
-        public async Task<IEnumerable<Setting>> Handle(SettingsQuery request, CancellationToken cancellationToken)
-        {
-            return await _settingsRepository.GetEntitiesAsync(null, cancellationToken);
-        }
+    public async Task<Unit> Handle(RemoveSettingCommand request, CancellationToken cancellationToken)
+    {
+        await _settingsRepository.RemoveEntityAsync(request.Id, cancellationToken);
 
-        public async Task<Setting> Handle(CreateSettingCommand request, CancellationToken cancellationToken)
-        {
-            return await _settingsRepository.CreateEntityAsync(request.Entity, cancellationToken);
-        }
+        return Unit.Value;
+    }
 
-        public async Task<Unit> Handle(UpdateSettingCommand request, CancellationToken cancellationToken)
-        {
-            await _settingsRepository.UpdateEntityAsync(request.Entity, cancellationToken);
+    public async Task<IEnumerable<Setting>> Handle(SettingsQuery request, CancellationToken cancellationToken)
+    {
+        return await _settingsRepository.GetEntitiesAsync(null, cancellationToken);
+    }
 
-            return Unit.Value;
-        }
+    public async Task<Unit> Handle(UpdateSettingCommand request, CancellationToken cancellationToken)
+    {
+        await _settingsRepository.UpdateEntityAsync(request.Entity, cancellationToken);
 
-        public async Task<Unit> Handle(RemoveSettingCommand request, CancellationToken cancellationToken)
-        {
-            await _settingsRepository.RemoveEntityAsync(request.Id, cancellationToken);
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

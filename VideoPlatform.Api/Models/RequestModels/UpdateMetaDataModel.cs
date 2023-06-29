@@ -4,49 +4,48 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VideoPlatform.Domain.Enums;
 
-namespace VideoPlatform.Api.Models.RequestModels
+namespace VideoPlatform.Api.Models.RequestModels;
+
+/// <summary>
+///     UpdateMetaDataModel
+/// </summary>
+public class UpdateMetaDataModel
 {
     /// <summary>
-    /// UpdateMetaDataModel
+    ///     Id
     /// </summary>
-    public class UpdateMetaDataModel
-    {
-        /// <summary>
-        /// Id
-        /// </summary>
-        [JsonProperty("id")]
-        [Required]
-        public string Id { get; set; }
+    [JsonProperty("id")]
+    [Required]
+    public string Id { get; set; }
 
-        /// <summary>
-        /// Name
-        /// </summary>
-        [JsonProperty("name")]
-        [Required]
-        public string Name { get; set; }
+    /// <summary>
+    ///     Name
+    /// </summary>
+    [JsonProperty("name")]
+    [Required]
+    public string Name { get; set; }
 
-        /// <summary>
-        /// Description
-        /// </summary>
-        [JsonProperty("description")]
-        [Required]
-        public string Description { get; set; }
+    /// <summary>
+    ///     Description
+    /// </summary>
+    [JsonProperty("description")]
+    [Required]
+    public string Description { get; set; }
 
-        /// <summary>
-        /// Value
-        /// </summary>
-        [JsonProperty("value")]
-        [Required]
-        public string Value { get; set; }
+    /// <summary>
+    ///     Value
+    /// </summary>
+    [JsonProperty("value")]
+    [Required]
+    public string Value { get; set; }
 
-        /// <summary>
-        /// Type
-        /// </summary>
-        [JsonProperty("type")]
-        [EnumDataType(typeof(MetaType))]
-        [JsonConverter(typeof(StringEnumConverter))]
-        [DefaultValue(MetaType.Document)]
-        [Required]
-        public MetaType Type { get; set; } = MetaType.Document;
-    }
+    /// <summary>
+    ///     Type
+    /// </summary>
+    [JsonProperty("type")]
+    [EnumDataType(typeof(MetaType))]
+    [JsonConverter(typeof(StringEnumConverter))]
+    [DefaultValue(MetaType.Document)]
+    [Required]
+    public MetaType Type { get; set; } = MetaType.Document;
 }

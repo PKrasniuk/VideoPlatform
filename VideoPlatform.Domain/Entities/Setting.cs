@@ -1,9 +1,8 @@
-﻿namespace VideoPlatform.Domain.Entities
-{
-    public class Setting : Entity<short>
-    {
-        public string Name { get; set; }
+﻿namespace VideoPlatform.Domain.Entities;
 
-        public string Value { get; set; }
-    }
+public class Setting : Entity<short>
+{
+    public string Name { get; set; }
+
+    public string Value { get; set; }
 }

@@ -5,26 +5,26 @@ using Confluent.Kafka;
 using VideoPlatform.MessageService.Interfaces;
 using VideoPlatform.MessageService.Models.Enums;
 
-namespace VideoPlatform.MessageService.Wrappers
+namespace VideoPlatform.MessageService.Wrappers;
+
+public class ProducerWrapper : IProducerWrapper
 {
-    public class ProducerWrapper : IProducerWrapper
+    private static readonly Random Rand = new();
+    private readonly ProducerConfig _config;
+
+    public ProducerWrapper(ProducerConfig config)
     {
-        private readonly ProducerConfig _config;
-        private static readonly Random Rand = new();
+        _config = config;
+    }
 
-        public ProducerWrapper(ProducerConfig config)
+    public async Task<DeliveryResult<string, string>> WriteMessage(string message, MessageType messageType,
+        CancellationToken cancellationToken)
+    {
+        using var producer = new ProducerBuilder<string, string>(_config).Build();
+        return await producer.ProduceAsync(messageType.ToString(), new Message<string, string>
         {
-            _config = config;
-        }
-
-        public async Task<DeliveryResult<string, string>> WriteMessage(string message, MessageType messageType, CancellationToken cancellationToken)
-        {
-            using var producer = new ProducerBuilder<string, string>(_config).Build();
-            return await producer.ProduceAsync(messageType.ToString(), new Message<string, string>
-            {
-                Key = Rand.Next(5).ToString(),
-                Value = message
-            }, cancellationToken);
-        }
+            Key = Rand.Next(5).ToString(),
+            Value = message
+        }, cancellationToken);
     }
 }

@@ -17,8 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VideoPlatform.BLL\VideoPlatform.BLL.csproj" />
     <ProjectReference Include="..\VideoPlatform.Common\VideoPlatform.Common.csproj" />
+    <ProjectReference Include="..\VideoPlatform.DAL\VideoPlatform.DAL.csproj" />
+    <ProjectReference Include="..\VideoPlatform.Domain\VideoPlatform.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

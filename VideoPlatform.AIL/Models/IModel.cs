@@ -1,6 +1,5 @@
-﻿namespace VideoPlatform.AIL.Models
+﻿namespace VideoPlatform.AIL.Models;
+
+public interface IModel
 {
-    public interface IModel
-    {
-    }
 }

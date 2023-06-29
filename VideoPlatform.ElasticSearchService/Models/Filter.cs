@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Linq.Expressions;
+using Nest;
 using VideoPlatform.Common.Infrastructure.Constants;
 
-namespace VideoPlatform.ElasticSearchService.Models
+namespace VideoPlatform.ElasticSearchService.Models;
+
+public class Filter<TEntity>
 {
-    public class Filter<TEntity>
-    {
-        public int PageNumber { get; set; } = FilterConstants.DefaultPageNumber;
+    public int PageNumber { get; set; } = FilterConstants.DefaultPageNumber;
 
-        public int PageSize { get; set; } = FilterConstants.DefaultPageSize;
+    public int PageSize { get; set; } = FilterConstants.DefaultPageSize;
 
-        public Expression<Func<TEntity, dynamic>> SortedProperty { get; set; }
+    public Expression<Func<TEntity, dynamic>> SortedProperty { get; set; }
 
-        public Nest.SortOrder SortOrder { get; set; } = Nest.SortOrder.Ascending;
+    public SortOrder SortOrder { get; set; } = SortOrder.Ascending;
 
-        public string FilterQuery { get; set; }
-    }
+    public string FilterQuery { get; set; }
 }

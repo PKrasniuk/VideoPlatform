@@ -1,13 +1,12 @@
-﻿namespace VideoPlatform.Domain.Entities
+﻿namespace VideoPlatform.Domain.Entities;
+
+public class SubscriptionTopic : Entity<int>
 {
-    public class SubscriptionTopic : Entity<int>
-    {
-        public int TopicId { get; set; }
+    public int TopicId { get; set; }
 
-        public int UserId { get; set; }
-        
-        public virtual Topic Topic { get; set; }
+    public int UserId { get; set; }
 
-        public virtual AppUser User { get; set; }
-    }
+    public virtual Topic Topic { get; set; }
+
+    public virtual AppUser User { get; set; }
 }

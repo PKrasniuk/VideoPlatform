@@ -10,58 +10,57 @@ using VideoPlatform.ApiGateway.Infrastructure.Extensions;
 using VideoPlatform.Common.Infrastructure.Configurations;
 using VideoPlatform.Common.Infrastructure.Middleware;
 
-namespace VideoPlatform.ApiGateway
+namespace VideoPlatform.ApiGateway;
+
+/// <summary>
+///     Startup
+/// </summary>
+public class Startup
 {
     /// <summary>
-    /// Startup
+    ///     Startup constructor
     /// </summary>
-    public class Startup
+    /// <param name="configuration"></param>
+    public Startup(IConfiguration configuration)
     {
-        private IConfiguration Configuration { get; }
+        Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+    }
 
-        /// <summary>
-        /// Startup constructor
-        /// </summary>
-        /// <param name="configuration"></param>
-        public Startup(IConfiguration configuration)
+    private IConfiguration Configuration { get; }
+
+    /// <summary>
+    ///     ConfigureServices
+    /// </summary>
+    /// <param name="services"></param>
+    public void ConfigureServices(IServiceCollection services)
+    {
+        Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(Configuration).CreateLogger();
+
+        services.AddRouting(options => options.LowercaseUrls = true);
+
+        services.AddOcelotConfiguration(Configuration);
+
+        services.AddHsts(AdditionalConfig.ConfigureHsts);
+        services.AddHttpsRedirection(AdditionalConfig.ConfigureHttpsRedirection);
+    }
+
+    /// <summary>
+    ///     Configure
+    /// </summary>
+    /// <param name="app"></param>
+    /// <param name="env"></param>
+    /// <param name="loggerFactory"></param>
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+    {
+        app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+        loggerFactory.AddSerilog();
+
+        app.AddSwaggerBuilder();
+        if (!env.IsDevelopment())
         {
-            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        }
-
-        /// <summary>
-        /// ConfigureServices
-        /// </summary>
-        /// <param name="services"></param>
-        public void ConfigureServices(IServiceCollection services)
-        {
-            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(Configuration).CreateLogger();
-
-            services.AddRouting(options => options.LowercaseUrls = true);
-
-            services.AddOcelotConfiguration(Configuration);
-
-            services.AddHsts(AdditionalConfig.ConfigureHsts);
-            services.AddHttpsRedirection(AdditionalConfig.ConfigureHttpsRedirection);
-        }
-
-        /// <summary>
-        /// Configure
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="env"></param>
-        /// <param name="loggerFactory"></param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
-        {
-            app.UseMiddleware<ExceptionHandlerMiddleware>();
-
-            loggerFactory.AddSerilog();
-
-            app.AddSwaggerBuilder();
-            if (!env.IsDevelopment())
-            {
-                app.UseHsts();
-                app.UseHttpsRedirection();
-            }
+            app.UseHsts();
+            app.UseHttpsRedirection();
         }
     }
 }

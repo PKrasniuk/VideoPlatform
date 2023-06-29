@@ -2,18 +2,17 @@
 using MongoDB.Driver;
 using VideoPlatform.DAL.Infrastructure.Configurations;
 
-namespace VideoPlatform.DAL
+namespace VideoPlatform.DAL;
+
+public class MetaContext
 {
-    public class MetaContext
+    public MetaContext(IOptions<MetaDataAccessConfiguration> options)
     {
-        public MetaContext(IOptions<MetaDataAccessConfiguration> options)
-        {
-            Client = new MongoClient(options.Value.ConnectionString);
-            MetaDatabase = Client.GetDatabase(options.Value.DatabaseName);
-        }
-
-        public MongoClient Client { get; }
-
-        public IMongoDatabase MetaDatabase { get; }
+        Client = new MongoClient(options.Value.ConnectionString);
+        MetaDatabase = Client.GetDatabase(options.Value.DatabaseName);
     }
+
+    public MongoClient Client { get; }
+
+    public IMongoDatabase MetaDatabase { get; }
 }

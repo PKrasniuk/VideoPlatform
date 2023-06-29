@@ -2,15 +2,14 @@
 using VideoPlatform.BLL.Interfaces;
 using VideoPlatform.DAL.Interfaces;
 
-namespace VideoPlatform.BLL.Managers
-{
-    public class TopicManager : ITopicManager
-    {
-        private readonly ITopicsRepository _topicsRepository;
+namespace VideoPlatform.BLL.Managers;
 
-        public TopicManager(ITopicsRepository topicsRepository)
-        {
-            _topicsRepository = topicsRepository ?? throw new ArgumentNullException(nameof(topicsRepository));
-        }
+public class TopicManager : ITopicManager
+{
+    private readonly ITopicsRepository _topicsRepository;
+
+    public TopicManager(ITopicsRepository topicsRepository)
+    {
+        _topicsRepository = topicsRepository ?? throw new ArgumentNullException(nameof(topicsRepository));
     }
 }

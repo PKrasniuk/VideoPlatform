@@ -1,8 +1,7 @@
 ﻿using VideoPlatform.Domain.Entities;
 
-namespace VideoPlatform.DAL.Interfaces
+namespace VideoPlatform.DAL.Interfaces;
+
+public interface IMediaTagsRepository : IEntityRepository<MediaTag, int>
 {
-    public interface IMediaTagsRepository : IEntityRepository<MediaTag, int>
-    {
-    }
 }

@@ -5,26 +5,28 @@ using Serilog;
 using VideoPlatform.Common.Infrastructure.Extensions;
 using VideoPlatform.Common.Models.ConfigurationModels;
 
-namespace VideoPlatform.ApiGateway
+namespace VideoPlatform.ApiGateway;
+
+/// <summary>
+///     Program
+/// </summary>
+public static class Program
 {
     /// <summary>
-    /// Program
+    ///     Main
     /// </summary>
-    public static class Program
+    /// <param name="args"></param>
+    public static async Task Main(string[] args)
     {
-        /// <summary>
-        /// Main
-        /// </summary>
-        /// <param name="args"></param>
-        public static async Task Main(string[] args) => await CreateWebHostBuilder(args).Build().RunAsync();
+        await CreateWebHostBuilder(args).Build().RunAsync();
+    }
 
-        private static IHostBuilder CreateWebHostBuilder(string[] args)
-        {
-            var host = Host.CreateDefaultBuilder(args)
-                .InitAppConfiguration(new TransientFaultHandlingOptions())
-                .ConfigureWebHostDefaults(hostBuilder => hostBuilder.UseStartup<Startup>());
-            host.UseSerilog();
-            return host;
-        }
+    private static IHostBuilder CreateWebHostBuilder(string[] args)
+    {
+        var host = Host.CreateDefaultBuilder(args)
+            .InitAppConfiguration(new TransientFaultHandlingOptions())
+            .ConfigureWebHostDefaults(hostBuilder => hostBuilder.UseStartup<Startup>());
+        host.UseSerilog();
+        return host;
     }
 }

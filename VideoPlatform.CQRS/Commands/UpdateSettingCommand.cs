@@ -1,19 +1,18 @@
 ﻿using MediatR;
 using VideoPlatform.Domain.Entities;
 
-namespace VideoPlatform.CQRS.Commands
+namespace VideoPlatform.CQRS.Commands;
+
+public class UpdateSettingCommand : BaseCommand<Unit>
 {
-    public class UpdateSettingCommand : BaseCommand<Unit>
+    public UpdateSettingCommand()
     {
-        public UpdateSettingCommand()
-        {
-        }
-
-        public UpdateSettingCommand(Setting entity)
-        {
-            Entity = entity;
-        }
-
-        public Setting Entity { get; }
     }
+
+    public UpdateSettingCommand(Setting entity)
+    {
+        Entity = entity;
+    }
+
+    public Setting Entity { get; }
 }

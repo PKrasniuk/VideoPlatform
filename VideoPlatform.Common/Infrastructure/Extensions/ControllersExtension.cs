@@ -2,18 +2,15 @@
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Converters;
 
-namespace VideoPlatform.Common.Infrastructure.Extensions
+namespace VideoPlatform.Common.Infrastructure.Extensions;
+
+public static class ControllersExtension
 {
-    public static class ControllersExtension
+    public static void AddControllersConfiguration(this IServiceCollection services)
     {
-        public static void AddControllersConfiguration(this IServiceCollection services)
-        {
-            services.AddControllers(options =>
-            {
-                options.EnableEndpointRouting = true;
-            }).AddFluentValidation().AddNewtonsoftJson(options =>
+        services.AddControllers(options => { options.EnableEndpointRouting = true; }).AddFluentValidation()
+            .AddNewtonsoftJson(options =>
                 options.SerializerSettings.Converters.Add(new StringEnumConverter()));
-            services.AddRouting(options => options.LowercaseUrls = true);
-        }
+        services.AddRouting(options => options.LowercaseUrls = true);
     }
 }

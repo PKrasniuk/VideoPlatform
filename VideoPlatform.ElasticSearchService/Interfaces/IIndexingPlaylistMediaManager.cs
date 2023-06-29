@@ -1,8 +1,7 @@
 ﻿using VideoPlatform.Domain.Entities;
 
-namespace VideoPlatform.ElasticSearchService.Interfaces
+namespace VideoPlatform.ElasticSearchService.Interfaces;
+
+public interface IIndexingPlaylistMediaManager : IIndexingEntityManager<PlaylistMedia>
 {
-    public interface IIndexingPlaylistMediaManager : IIndexingEntityManager<PlaylistMedia>
-    {
-    }
 }

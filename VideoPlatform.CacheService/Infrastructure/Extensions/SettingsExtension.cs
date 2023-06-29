@@ -2,13 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using VideoPlatform.CacheService.Infrastructure.Settings;
 
-namespace VideoPlatform.CacheService.Infrastructure.Extensions
+namespace VideoPlatform.CacheService.Infrastructure.Extensions;
+
+public static partial class ConfigurationExtension
 {
-    public static partial class ConfigurationExtension
+    public static void AddSettingsConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
-        public static void AddSettingsConfiguration(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.Configure<CacheSettings>(configuration.GetSection("Cache"));
-        }
+        services.Configure<CacheSettings>(configuration.GetSection("Cache"));
     }
 }

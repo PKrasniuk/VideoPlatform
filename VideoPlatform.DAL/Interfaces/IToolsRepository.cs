@@ -1,8 +1,7 @@
 ﻿using VideoPlatform.Domain.Entities;
 
-namespace VideoPlatform.DAL.Interfaces
+namespace VideoPlatform.DAL.Interfaces;
+
+public interface IToolsRepository : IEntityRepository<Tool, int>
 {
-    public interface IToolsRepository : IEntityRepository<Tool, int>
-    {
-    }
 }

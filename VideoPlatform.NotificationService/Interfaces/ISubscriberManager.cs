@@ -1,17 +1,16 @@
 ﻿using System.Threading.Tasks;
 using VideoPlatform.MessageService.IntegrationEvents.Events;
 
-namespace VideoPlatform.NotificationService.Interfaces
+namespace VideoPlatform.NotificationService.Interfaces;
+
+/// <summary>
+///     ISubscriberService
+/// </summary>
+public interface ISubscriberManager
 {
     /// <summary>
-    /// ISubscriberService
+    ///     CheckPartnerTypesRemoveMessage
     /// </summary>
-    public interface ISubscriberManager
-    {
-        /// <summary>
-        /// CheckPartnerTypesRemoveMessage
-        /// </summary>
-        /// <param name="event"></param>
-        Task CheckPartnerTypesRemoveMessageAsync(PartnerTypesRemoveIntegrationEvent @event);
-    }
+    /// <param name="event"></param>
+    Task CheckPartnerTypesRemoveMessageAsync(PartnerTypesRemoveIntegrationEvent @event);
 }

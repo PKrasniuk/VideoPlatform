@@ -1,10 +1,8 @@
 ﻿using Microsoft.ML.Data;
 
-namespace VideoPlatform.AIL.Models.TripModels
+namespace VideoPlatform.AIL.Models.TripModels;
+
+public class TripFarePredictionModel : IModel
 {
-    public class TripFarePredictionModel : IModel
-    {
-        [ColumnName("Score")]
-        public float FareAmount;
-    }
+    [ColumnName("Score")] public float FareAmount;
 }

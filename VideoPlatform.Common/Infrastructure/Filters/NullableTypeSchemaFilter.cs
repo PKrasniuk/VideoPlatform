@@ -4,32 +4,28 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace VideoPlatform.Common.Infrastructure.Filters
+namespace VideoPlatform.Common.Infrastructure.Filters;
+
+/// <summary>
+///     NullableTypeSchemaFilter
+/// </summary>
+public class NullableTypeSchemaFilter : ISchemaFilter
 {
-    /// <summary>
-    /// NullableTypeSchemaFilter
-    /// </summary>
-    public class NullableTypeSchemaFilter : ISchemaFilter
+    public void Apply(OpenApiSchema model, SchemaFilterContext context)
     {
-        public void Apply(OpenApiSchema model, SchemaFilterContext context)
+        if (model.Properties == null) return;
+
+        foreach (var (key, value) in model.Properties)
         {
-            if (model.Properties == null)
-            {
-                return;
-            }
+            var property = context.Type.GetProperty(key,
+                BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
 
-            foreach (var (key, value) in model.Properties)
+            if (property != null && property.PropertyType.IsGenericType &&
+                property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
-                var property = context.Type.GetProperty(key,
-                    BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-
-                if (property != null && property.PropertyType.IsGenericType &&
-                    property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
-                {
-                    value.Default = null;
-                    value.Extensions.Add("nullable", new OpenApiBoolean(true));
-                    value.Example = null;
-                }
+                value.Default = null;
+                value.Extensions.Add("nullable", new OpenApiBoolean(true));
+                value.Example = null;
             }
         }
     }

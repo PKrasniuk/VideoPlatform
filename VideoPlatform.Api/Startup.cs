@@ -15,86 +15,87 @@ using VideoPlatform.Common.Infrastructure.Extensions;
 using VideoPlatform.Common.Infrastructure.Middleware;
 using VideoPlatform.Domain.Entities;
 
-namespace VideoPlatform.Api
+namespace VideoPlatform.Api;
+
+/// <summary>
+///     Startup
+/// </summary>
+public class Startup
 {
     /// <summary>
-    /// Startup
+    ///     Startup constructor
     /// </summary>
-    public class Startup
+    /// <param name="configuration"></param>
+    public Startup(IConfiguration configuration)
     {
-        private IConfiguration Configuration { get; }
+        Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+    }
 
-        /// <summary>
-        /// Startup constructor
-        /// </summary>
-        /// <param name="configuration"></param>
-        public Startup(IConfiguration configuration) =>
-            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+    private IConfiguration Configuration { get; }
 
-        /// <summary>
-        /// ConfigureServices
-        /// </summary>
-        /// <param name="services"></param>
-        public void ConfigureServices(IServiceCollection services)
+    /// <summary>
+    ///     ConfigureServices
+    /// </summary>
+    /// <param name="services"></param>
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddLoggerConfiguration(Configuration);
+
+        services.AddControllersConfiguration();
+
+        services.AddResponseConfiguration();
+
+        services.AddBusinessInfrastructureConfiguration(Configuration);
+
+        services.AddCorsConfiguration(Configuration);
+
+        services.AddValidatorsCollection();
+        services.AddMappingConfiguration();
+
+        services.AddSecurityConfiguration(Configuration);
+        services.AddSwaggerConfiguration(Configuration);
+
+        services.AddHealthCheck(Configuration);
+        services.AddAppMetrics(Configuration);
+
+        services.AddHsts(AdditionalConfig.ConfigureHsts);
+        services.AddHttpsRedirection(AdditionalConfig.ConfigureHttpsRedirection);
+    }
+
+    /// <summary>
+    ///     Configure
+    /// </summary>
+    /// <param name="app"></param>
+    /// <param name="env"></param>
+    /// <param name="loggerFactory"></param>
+    /// <param name="userManager"></param>
+    /// <param name="roleManager"></param>
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory,
+        UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
+    {
+        app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+        loggerFactory.AddSerilog();
+
+        app.UseCors(ConfigurationConstants.DefaultCorsPolicyName);
+        app.UseResponseCompression();
+        app.UseStaticFiles();
+        app.UseRouting();
+        app.UseAuthentication();
+
+        app.AddBusinessInfrastructureBuilder(userManager, roleManager);
+
+        app.AddSwaggerBuilder(Configuration);
+        app.AddHealthChecksBuilder();
+        if (!env.IsDevelopment())
         {
-            services.AddLoggerConfiguration(Configuration);
-
-            services.AddControllersConfiguration();
-
-            services.AddResponseConfiguration();
-
-            services.AddBusinessInfrastructureConfiguration(Configuration);
-
-            services.AddCorsConfiguration(Configuration);
-
-            services.AddValidatorsCollection();
-            services.AddMappingConfiguration();
-
-            services.AddSecurityConfiguration(Configuration);
-            services.AddSwaggerConfiguration(Configuration);
-
-            services.AddHealthCheck(Configuration);
-            services.AddAppMetrics(Configuration);
-
-            services.AddHsts(AdditionalConfig.ConfigureHsts);
-            services.AddHttpsRedirection(AdditionalConfig.ConfigureHttpsRedirection);
+            app.UseHsts();
+            app.UseHttpsRedirection();
         }
 
-        /// <summary>
-        /// Configure
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="env"></param>
-        /// <param name="loggerFactory"></param>
-        /// <param name="userManager"></param>
-        /// <param name="roleManager"></param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory,
-            UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
-        {
-            app.UseMiddleware<ExceptionHandlerMiddleware>();
-
-            loggerFactory.AddSerilog();
-
-            app.UseCors(ConfigurationConstants.DefaultCorsPolicyName);
-            app.UseResponseCompression();
-            app.UseStaticFiles();
-            app.UseRouting();
-            app.UseAuthentication();
-
-            app.AddBusinessInfrastructureBuilder(userManager, roleManager);
-
-            app.AddSwaggerBuilder(Configuration);
-            app.AddHealthChecksBuilder();
-            if (!env.IsDevelopment())
-            {
-                app.UseHsts();
-                app.UseHttpsRedirection();
-            }
-
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-            app.UseMetricsAllMiddleware();
-            app.UseMetricsAllEndpoints();
-            app.UseHealthAllEndpoints();
-        }
+        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        app.UseMetricsAllMiddleware();
+        app.UseMetricsAllEndpoints();
+        app.UseHealthAllEndpoints();
     }
 }

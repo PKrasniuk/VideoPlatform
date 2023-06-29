@@ -1,5 +1,6 @@
-﻿@{
-    var version = typeof(IdentityServer4.Hosting.IdentityServerMiddleware).Assembly.GetName().Version?.ToString();
+﻿@using IdentityServer4.Hosting
+@{
+    var version = typeof(IdentityServerMiddleware).Assembly.GetName().Version?.ToString();
 }
 
 <div class="welcome-page">

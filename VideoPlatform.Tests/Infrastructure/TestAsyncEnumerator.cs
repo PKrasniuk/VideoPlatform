@@ -2,41 +2,51 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace VideoPlatform.Tests.Infrastructure
+namespace VideoPlatform.Tests.Infrastructure;
+
+internal sealed class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
 {
-    internal sealed class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
+    private readonly IEnumerator<T> _inner;
+
+    private bool _disposed;
+
+    public TestAsyncEnumerator(IEnumerator<T> inner)
     {
-        private readonly IEnumerator<T> _inner;
+        _inner = inner ?? throw new ArgumentNullException(nameof(inner));
+    }
 
-        private bool _disposed;
+    public ValueTask<bool> MoveNextAsync()
+    {
+        return new ValueTask<bool>(_inner.MoveNext());
+    }
 
-        public TestAsyncEnumerator(IEnumerator<T> inner) =>
-            _inner = inner ?? throw new ArgumentNullException(nameof(inner));
+    public T Current => _inner.Current;
 
-        public void Dispose() => Dispose(true);
+    public ValueTask DisposeAsync()
+    {
+        _inner.Dispose();
 
-        private void Dispose(bool disposing)
-        {
-            if (_disposed)
-                return;
+        return new ValueTask(Task.CompletedTask);
+    }
 
-            if (disposing) 
-                _inner?.Dispose();
+    public void Dispose()
+    {
+        Dispose(true);
+    }
 
-            _disposed = true;
-        }
+    private void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
 
-        public Task<bool> MoveNext() => Task.FromResult(_inner.MoveNext());
+        if (disposing)
+            _inner?.Dispose();
 
-        public ValueTask<bool> MoveNextAsync() => new(_inner.MoveNext());
+        _disposed = true;
+    }
 
-        public T Current => _inner.Current;
-
-        public ValueTask DisposeAsync()
-        {
-            _inner.Dispose();
-
-            return new ValueTask(Task.CompletedTask);
-        }
+    public Task<bool> MoveNext()
+    {
+        return Task.FromResult(_inner.MoveNext());
     }
 }

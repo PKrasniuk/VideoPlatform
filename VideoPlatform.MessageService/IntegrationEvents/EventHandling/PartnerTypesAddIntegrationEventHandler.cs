@@ -5,25 +5,24 @@ using VideoPlatform.DAL.Interfaces;
 using VideoPlatform.Domain.Entities;
 using VideoPlatform.MessageService.IntegrationEvents.Events;
 
-namespace VideoPlatform.MessageService.IntegrationEvents.EventHandling
+namespace VideoPlatform.MessageService.IntegrationEvents.EventHandling;
+
+public class PartnerTypesAddIntegrationEventHandler : ICapSubscribe
 {
-    public class PartnerTypesAddIntegrationEventHandler : ICapSubscribe
+    private readonly IPartnerTypesRepository _repository;
+
+    public PartnerTypesAddIntegrationEventHandler(IPartnerTypesRepository repository)
     {
-        private readonly IPartnerTypesRepository _repository;
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+    }
 
-        public PartnerTypesAddIntegrationEventHandler(IPartnerTypesRepository repository)
+    [CapSubscribe(nameof(PartnerTypesAddIntegrationEvent))]
+    public async Task HandleAsync(PartnerTypesAddIntegrationEvent @event)
+    {
+        await _repository.CreateEntityAsync(new PartnerTypes
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        }
-
-        [CapSubscribe(nameof(PartnerTypesAddIntegrationEvent))]
-        public async Task HandleAsync(PartnerTypesAddIntegrationEvent @event)
-        {
-            await _repository.CreateEntityAsync(new PartnerTypes
-            {
-                PartnerId = @event.PartnerId,
-                Type = @event.Type
-            });
-        }
+            PartnerId = @event.PartnerId,
+            Type = @event.Type
+        });
     }
 }

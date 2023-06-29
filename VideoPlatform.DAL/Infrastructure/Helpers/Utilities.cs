@@ -1,14 +1,13 @@
 ﻿using System.Linq;
 
-namespace VideoPlatform.DAL.Infrastructure.Helpers
+namespace VideoPlatform.DAL.Infrastructure.Helpers;
+
+public static class Utilities
 {
-    public static class Utilities
+    public static string FirstCharToUpper(this string input)
     {
-        public static string FirstCharToUpper(this string input)
-        {
-            return string.IsNullOrEmpty(input) || string.IsNullOrWhiteSpace(input)
-                ? input
-                : input.First().ToString().ToUpper() + input[1..];
-        }
+        return string.IsNullOrEmpty(input) || string.IsNullOrWhiteSpace(input)
+            ? input
+            : input.First().ToString().ToUpper() + input[1..];
     }
 }

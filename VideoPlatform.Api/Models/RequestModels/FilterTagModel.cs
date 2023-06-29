@@ -4,21 +4,20 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VideoPlatform.Api.Models.Enums;
 
-namespace VideoPlatform.Api.Models.RequestModels
+namespace VideoPlatform.Api.Models.RequestModels;
+
+/// <summary>
+///     FilterTagModel
+/// </summary>
+public class FilterTagModel : FilterModel
 {
     /// <summary>
-    /// FilterTagModel
+    ///     SortedProperty
     /// </summary>
-    public class FilterTagModel : FilterModel
-    {
-        /// <summary>
-        /// SortedProperty
-        /// </summary>
-        [EnumDataType(typeof(TagSortedProperty))]
-        [JsonConverter(typeof(StringEnumConverter))]
-        [JsonProperty("sortedProperty")]
-        [DefaultValue(TagSortedProperty.Id)]
-        [Required]
-        public TagSortedProperty SortedProperty { get; set; }
-    }
+    [EnumDataType(typeof(TagSortedProperty))]
+    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonProperty("sortedProperty")]
+    [DefaultValue(TagSortedProperty.Id)]
+    [Required]
+    public TagSortedProperty SortedProperty { get; set; }
 }

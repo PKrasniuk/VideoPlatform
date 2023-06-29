@@ -1,6 +1,5 @@
-﻿namespace VideoPlatform.BLL.Interfaces
+﻿namespace VideoPlatform.BLL.Interfaces;
+
+public interface IToolManager
 {
-    public interface IToolManager
-    {
-    }
 }

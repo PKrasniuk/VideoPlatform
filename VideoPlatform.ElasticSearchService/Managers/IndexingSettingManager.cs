@@ -2,12 +2,11 @@
 using VideoPlatform.Domain.Entities;
 using VideoPlatform.ElasticSearchService.Interfaces;
 
-namespace VideoPlatform.ElasticSearchService.Managers
+namespace VideoPlatform.ElasticSearchService.Managers;
+
+public class IndexingSettingManager : IndexingEntityManager<Setting>, IIndexingSettingManager
 {
-    public class IndexingSettingManager : IndexingEntityManager<Setting>, IIndexingSettingManager
+    public IndexingSettingManager(IElasticClient elasticClient) : base(elasticClient)
     {
-        public IndexingSettingManager(IElasticClient elasticClient) : base(elasticClient)
-        {
-        }
     }
 }

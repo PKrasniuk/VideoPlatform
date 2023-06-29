@@ -3,30 +3,37 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace VideoPlatform.Tests.Infrastructure
+namespace VideoPlatform.Tests.Infrastructure;
+
+internal class AsyncEnumerator<T> : IAsyncEnumerator<T>, IDisposable
 {
-    internal class AsyncEnumerator<T> : IAsyncEnumerator<T>, IDisposable
+    private readonly IEnumerator<T> _enumerator;
+
+    public AsyncEnumerator(IEnumerator<T> enumerator)
     {
-        private readonly IEnumerator<T> _enumerator;
+        _enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
+    }
 
-        public AsyncEnumerator(IEnumerator<T> enumerator) =>
-            _enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
+    public ValueTask<bool> MoveNextAsync()
+    {
+        return new ValueTask<bool>(_enumerator.MoveNext());
+    }
 
-        public ValueTask<bool> MoveNextAsync() => new(_enumerator.MoveNext());
+    public T Current => _enumerator.Current;
 
-        public Task<bool> MoveNext(CancellationToken cancellationToken) => Task.FromResult(_enumerator.MoveNext());
+    public async ValueTask DisposeAsync()
+    {
+        await Task.Delay(TimeSpan.FromSeconds(1));
 
-        public T Current => _enumerator.Current;
+        Dispose();
+    }
 
-        public void Dispose()
-        {
-        }
+    public void Dispose()
+    {
+    }
 
-        public async ValueTask DisposeAsync()
-        {
-            await Task.Delay(TimeSpan.FromSeconds(1));
-
-            Dispose();
-        }
+    public Task<bool> MoveNext(CancellationToken cancellationToken)
+    {
+        return Task.FromResult(_enumerator.MoveNext());
     }
 }

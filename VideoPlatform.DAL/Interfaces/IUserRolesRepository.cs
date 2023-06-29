@@ -3,12 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using VideoPlatform.DAL.DataModels;
 
-namespace VideoPlatform.DAL.Interfaces
-{
-    public interface IUserRolesRepository
-    {
-        Task<ICollection<UserRoleDataModel>> GetUserRolesAsync(CancellationToken cancellationToken = default);
+namespace VideoPlatform.DAL.Interfaces;
 
-        Task<ICollection<UserRoleDataModel>> GetUserRolesAlternativeAsync(CancellationToken cancellationToken = default);
-    }
+public interface IUserRolesRepository
+{
+    Task<ICollection<UserRoleDataModel>> GetUserRolesAsync(CancellationToken cancellationToken = default);
+
+    Task<ICollection<UserRoleDataModel>> GetUserRolesAlternativeAsync(CancellationToken cancellationToken = default);
 }

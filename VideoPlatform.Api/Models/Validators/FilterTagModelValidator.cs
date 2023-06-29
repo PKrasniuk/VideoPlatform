@@ -1,16 +1,15 @@
 ﻿using FluentValidation;
 using VideoPlatform.Api.Models.RequestModels;
 
-namespace VideoPlatform.Api.Models.Validators
+namespace VideoPlatform.Api.Models.Validators;
+
+internal class FilterTagModelValidator : AbstractValidator<FilterTagModel>
 {
-    internal class FilterTagModelValidator : AbstractValidator<FilterTagModel>
+    public FilterTagModelValidator()
     {
-        public FilterTagModelValidator()
-        {
-            RuleFor(x => x.PageNumber).NotNull().NotEmpty().GreaterThan(0);
-            RuleFor(x => x.PageSize).NotNull().NotEmpty().GreaterThan(0);
-            RuleFor(x => x.SortedProperty).NotNull();
-            RuleFor(x => x.SortOrder).NotNull();
-        }
+        RuleFor(x => x.PageNumber).NotNull().NotEmpty().GreaterThan(0);
+        RuleFor(x => x.PageSize).NotNull().NotEmpty().GreaterThan(0);
+        RuleFor(x => x.SortedProperty).NotNull();
+        RuleFor(x => x.SortOrder).NotNull();
     }
 }

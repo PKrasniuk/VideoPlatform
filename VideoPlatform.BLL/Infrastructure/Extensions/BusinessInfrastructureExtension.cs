@@ -10,39 +10,38 @@ using VideoPlatform.ExternalService.Infrastructure.Extensions;
 using VideoPlatform.MessageService.Infrastructure.Extensions;
 using VideoPlatform.SchedulerService.Infrastructure.Extensions;
 
-namespace VideoPlatform.BLL.Infrastructure.Extensions
+namespace VideoPlatform.BLL.Infrastructure.Extensions;
+
+public static class BusinessInfrastructureExtension
 {
-    public static class BusinessInfrastructureExtension
+    public static void AddBusinessInfrastructureConfiguration(this IServiceCollection services,
+        IConfiguration configuration)
     {
-        public static void AddBusinessInfrastructureConfiguration(this IServiceCollection services,
-            IConfiguration configuration)
-        {
-            services.AddOptions();
+        services.AddOptions();
 
-            services.AddDatabaseConfiguration(configuration);
+        services.AddDatabaseConfiguration(configuration);
 
-            services.AddRepositoriesCollection();
-            services.AddManagersCollection();
+        services.AddRepositoriesCollection();
+        services.AddManagersCollection();
 
-            services.AddCQRS(AppDomain.CurrentDomain.Load("VideoPlatform.CQRS"));
+        services.AddCQRS(AppDomain.CurrentDomain.Load("VideoPlatform.CQRS"));
 
-            services.AddElasticSearchConfiguration(configuration);
-            services.AddIndexingManagersCollection();
+        services.AddElasticSearchConfiguration(configuration);
+        services.AddIndexingManagersCollection();
 
-            services.AddSettingsConfiguration(configuration);
-            services.AddCacheConfiguration(configuration);
-            services.AddCacheService();
+        services.AddSettingsConfiguration(configuration);
+        services.AddCacheConfiguration(configuration);
+        services.AddCacheService();
 
-            services.AddSchedulerConfiguration();
+        services.AddSchedulerConfiguration();
 
-            services.AddMessenger(configuration);
-            services.AddEventBus(configuration);
-            services.RegisteringEventHandlers();
+        services.AddMessenger(configuration);
+        services.AddEventBus(configuration);
+        services.RegisteringEventHandlers();
 
-            services.AddKafkaMessenger(configuration);
+        services.AddKafkaMessenger(configuration);
 
-            services.AddExternalServicesCollection(configuration);
-            services.AddMachineLearningConfiguration(configuration);
-        }
+        services.AddExternalServicesCollection(configuration);
+        services.AddMachineLearningConfiguration(configuration);
     }
 }

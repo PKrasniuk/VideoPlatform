@@ -1,12 +1,11 @@
 ﻿using VideoPlatform.DAL.Interfaces;
 using VideoPlatform.Domain.Entities;
 
-namespace VideoPlatform.DAL.Repositories
+namespace VideoPlatform.DAL.Repositories;
+
+public class InfoDataRepository : CosmosEntityRepository<InfoData>, IInfoDataRepository
 {
-    public class InfoDataRepository : CosmosEntityRepository<InfoData>, IInfoDataRepository
+    public InfoDataRepository(CosmosContext dbContext) : base(dbContext, "infoData")
     {
-        public InfoDataRepository(CosmosContext dbContext) : base(dbContext, "infoData")
-        {
-        }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using VideoPlatform.Domain.Entities;
 
-namespace VideoPlatform.DAL.Interfaces
+namespace VideoPlatform.DAL.Interfaces;
+
+public interface IPartnerTypesRepository : IEntityRepository<PartnerTypes, int>
 {
-    public interface IPartnerTypesRepository : IEntityRepository<PartnerTypes, int>
-    {
-    }
 }

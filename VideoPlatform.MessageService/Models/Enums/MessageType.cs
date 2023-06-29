@@ -1,8 +1,7 @@
-﻿namespace VideoPlatform.MessageService.Models.Enums
+﻿namespace VideoPlatform.MessageService.Models.Enums;
+
+public enum MessageType
 {
-    public enum MessageType
-    {
-        PartnerTypesAdd,
-        PartnerTypesRemove
-    }
+    PartnerTypesAdd,
+    PartnerTypesRemove
 }

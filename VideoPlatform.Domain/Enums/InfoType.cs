@@ -1,12 +1,9 @@
 ﻿using System.ComponentModel;
 
-namespace VideoPlatform.Domain.Enums
+namespace VideoPlatform.Domain.Enums;
+
+public enum InfoType : byte
 {
-    public enum InfoType : byte
-    {
-        [Description("BaseDocument")]
-        BaseDocument = 1,
-        [Description("SupportDocument")]
-        SupportDocument = 2
-    }
+    [Description("BaseDocument")] BaseDocument = 1,
+    [Description("SupportDocument")] SupportDocument = 2
 }

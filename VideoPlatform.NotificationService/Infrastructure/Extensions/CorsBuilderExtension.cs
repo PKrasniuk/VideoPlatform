@@ -1,17 +1,16 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace VideoPlatform.NotificationService.Infrastructure.Extensions
+namespace VideoPlatform.NotificationService.Infrastructure.Extensions;
+
+internal static partial class BuilderExtension
 {
-    internal static partial class BuilderExtension
+    internal static void AddCorsBuilder(this IApplicationBuilder app)
     {
-        internal static void AddCorsBuilder(this IApplicationBuilder app)
-        {
-            app.UseCors(options =>
-                options
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
-        }
+        app.UseCors(options =>
+            options
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
     }
 }

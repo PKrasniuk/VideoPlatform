@@ -1,23 +1,22 @@
-﻿namespace VideoPlatform.CacheService.Infrastructure.Settings
+﻿namespace VideoPlatform.CacheService.Infrastructure.Settings;
+
+/// <summary>
+///     CacheSettings
+/// </summary>
+public class CacheSettings
 {
     /// <summary>
-    /// CacheSettings
+    ///     RedisUrl
     /// </summary>
-    public class CacheSettings
-    {
-        /// <summary>
-        /// RedisUrl
-        /// </summary>
-        public string RedisUrl { get; set; }
+    public string RedisUrl { get; set; }
 
-        /// <summary>
-        /// InstanceName
-        /// </summary>
-        public string InstanceName { get; set; }
+    /// <summary>
+    ///     InstanceName
+    /// </summary>
+    public string InstanceName { get; set; }
 
-        /// <summary>
-        /// PartnersExpirationMinutes
-        /// </summary>
-        public int PartnersExpirationMinutes { get; set; }
-    }
+    /// <summary>
+    ///     PartnersExpirationMinutes
+    /// </summary>
+    public int PartnersExpirationMinutes { get; set; }
 }

@@ -1,8 +1,7 @@
 ﻿using MediatR;
 
-namespace VideoPlatform.CQRS.Queries
+namespace VideoPlatform.CQRS.Queries;
+
+public abstract class BaseQuery<TResult> : IRequest<TResult>
 {
-    public abstract class BaseQuery<TResult> : IRequest<TResult>
-    {
-    }
 }

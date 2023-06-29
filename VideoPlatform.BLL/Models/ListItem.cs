@@ -1,9 +1,8 @@
-﻿namespace VideoPlatform.BLL.Models
-{
-    public class ListItem<T>
-    {
-        public T Id { get; set; }
+﻿namespace VideoPlatform.BLL.Models;
 
-        public string Name { get; set; }
-    }
+public class ListItem<T>
+{
+    public T Id { get; set; }
+
+    public string Name { get; set; }
 }

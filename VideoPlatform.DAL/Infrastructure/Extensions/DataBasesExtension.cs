@@ -7,39 +7,37 @@ using VideoPlatform.Common.Infrastructure.Constants;
 using VideoPlatform.DAL.Infrastructure.Configurations;
 using VideoPlatform.Domain.Entities;
 
-namespace VideoPlatform.DAL.Infrastructure.Extensions
+namespace VideoPlatform.DAL.Infrastructure.Extensions;
+
+public static class ConfigurationExtension
 {
-    public static class ConfigurationExtension
+    public static void AddDatabaseConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
-        public static void AddDatabaseConfiguration(this IServiceCollection services, IConfiguration configuration)
+        services.AddEntityFrameworkSqlServer();
+
+        services.AddDbContextPool<VideoPlatformContext>((serviceProvider, optionsBuilder) =>
         {
-            services.AddEntityFrameworkSqlServer();
+            optionsBuilder.UseSqlServer(
+                configuration.GetConnectionString(ConfigurationConstants.ConnectionStringName),
+                builder => { builder.MigrationsAssembly("VideoPlatform.DAL"); });
+            optionsBuilder.UseInternalServiceProvider(serviceProvider);
+            optionsBuilder.UseLazyLoadingProxies(false);
+        });
 
-            services.AddDbContextPool<VideoPlatformContext>((serviceProvider, optionsBuilder) =>
-            {
-                optionsBuilder.UseSqlServer(
-                    configuration.GetConnectionString(ConfigurationConstants.ConnectionStringName),
-                    builder =>
-                    {
-                        builder.MigrationsAssembly("VideoPlatform.DAL");
-                    });
-                optionsBuilder.UseInternalServiceProvider(serviceProvider);
-                optionsBuilder.UseLazyLoadingProxies(false);
-            });
+        services.AddIdentity<AppUser, AppRole>(options => { options.User.RequireUniqueEmail = true; })
+            .AddEntityFrameworkStores<VideoPlatformContext>()
+            .AddDefaultTokenProviders();
 
-            services.AddIdentity<AppUser, AppRole>(options => { options.User.RequireUniqueEmail = true; })
-                .AddEntityFrameworkStores<VideoPlatformContext>()
-                .AddDefaultTokenProviders();
+        services.Configure<MetaDataAccessConfiguration>(
+            configuration.GetSection(ConfigurationConstants.MetaDataAccessName));
 
-            services.Configure<MetaDataAccessConfiguration>(configuration.GetSection(ConfigurationConstants.MetaDataAccessName));
+        services.AddTransient(serviceProvider =>
+            new MetaContext(serviceProvider.GetService<IOptions<MetaDataAccessConfiguration>>()));
 
-            services.AddTransient(serviceProvider =>
-                new MetaContext(serviceProvider.GetService<IOptions<MetaDataAccessConfiguration>>()));
+        services.Configure<CosmosDataAccessConfiguration>(
+            configuration.GetSection(ConfigurationConstants.CosmosDataAccessName));
 
-            services.Configure<CosmosDataAccessConfiguration>(configuration.GetSection(ConfigurationConstants.CosmosDataAccessName));
-
-            services.AddTransient(serviceProvider =>
-                new CosmosContext(serviceProvider.GetService<IOptions<CosmosDataAccessConfiguration>>()));
-        }
+        services.AddTransient(serviceProvider =>
+            new CosmosContext(serviceProvider.GetService<IOptions<CosmosDataAccessConfiguration>>()));
     }
 }

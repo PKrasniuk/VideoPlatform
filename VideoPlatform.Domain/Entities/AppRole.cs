@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace VideoPlatform.Domain.Entities
+namespace VideoPlatform.Domain.Entities;
+
+public class AppRole : IdentityRole<int>
 {
-    public class AppRole : IdentityRole<int>
-    {
-        public string Description { get; set; }
-    }
+    public string Description { get; set; }
 }

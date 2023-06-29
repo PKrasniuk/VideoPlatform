@@ -6,53 +6,52 @@ using Newtonsoft.Json;
 using VideoPlatform.CacheService.Interfaces;
 using VideoPlatform.Common.Infrastructure.Constants;
 
-namespace VideoPlatform.CacheService.Repositories
+namespace VideoPlatform.CacheService.Repositories;
+
+public class CacheRepository : ICacheRepository
 {
-    public class CacheRepository : ICacheRepository
+    private readonly IDistributedCache _cache;
+
+    public CacheRepository(IDistributedCache cache)
     {
-        private readonly IDistributedCache _cache;
+        _cache = cache ?? throw new ArgumentNullException(nameof(cache));
+    }
 
-        public CacheRepository(IDistributedCache cache)
-        {
-            _cache = cache ?? throw new ArgumentNullException(nameof(cache));
-        }
+    public async Task RefreshAsync(string key, CancellationToken cancellationToken)
+    {
+        await _cache.RefreshAsync(key, cancellationToken);
+    }
 
-        public async Task RefreshAsync(string key, CancellationToken cancellationToken)
-        {
-            await _cache.RefreshAsync(key, cancellationToken);
-        }
-
-        public async Task<bool> ExistObjectAsync(string key, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var value = await _cache.GetStringAsync(key, cancellationToken);
-                return value != null;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        public async Task SetObjectAsync<T>(string key, T value,
-            int expirationMinutes = ConfigurationConstants.DefaultExpirationMinutes,
-            CancellationToken cancellationToken = default)
-        {
-            await _cache.SetStringAsync(key, JsonConvert.SerializeObject(value),
-                new DistributedCacheEntryOptions { AbsoluteExpiration = DateTime.Now.AddMinutes(expirationMinutes) },
-                cancellationToken);
-        }
-
-        public async Task<T> GetObjectAsync<T>(string key, CancellationToken cancellationToken)
+    public async Task<bool> ExistObjectAsync(string key, CancellationToken cancellationToken)
+    {
+        try
         {
             var value = await _cache.GetStringAsync(key, cancellationToken);
-            return string.IsNullOrEmpty(value) ? default : JsonConvert.DeserializeObject<T>(value);
+            return value != null;
         }
-
-        public async Task RemoveAsync(string key, CancellationToken cancellationToken)
+        catch (Exception)
         {
-            await _cache.RemoveAsync(key, cancellationToken);
+            return false;
         }
+    }
+
+    public async Task SetObjectAsync<T>(string key, T value,
+        int expirationMinutes = ConfigurationConstants.DefaultExpirationMinutes,
+        CancellationToken cancellationToken = default)
+    {
+        await _cache.SetStringAsync(key, JsonConvert.SerializeObject(value),
+            new DistributedCacheEntryOptions { AbsoluteExpiration = DateTime.Now.AddMinutes(expirationMinutes) },
+            cancellationToken);
+    }
+
+    public async Task<T> GetObjectAsync<T>(string key, CancellationToken cancellationToken)
+    {
+        var value = await _cache.GetStringAsync(key, cancellationToken);
+        return string.IsNullOrEmpty(value) ? default : JsonConvert.DeserializeObject<T>(value);
+    }
+
+    public async Task RemoveAsync(string key, CancellationToken cancellationToken)
+    {
+        await _cache.RemoveAsync(key, cancellationToken);
     }
 }

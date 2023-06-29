@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace VideoPlatform.SchedulerService.Jobs
+namespace VideoPlatform.SchedulerService.Jobs;
+
+public class JobSchedule
 {
-    public class JobSchedule
+    public JobSchedule(Type jobType, string cronExpression)
     {
-        public JobSchedule(Type jobType, string cronExpression)
-        {
-            JobType = jobType;
-            CronExpression = cronExpression;
-        }
-
-        public Type JobType { get; }
-
-        public string CronExpression { get; }
+        JobType = jobType;
+        CronExpression = cronExpression;
     }
+
+    public Type JobType { get; }
+
+    public string CronExpression { get; }
 }

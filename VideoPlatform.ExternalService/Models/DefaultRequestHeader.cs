@@ -1,9 +1,8 @@
-﻿namespace VideoPlatform.ExternalService.Models
-{
-    public class DefaultRequestHeader
-    {
-        public string Name { get; set; }
+﻿namespace VideoPlatform.ExternalService.Models;
 
-        public string Value { get; set; }
-    }
+public class DefaultRequestHeader
+{
+    public string Name { get; set; }
+
+    public string Value { get; set; }
 }

@@ -7,43 +7,42 @@ using VideoPlatform.MessageService.Infrastructure.Helpers;
 using VideoPlatform.MessageService.Interfaces;
 using VideoPlatform.MessageService.Models.Enums;
 
-namespace VideoPlatform.MessageService.Managers
+namespace VideoPlatform.MessageService.Managers;
+
+public class RabbitManager : IRabbitManager
 {
-    public class RabbitManager : IRabbitManager
+    private readonly DefaultObjectPool<IModel> _objectPool;
+
+    public RabbitManager(IPooledObjectPolicy<IModel> objectPolicy)
     {
-        private readonly DefaultObjectPool<IModel> _objectPool;
+        _objectPool = new DefaultObjectPool<IModel>(objectPolicy, Environment.ProcessorCount * 2);
+    }
 
-        public RabbitManager(IPooledObjectPolicy<IModel> objectPolicy)
+    public void Publish<T>(T message, MessageType type) where T : class
+    {
+        if (message == null)
+            return;
+
+        var channel = _objectPool.Get();
+        var parameters = MessageTypesResolver.GetMessageParameters(type);
+
+        try
         {
-            _objectPool = new DefaultObjectPool<IModel>(objectPolicy, Environment.ProcessorCount * 2);
+            channel.ExchangeDeclare(parameters.ExchangeName, ExchangeType.Topic, true, false, null);
+            channel.QueueDeclare(parameters.QueueName, true, false, false, null);
+            channel.QueueBind(parameters.QueueName, parameters.ExchangeName, parameters.RouteKey, null);
+            channel.BasicQos(0, 1, false);
+
+            var sendBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+
+            var properties = channel.CreateBasicProperties();
+            properties.Persistent = true;
+
+            channel.BasicPublish(parameters.ExchangeName, parameters.RouteKey, properties, sendBytes);
         }
-
-        public void Publish<T>(T message, MessageType type) where T : class
+        finally
         {
-            if (message == null)
-                return;
-
-            var channel = _objectPool.Get();
-            var parameters = MessageTypesResolver.GetMessageParameters(type);
-
-            try
-            {
-                channel.ExchangeDeclare(parameters.ExchangeName, ExchangeType.Topic, true, false, null);
-                channel.QueueDeclare(parameters.QueueName, true, false, false, null);
-                channel.QueueBind(parameters.QueueName, parameters.ExchangeName, parameters.RouteKey, null);
-                channel.BasicQos(0, 1, false);
-
-                var sendBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
-
-                var properties = channel.CreateBasicProperties();
-                properties.Persistent = true;
-
-                channel.BasicPublish(parameters.ExchangeName, parameters.RouteKey, properties, sendBytes);
-            }
-            finally
-            {
-                _objectPool.Return(channel);
-            }
+            _objectPool.Return(channel);
         }
     }
 }

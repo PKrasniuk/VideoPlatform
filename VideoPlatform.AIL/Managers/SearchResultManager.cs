@@ -10,197 +10,178 @@ using VideoPlatform.AIL.Models.SearchResultModels;
 using VideoPlatform.Common.Infrastructure.Constants;
 using VideoPlatform.Common.Infrastructure.Helpers;
 
-namespace VideoPlatform.AIL.Managers
+namespace VideoPlatform.AIL.Managers;
+
+public class SearchResultManager : IManager<SearchResultModel, SearchResultPredictionModel, RankingMetrics>
 {
-    public class SearchResultManager : IManager<SearchResultModel, SearchResultPredictionModel, RankingMetrics>
+    private static string _dataSetsPath;
+    private static string _modelsPath;
+
+    private readonly MLContext _mlContext;
+    private bool _testDataSetFileExists;
+    private bool _trainDataSetFileExists;
+    private bool _validationDataSetFileExists;
+
+    public SearchResultManager(string dataSetsPath, string modelsPath)
     {
-        private static string _dataSetsPath;
-        private static string _modelsPath;
-        private bool _trainDataSetFileExists;
-        private bool _validationDataSetFileExists;
-        private bool _testDataSetFileExists;
+        _dataSetsPath = PathHelper.GetAbsolutePath(dataSetsPath);
+        _modelsPath = PathHelper.GetAbsolutePath(modelsPath);
 
-        private readonly MLContext _mlContext;
+        //Create ML Context with seed for repeteable/deterministic results
+        _mlContext = new MLContext(0);
 
-        public SearchResultManager(string dataSetsPath, string modelsPath)
-        {
-            _dataSetsPath = PathHelper.GetAbsolutePath(dataSetsPath);
-            _modelsPath = PathHelper.GetAbsolutePath(modelsPath);
+        _trainDataSetFileExists = false;
+        _validationDataSetFileExists = false;
+        _testDataSetFileExists = false;
+    }
 
-            //Create ML Context with seed for repeteable/deterministic results
-            _mlContext = new MLContext(seed: 0);
+    private static string TrainDataSetPath => $"{_dataSetsPath}/MSLRWeb10KTrain720kRows.tsv";
+    private static string ValidationDataSetPath => $"{_dataSetsPath}/MSLRWeb10KValidate240kRows.tsv";
+    private static string TestDataSetPath => $"{_dataSetsPath}/MSLRWeb10KTest240kRows.tsv";
 
-            _trainDataSetFileExists = false;
-            _validationDataSetFileExists = false;
-            _testDataSetFileExists = false;
-        }
+    private static string ModelPath => $"{_modelsPath}/RankingModel.zip";
 
-        private static string TrainDataSetPath => $"{_dataSetsPath}/MSLRWeb10KTrain720kRows.tsv";
-        private static string ValidationDataSetPath => $"{_dataSetsPath}/MSLRWeb10KValidate240kRows.tsv";
-        private static string TestDataSetPath => $"{_dataSetsPath}/MSLRWeb10KTest240kRows.tsv";
+    public Tuple<ITransformer, RankingMetrics> BuildTrainEvaluateAndSaveModel()
+    {
+        var timeStart = DateTime.Now;
 
-        private static string ModelPath => $"{_modelsPath}/RankingModel.zip";
+        PrepareDataSets();
 
-        public Tuple<ITransformer, RankingMetrics> BuildTrainEvaluateAndSaveModel()
-        {
-            var timeStart = DateTime.Now;
+        while (!_trainDataSetFileExists || !_validationDataSetFileExists || !_testDataSetFileExists)
+            if (timeStart.AddSeconds(ExternalServiceConstants.MaxSecondWaitingDataDownload) < DateTime.Now)
+                throw new Exception("Can not download data files to build a model");
 
-            PrepareDataSets();
+        // Create the pipeline using the training dataSets schema;
+        // the validation and testing data have the same schema.
+        var trainData = _mlContext.Data.LoadFromTextFile<SearchResultModel>(TrainDataSetPath, '\t', true);
+        var pipeline = CreatePipeline(trainData);
 
-            while (!_trainDataSetFileExists || !_validationDataSetFileExists || !_testDataSetFileExists)
-            {
-                if (timeStart.AddSeconds(ExternalServiceConstants.MaxSecondWaitingDataDownload) < DateTime.Now)
-                {
-                    throw new Exception("Can not download data files to build a model");
-                }
-            }
+        // Train the model on the training dataSet. To perform training you need to call the Fit() method.
+        var model = pipeline.Fit(trainData);
 
-            // Create the pipeline using the training dataSets schema;
-            // the validation and testing data have the same schema.
-            var trainData = _mlContext.Data.LoadFromTextFile<SearchResultModel>(TrainDataSetPath, '\t', true);
-            var pipeline = CreatePipeline(trainData);
+        // Evaluate the model using the metrics from the validation dataSet;
+        // you would then retrain and reevaluate the model until the desired metrics are achieved.
+        var validationData = _mlContext.Data.LoadFromTextFile<SearchResultModel>(ValidationDataSetPath);
+        EvaluateModel(model, validationData);
 
-            // Train the model on the training dataSet. To perform training you need to call the Fit() method.
-            var model = pipeline.Fit(trainData);
+        // Combine the training and validation dataSets.
+        var validationDataEnum = _mlContext.Data.CreateEnumerable<SearchResultModel>(validationData, false);
+        var trainDataEnum = _mlContext.Data.CreateEnumerable<SearchResultModel>(trainData, false);
+        var trainValidationDataEnum = validationDataEnum.Concat(trainDataEnum).ToList();
+        var trainValidationData = _mlContext.Data.LoadFromEnumerable(trainValidationDataEnum);
 
-            // Evaluate the model using the metrics from the validation dataSet;
-            // you would then retrain and reevaluate the model until the desired metrics are achieved.
-            var validationData = _mlContext.Data.LoadFromTextFile<SearchResultModel>(ValidationDataSetPath);
-            EvaluateModel(model, validationData);
+        // Train the model on the train + validation dataSet.
+        model = pipeline.Fit(trainValidationData);
 
-            // Combine the training and validation dataSets.
-            var validationDataEnum = _mlContext.Data.CreateEnumerable<SearchResultModel>(validationData, false);
-            var trainDataEnum = _mlContext.Data.CreateEnumerable<SearchResultModel>(trainData, false);
-            var trainValidationDataEnum = validationDataEnum.Concat(trainDataEnum).ToList();
-            var trainValidationData = _mlContext.Data.LoadFromEnumerable(trainValidationDataEnum);
+        // Evaluate the model using the metrics from the testing dataSet;
+        // you do this only once and these are your final metrics.
+        var testData = _mlContext.Data.LoadFromTextFile<SearchResultModel>(TestDataSetPath);
+        EvaluateModel(model, testData);
 
-            // Train the model on the train + validation dataSet.
-            model = pipeline.Fit(trainValidationData);
+        // Combine the training, validation, and testing dataSets.
+        var testDataEnum = _mlContext.Data.CreateEnumerable<SearchResultModel>(testData, false);
+        var allDataEnum = trainValidationDataEnum.Concat(testDataEnum).ToList();
+        var allData = _mlContext.Data.LoadFromEnumerable(allDataEnum);
 
-            // Evaluate the model using the metrics from the testing dataSet;
-            // you do this only once and these are your final metrics.
-            var testData = _mlContext.Data.LoadFromTextFile<SearchResultModel>(TestDataSetPath);
-            EvaluateModel(model, testData);
+        // Retrain the model on all of the data, train + validate + test.
+        model = pipeline.Fit(allData);
+        var metrics = EvaluateModel(model, allData);
 
-            // Combine the training, validation, and testing dataSets.
-            var testDataEnum = _mlContext.Data.CreateEnumerable<SearchResultModel>(testData, false);
-            var allDataEnum = trainValidationDataEnum.Concat(testDataEnum).ToList();
-            var allData = _mlContext.Data.LoadFromEnumerable(allDataEnum);
+        // Save the model.
+        if (!Directory.Exists(_modelsPath)) Directory.CreateDirectory(_modelsPath);
+        _mlContext.Model.Save(model, null, ModelPath);
 
-            // Retrain the model on all of the data, train + validate + test.
-            model = pipeline.Fit(allData);
-            var metrics = EvaluateModel(model, allData);
+        return new Tuple<ITransformer, RankingMetrics>(model, metrics);
+    }
 
-            // Save the model.
-            if (!Directory.Exists(_modelsPath))
-            {
-                Directory.CreateDirectory(_modelsPath);
-            }
-            _mlContext.Model.Save(model, null, ModelPath);
+    public ICollection<SearchResultPredictionModel> CalculatePrediction(IEnumerable<SearchResultModel> items,
+        bool rebuildModel = false)
+    {
+        if (!File.Exists(ModelPath) || rebuildModel) BuildTrainEvaluateAndSaveModel();
 
-            return new Tuple<ITransformer, RankingMetrics>(model, metrics);
-        }
+        if (!File.Exists(ModelPath)) return null;
 
-        public ICollection<SearchResultPredictionModel> CalculatePrediction(IEnumerable<SearchResultModel> items, bool rebuildModel = false)
-        {
-            if (!File.Exists(ModelPath) || rebuildModel)
-            {
-                BuildTrainEvaluateAndSaveModel();
-            }
+        // Load the model to perform predictions with it.
+        var predictionPipeline = _mlContext.Model.Load(ModelPath, out _);
 
-            if (!File.Exists(ModelPath))
-            {
-                return null;
-            }
+        // Predict rankings.
+        var predictions = predictionPipeline.Transform(_mlContext.Data.LoadFromEnumerable(items));
 
-            // Load the model to perform predictions with it.
-            var predictionPipeline = _mlContext.Model.Load(ModelPath, out _);
+        // In the predictions, get the scores of the search results included in the first query (e.g. group).
+        var searchQueries =
+            _mlContext.Data.CreateEnumerable<SearchResultPredictionModel>(predictions, false).ToList();
+        var firstGroupId = searchQueries.First().GroupId;
+        return searchQueries.Take(100).Where(p => p.GroupId == firstGroupId).OrderByDescending(p => p.Score).ToList();
+    }
 
-            // Predict rankings.
-            var predictions = predictionPipeline.Transform(_mlContext.Data.LoadFromEnumerable(items));
+    private void PrepareDataSets()
+    {
+        const string trainDataSetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTrain720kRows.tsv";
+        const string validationDataSetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KValidate240kRows.tsv";
+        const string testDataSetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTest240kRows.tsv";
 
-            // In the predictions, get the scores of the search results included in the first query (e.g. group).
-            var searchQueries =
-                _mlContext.Data.CreateEnumerable<SearchResultPredictionModel>(predictions, reuseRowObject: false).ToList();
-            var firstGroupId = searchQueries.First().GroupId;
-            return searchQueries.Take(100).Where(p => p.GroupId == firstGroupId).OrderByDescending(p => p.Score).ToList();
-        }
+        if (!Directory.Exists(_dataSetsPath)) Directory.CreateDirectory(_dataSetsPath);
 
-        private void PrepareDataSets()
-        {
-            const string trainDataSetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTrain720kRows.tsv";
-            const string validationDataSetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KValidate240kRows.tsv";
-            const string testDataSetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTest240kRows.tsv";
+        if (!Directory.Exists(_modelsPath)) Directory.CreateDirectory(_modelsPath);
 
-            if (!Directory.Exists(_dataSetsPath))
-            {
-                Directory.CreateDirectory(_dataSetsPath);
-            }
+        if (!File.Exists(TrainDataSetPath))
+            AsyncHelper.RunSync(async () => await DownloadFileAsync(new Uri(trainDataSetUrl), TrainDataSetPath));
 
-            if (!Directory.Exists(_modelsPath))
-            {
-                Directory.CreateDirectory(_modelsPath);
-            }
+        _trainDataSetFileExists = true;
 
-            if (!File.Exists(TrainDataSetPath))
-                AsyncHelper.RunSync(async () => await DownloadFileAsync(new Uri(trainDataSetUrl), TrainDataSetPath));
+        if (!File.Exists(ValidationDataSetPath))
+            AsyncHelper.RunSync(async () =>
+                await DownloadFileAsync(new Uri(validationDataSetUrl), ValidationDataSetPath));
 
-            _trainDataSetFileExists = true;
+        _validationDataSetFileExists = true;
 
-            if (!File.Exists(ValidationDataSetPath))
-                AsyncHelper.RunSync(async () =>
-                    await DownloadFileAsync(new Uri(validationDataSetUrl), ValidationDataSetPath));
+        if (!File.Exists(TestDataSetPath))
+            AsyncHelper.RunSync(async () => await DownloadFileAsync(new Uri(testDataSetUrl), TestDataSetPath));
 
-            _validationDataSetFileExists = true;
+        _testDataSetFileExists = true;
+    }
 
-            if (!File.Exists(TestDataSetPath))
-                AsyncHelper.RunSync(async () => await DownloadFileAsync(new Uri(testDataSetUrl), TestDataSetPath));
+    private static async Task DownloadFileAsync(Uri uri, string outputPath)
+    {
+        using var client = new HttpClient();
+        var response = await client.GetAsync(uri);
+        await using var fs = new FileStream(outputPath, FileMode.CreateNew);
+        await response.Content.CopyToAsync(fs);
+    }
 
-            _testDataSetFileExists = true;
-        }
+    private IEstimator<ITransformer> CreatePipeline(IDataView dataView)
+    {
+        const string featuresVectorName = "Features";
 
-        private static async Task DownloadFileAsync(Uri uri, string outputPath)
-        {
-            using var client = new HttpClient();
-            var response = await client.GetAsync(uri);
-            await using var fs = new FileStream(outputPath, FileMode.CreateNew);
-            await response.Content.CopyToAsync(fs);
-        }
+        // Specify the columns to include in the feature input data.
+        var featureCols = dataView.Schema.AsQueryable()
+            .Select(s => s.Name)
+            .Where(c =>
+                c != nameof(SearchResultModel.Label) &&
+                c != nameof(SearchResultModel.GroupId))
+            .ToArray();
 
-        private IEstimator<ITransformer> CreatePipeline(IDataView dataView)
-        {
-            const string featuresVectorName = "Features";
+        // Create an Estimator and transform the data:
+        // 1. Concatenate the feature columns into a single Features vector.
+        // 2. Create a key type for the label input data by using the value to key transform.
+        // 3. Create a key type for the group input data by using a hash transform.
+        IEstimator<ITransformer> dataPipeline = _mlContext.Transforms.Concatenate(featuresVectorName, featureCols)
+            .Append(_mlContext.Transforms.Conversion.MapValueToKey(nameof(SearchResultModel.Label)))
+            .Append(_mlContext.Transforms.Conversion.Hash(nameof(SearchResultModel.GroupId),
+                nameof(SearchResultModel.GroupId), 20));
 
-            // Specify the columns to include in the feature input data.
-            var featureCols = dataView.Schema.AsQueryable()
-                .Select(s => s.Name)
-                .Where(c =>
-                    c != nameof(SearchResultModel.Label) &&
-                    c != nameof(SearchResultModel.GroupId))
-                .ToArray();
+        // Set the LightGBM LambdaRank trainer.
+        IEstimator<ITransformer> trainer = _mlContext.Ranking.Trainers.LightGbm();
+        return dataPipeline.Append(trainer);
+    }
 
-            // Create an Estimator and transform the data:
-            // 1. Concatenate the feature columns into a single Features vector.
-            // 2. Create a key type for the label input data by using the value to key transform.
-            // 3. Create a key type for the group input data by using a hash transform.
-            IEstimator<ITransformer> dataPipeline = _mlContext.Transforms.Concatenate(featuresVectorName, featureCols)
-                .Append(_mlContext.Transforms.Conversion.MapValueToKey(nameof(SearchResultModel.Label)))
-                .Append(_mlContext.Transforms.Conversion.Hash(nameof(SearchResultModel.GroupId),
-                    nameof(SearchResultModel.GroupId), 20));
+    private RankingMetrics EvaluateModel(ITransformer model, IDataView data)
+    {
+        // Use the model to perform predictions on the test data.
+        var predictions = model.Transform(data);
 
-            // Set the LightGBM LambdaRank trainer.
-            IEstimator<ITransformer> trainer = _mlContext.Ranking.Trainers.LightGbm();
-            return dataPipeline.Append(trainer);
-        }
-
-        private RankingMetrics EvaluateModel(ITransformer model, IDataView data)
-        {
-            // Use the model to perform predictions on the test data.
-            var predictions = model.Transform(data);
-
-            // Evaluate the metrics for the data using NDCG; by default,
-            // metrics for the up to 3 search results in the query are reported (e.g. NDCG@3).
-            return _mlContext.Ranking.Evaluate(predictions);
-        }
+        // Evaluate the metrics for the data using NDCG; by default,
+        // metrics for the up to 3 search results in the query are reported (e.g. NDCG@3).
+        return _mlContext.Ranking.Evaluate(predictions);
     }
 }

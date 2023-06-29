@@ -2,13 +2,12 @@
 using VideoPlatform.Api.Models.RequestModels;
 using VideoPlatform.BLL.Interfaces;
 
-namespace VideoPlatform.Api.Models.Validators
+namespace VideoPlatform.Api.Models.Validators;
+
+internal class AddTagsModelValidator : AbstractValidator<AddTagsModel>
 {
-    internal class AddTagsModelValidator : AbstractValidator<AddTagsModel>
+    public AddTagsModelValidator(ITagManager tagManager)
     {
-        public AddTagsModelValidator(ITagManager tagManager)
-        {
-            RuleForEach(x => x.Tags).NotNull().SetValidator(new AddTagModelValidator(tagManager));
-        }
+        RuleForEach(x => x.Tags).NotNull().SetValidator(new AddTagModelValidator(tagManager));
     }
 }

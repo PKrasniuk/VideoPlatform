@@ -2,13 +2,13 @@
 using FluentValidation.Validators;
 using VideoPlatform.Api.Models.RequestModels;
 
-namespace VideoPlatform.Api.Models.Validators
+namespace VideoPlatform.Api.Models.Validators;
+
+internal class RemoveTagsModelValidator : AbstractValidator<RemoveTagsModel>
 {
-    internal class RemoveTagsModelValidator : AbstractValidator<RemoveTagsModel>
+    public RemoveTagsModelValidator()
     {
-        public RemoveTagsModelValidator()
-        {
-            RuleForEach(x => x.Ids).NotNull().NotEmpty().SetValidator(new GreaterThanOrEqualValidator<RemoveTagsModel, int>(0));
-        }
+        RuleForEach(x => x.Ids).NotNull().NotEmpty()
+            .SetValidator(new GreaterThanOrEqualValidator<RemoveTagsModel, int>(0));
     }
 }

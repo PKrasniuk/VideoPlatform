@@ -7,41 +7,41 @@ using VideoPlatform.DAL.Interfaces;
 using VideoPlatform.MessageService.Models;
 using VideoPlatform.MessageService.Models.Enums;
 
-namespace VideoPlatform.MessageService.Managers
+namespace VideoPlatform.MessageService.Managers;
+
+/// <summary>
+///     PartnerTypesRemoveListener
+/// </summary>
+public sealed class PartnerTypesRemoveListener : RabbitListener
 {
-    /// <summary>
-    /// PartnerTypesRemoveListener
-    /// </summary>
-    public sealed class PartnerTypesRemoveListener : RabbitListener
+    private readonly IServiceScopeFactory _scopeFactory;
+
+    public PartnerTypesRemoveListener(IOptions<RabbitOptions> optionsAccess, IServiceScopeFactory scopeFactory) :
+        base(optionsAccess)
     {
-        private readonly IServiceScopeFactory _scopeFactory;
+        MessageType = MessageType.PartnerTypesRemove;
+        _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
+    }
 
-        public PartnerTypesRemoveListener(IOptions<RabbitOptions> optionsAccess, IServiceScopeFactory scopeFactory) : base(optionsAccess)
+    protected override bool Process(string message)
+    {
+        if (!string.IsNullOrEmpty(message))
         {
-            MessageType = MessageType.PartnerTypesRemove;
-            _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
-        }
+            var model = JsonConvert.DeserializeObject<PartnerTypesRemoveModel>(message);
+            using var scope = _scopeFactory.CreateScope();
+            var repository = scope.ServiceProvider.GetRequiredService<IPartnerTypesRepository>();
 
-        protected override bool Process(string message)
-        {
-            if (!string.IsNullOrEmpty(message))
+            AsyncHelper.RunSync(async () =>
             {
-                var model = JsonConvert.DeserializeObject<PartnerTypesRemoveModel>(message);
-                using var scope = _scopeFactory.CreateScope();
-                var repository = scope.ServiceProvider.GetRequiredService<IPartnerTypesRepository>();
+                var partnerTypes = await repository.GetEntityAsync(x =>
+                    x.PartnerId == model.PartnerId && x.Type.Equals(model.Type));
+                if (partnerTypes != null)
+                    await repository.RemoveEntityAsync(partnerTypes.Id);
+            });
 
-                AsyncHelper.RunSync(async () =>
-                {
-                    var partnerTypes = await repository.GetEntityAsync(x =>
-                        x.PartnerId == model.PartnerId && x.Type.Equals(model.Type));
-                    if (partnerTypes != null) 
-                        await repository.RemoveEntityAsync(partnerTypes.Id);
-                });
-
-                return true;
-            }
-
-            return false;
+            return true;
         }
+
+        return false;
     }
 }

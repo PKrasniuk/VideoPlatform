@@ -1,18 +1,17 @@
 ﻿using MediatR;
 
-namespace VideoPlatform.CQRS.Commands
+namespace VideoPlatform.CQRS.Commands;
+
+public class RemoveSettingCommand : BaseCommand<Unit>
 {
-    public class RemoveSettingCommand : BaseCommand<Unit>
+    public RemoveSettingCommand()
     {
-        public RemoveSettingCommand()
-        {
-        }
-
-        public RemoveSettingCommand(short id)
-        {
-            Id = id;
-        }
-
-        public short Id { get; }
     }
+
+    public RemoveSettingCommand(short id)
+    {
+        Id = id;
+    }
+
+    public short Id { get; }
 }

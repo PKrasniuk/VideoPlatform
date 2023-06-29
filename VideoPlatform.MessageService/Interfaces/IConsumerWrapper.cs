@@ -1,15 +1,14 @@
 ﻿using VideoPlatform.MessageService.Models.Enums;
 
-namespace VideoPlatform.MessageService.Interfaces
+namespace VideoPlatform.MessageService.Interfaces;
+
+public interface IConsumerWrapper
 {
-    public interface IConsumerWrapper
-    {
-        void Subscribe(MessageType messageType);
+    void Subscribe(MessageType messageType);
 
-        string ReadMessage();
+    string ReadMessage();
 
-        void Close();
+    void Close();
 
-        void Dispose();
-    }
+    void Dispose();
 }

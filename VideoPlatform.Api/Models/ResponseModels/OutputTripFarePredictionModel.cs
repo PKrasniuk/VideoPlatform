@@ -1,16 +1,15 @@
 ﻿using Newtonsoft.Json;
 
-namespace VideoPlatform.Api.Models.ResponseModels
+namespace VideoPlatform.Api.Models.ResponseModels;
+
+/// <summary>
+///     OutputTripFarePredictionModel
+/// </summary>
+public class OutputTripFarePredictionModel
 {
     /// <summary>
-    /// OutputTripFarePredictionModel
+    ///     FareAmount
     /// </summary>
-    public class OutputTripFarePredictionModel
-    {
-        /// <summary>
-        /// FareAmount
-        /// </summary>
-        [JsonProperty("fareAmount")]
-        public float FareAmount { get; set; }
-    }
+    [JsonProperty("fareAmount")]
+    public float FareAmount { get; set; }
 }

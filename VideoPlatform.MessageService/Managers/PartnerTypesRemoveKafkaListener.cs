@@ -7,34 +7,34 @@ using VideoPlatform.MessageService.Interfaces;
 using VideoPlatform.MessageService.Models;
 using VideoPlatform.MessageService.Models.Enums;
 
-namespace VideoPlatform.MessageService.Managers
+namespace VideoPlatform.MessageService.Managers;
+
+/// <summary>
+///     PartnerTypesRemoveKafkaListener
+/// </summary>
+public sealed class PartnerTypesRemoveKafkaListener : KafkaListener
 {
-    /// <summary>
-    /// PartnerTypesRemoveKafkaListener
-    /// </summary>
-    public sealed class PartnerTypesRemoveKafkaListener : KafkaListener
+    private readonly IServiceScopeFactory _scopeFactory;
+
+    public PartnerTypesRemoveKafkaListener(IConsumerWrapper consumerWrapper, IServiceScopeFactory scopeFactory) : base(
+        consumerWrapper)
     {
-        private readonly IServiceScopeFactory _scopeFactory;
+        MessageType = MessageType.PartnerTypesRemove;
+        _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
+    }
 
-        public PartnerTypesRemoveKafkaListener(IConsumerWrapper consumerWrapper, IServiceScopeFactory scopeFactory) : base(consumerWrapper)
+    protected override async Task ProcessAsync(string message)
+    {
+        if (!string.IsNullOrEmpty(message))
         {
-            MessageType = MessageType.PartnerTypesRemove;
-            _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
-        }
+            var model = JsonConvert.DeserializeObject<PartnerTypesRemoveModel>(message);
+            using var scope = _scopeFactory.CreateScope();
+            var repository = scope.ServiceProvider.GetRequiredService<IPartnerTypesRepository>();
 
-        protected override async Task ProcessAsync(string message)
-        {
-            if (!string.IsNullOrEmpty(message))
-            {
-                var model = JsonConvert.DeserializeObject<PartnerTypesRemoveModel>(message);
-                using var scope = _scopeFactory.CreateScope();
-                var repository = scope.ServiceProvider.GetRequiredService<IPartnerTypesRepository>();
-
-                var partnerTypes = await repository.GetEntityAsync(x =>
-                    x.PartnerId == model.PartnerId && x.Type.Equals(model.Type));
-                if (partnerTypes != null) 
-                    await repository.RemoveEntityAsync(partnerTypes.Id);
-            }
+            var partnerTypes = await repository.GetEntityAsync(x =>
+                x.PartnerId == model.PartnerId && x.Type.Equals(model.Type));
+            if (partnerTypes != null)
+                await repository.RemoveEntityAsync(partnerTypes.Id);
         }
     }
 }

@@ -4,19 +4,18 @@ using Quartz.Impl;
 using Quartz.Spi;
 using VideoPlatform.SchedulerService.Jobs;
 
-namespace VideoPlatform.SchedulerService.Infrastructure.Extensions
+namespace VideoPlatform.SchedulerService.Infrastructure.Extensions;
+
+public static class SchedulerExtension
 {
-    public static class SchedulerExtension
+    public static void AddSchedulerConfiguration(this IServiceCollection services)
     {
-        public static void AddSchedulerConfiguration(this IServiceCollection services)
-        {
-            services.AddSingleton<IJobFactory, JobFactory>();
-            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
-            services.AddHostedService<QuartzHostedService>();
+        services.AddSingleton<IJobFactory, JobFactory>();
+        services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+        services.AddHostedService<QuartzHostedService>();
 
-            services.AddSingleton<BasedJob>();
+        services.AddSingleton<BasedJob>();
 
-            services.AddSingleton(new JobSchedule(jobType: typeof(BasedJob), cronExpression: "0/10 * * * * ?"));
-        }
+        services.AddSingleton(new JobSchedule(typeof(BasedJob), "0/10 * * * * ?"));
     }
 }

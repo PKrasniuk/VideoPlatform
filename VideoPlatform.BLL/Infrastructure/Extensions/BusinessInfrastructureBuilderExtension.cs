@@ -5,18 +5,17 @@ using Microsoft.Extensions.DependencyInjection;
 using VideoPlatform.DAL;
 using VideoPlatform.Domain.Entities;
 
-namespace VideoPlatform.BLL.Infrastructure.Extensions
-{
-    public static class BusinessInfrastructureBuilderExtension
-    {
-        public static void AddBusinessInfrastructureBuilder(this IApplicationBuilder app,
-            UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
-        {
-            using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            using var context = serviceScope.ServiceProvider.GetService<VideoPlatformContext>();
-            context?.Database.Migrate();
+namespace VideoPlatform.BLL.Infrastructure.Extensions;
 
-            IdentityDataInitializer.SeedData(userManager, roleManager);
-        }
+public static class BusinessInfrastructureBuilderExtension
+{
+    public static void AddBusinessInfrastructureBuilder(this IApplicationBuilder app,
+        UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
+    {
+        using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+        using var context = serviceScope.ServiceProvider.GetService<VideoPlatformContext>();
+        context?.Database.Migrate();
+
+        IdentityDataInitializer.SeedData(userManager, roleManager);
     }
 }

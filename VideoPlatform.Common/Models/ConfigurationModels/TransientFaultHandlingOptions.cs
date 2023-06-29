@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace VideoPlatform.Common.Models.ConfigurationModels
-{
-    public class TransientFaultHandlingOptions
-    {
-        public bool Enabled { get; set; }
+namespace VideoPlatform.Common.Models.ConfigurationModels;
 
-        public TimeSpan AutoRetryDelay { get; set; }
-    }
+public class TransientFaultHandlingOptions
+{
+    public bool Enabled { get; set; }
+
+    public TimeSpan AutoRetryDelay { get; set; }
 }

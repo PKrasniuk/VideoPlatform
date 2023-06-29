@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace VideoPlatform.DAL.Infrastructure.Extensions
+namespace VideoPlatform.DAL.Infrastructure.Extensions;
+
+internal static class ModelBuilderExtension
 {
-    internal static class ModelBuilderExtension
+    public static void Seed(this ModelBuilder modelBuilder)
     {
-        public static void Seed(this ModelBuilder modelBuilder)
-        {
-        }
     }
 }

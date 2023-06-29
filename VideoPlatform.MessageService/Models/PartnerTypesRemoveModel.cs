@@ -2,13 +2,12 @@
 using Newtonsoft.Json.Converters;
 using VideoPlatform.Domain.Enums;
 
-namespace VideoPlatform.MessageService.Models
-{
-    public class PartnerTypesRemoveModel
-    {
-        public int PartnerId { get; set; }
+namespace VideoPlatform.MessageService.Models;
 
-        [JsonConverter(typeof(StringEnumConverter))]
-        public PartnerType Type { get; set; }
-    }
+public class PartnerTypesRemoveModel
+{
+    public int PartnerId { get; set; }
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public PartnerType Type { get; set; }
 }
