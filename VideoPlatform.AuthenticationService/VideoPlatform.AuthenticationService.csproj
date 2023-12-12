@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <UserSecretsId>21f8ef02-8327-474b-ac6b-dd746c26edda</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>obj\Debug\net7.0\VideoPlatform.AuthenticationService.xml</DocumentationFile>
+    <DocumentationFile>obj\Debug\net8.0\VideoPlatform.AuthenticationService.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

@@ -34,11 +34,9 @@ public class SettingsHandler :
         return await _settingsRepository.GetEntityByIdAsync(request.SettingId, cancellationToken);
     }
 
-    public async Task<Unit> Handle(RemoveSettingCommand request, CancellationToken cancellationToken)
+    public async Task Handle(RemoveSettingCommand request, CancellationToken cancellationToken)
     {
         await _settingsRepository.RemoveEntityAsync(request.Id, cancellationToken);
-
-        return Unit.Value;
     }
 
     public async Task<IEnumerable<Setting>> Handle(SettingsQuery request, CancellationToken cancellationToken)
@@ -46,10 +44,8 @@ public class SettingsHandler :
         return await _settingsRepository.GetEntitiesAsync(null, cancellationToken);
     }
 
-    public async Task<Unit> Handle(UpdateSettingCommand request, CancellationToken cancellationToken)
+    public async Task Handle(UpdateSettingCommand request, CancellationToken cancellationToken)
     {
         await _settingsRepository.UpdateEntityAsync(request.Entity, cancellationToken);
-
-        return Unit.Value;
     }
 }

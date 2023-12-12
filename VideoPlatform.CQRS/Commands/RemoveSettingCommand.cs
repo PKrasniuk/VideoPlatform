@@ -2,7 +2,7 @@
 
 namespace VideoPlatform.CQRS.Commands;
 
-public class RemoveSettingCommand : BaseCommand<Unit>
+public class RemoveSettingCommand : BaseCommand<Unit>, IRequest
 {
     public RemoveSettingCommand()
     {

@@ -7,10 +7,6 @@ public static partial class ConfigurationExtension
 {
     public static void AddCacheConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDistributedRedisCache(options =>
-        {
-            options.Configuration = configuration["Cache:RedisUrl"];
-            options.InstanceName = configuration["Cache:InstanceName"];
-        });
+        services.AddDistributedMemoryCache();
     }
 }

@@ -3,7 +3,7 @@ using VideoPlatform.Domain.Entities;
 
 namespace VideoPlatform.CQRS.Commands;
 
-public class UpdateSettingCommand : BaseCommand<Unit>
+public class UpdateSettingCommand : BaseCommand<Unit>, IRequest
 {
     public UpdateSettingCommand()
     {
