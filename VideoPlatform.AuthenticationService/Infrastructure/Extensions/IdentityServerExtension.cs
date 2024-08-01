@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Collections.Generic;
+using Duende.IdentityServer.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +41,7 @@ internal static class ConfigurationExtension
             .AddDeveloperSigningCredential()
             .AddInMemoryIdentityResources(ClientsConfiguration.GetIdentityResources())
             .AddInMemoryApiResources(clientsConfiguration.GetApiResources())
-            .AddInMemoryClients(clientsConfiguration.GetClients())
+            .AddInMemoryClients((ICollection<Client>)clientsConfiguration.GetClients())
             .AddAspNetIdentity<AppUser>();
     }
 }

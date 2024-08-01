@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,5 +20,12 @@ public static class BusinessInfrastructureBuilderExtension
         context?.Database.Migrate();
 
         IdentityDataInitializer.SeedData(userManager, roleManager);
+    }
+
+    public static async Task<bool> GetSchemeSupportsSignOutAsync(this HttpContext context, string scheme)
+    {
+        var provider = context.RequestServices.GetRequiredService<IAuthenticationHandlerProvider>();
+        var handler = await provider.GetHandlerAsync(context, scheme);
+        return handler != null && handler is IAuthenticationSignOutHandler;
     }
 }

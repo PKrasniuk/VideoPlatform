@@ -12,10 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MMLib.SwaggerForOcelot" Version="8.1.0" />
-    <PackageReference Include="Ocelot" Version="22.0.1" />
-    <PackageReference Include="Ocelot.Administration" Version="22.0.1" />
-    <PackageReference Include="Ocelot.Cache.CacheManager" Version="22.0.1" />
+    <PackageReference Include="MMLib.SwaggerForOcelot" Version="8.3.0" />
+    <PackageReference Include="Ocelot" Version="23.3.3" />
+    <PackageReference Include="Ocelot.Administration" Version="23.3.3" />
+    <PackageReference Include="Ocelot.Cache.CacheManager" Version="23.3.3" />
   </ItemGroup>
 
   <ItemGroup>

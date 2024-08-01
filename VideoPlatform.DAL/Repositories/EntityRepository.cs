@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using System.Transactions;
 using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
-using VideoPlatform.Common.Models.Enums;
 using VideoPlatform.DAL.Interfaces;
 using VideoPlatform.DAL.Models;
 using VideoPlatform.Domain.Entities;
 using IsolationLevel = System.Data.IsolationLevel;
+using SortOrder = VideoPlatform.Common.Models.Enums.SortOrder;
 
 namespace VideoPlatform.DAL.Repositories;
 

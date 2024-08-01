@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using IdentityServer4.Models;
+using Duende.IdentityServer.Models;
 using Microsoft.Extensions.Configuration;
 
 namespace VideoPlatform.AuthenticationService.Infrastructure.Configurations;

@@ -12,11 +12,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IdentityServer4" Version="4.1.2" />
-    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
+    <PackageReference Include="Duende.IdentityServer" Version="7.0.6" />
+	<PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="7.0.6" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VideoPlatform.BLL\VideoPlatform.BLL.csproj" />
     <ProjectReference Include="..\VideoPlatform.Common\VideoPlatform.Common.csproj" />
     <ProjectReference Include="..\VideoPlatform.DAL\VideoPlatform.DAL.csproj" />
     <ProjectReference Include="..\VideoPlatform.Domain\VideoPlatform.Domain.csproj" />

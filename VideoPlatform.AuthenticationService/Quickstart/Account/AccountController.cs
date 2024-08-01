@@ -5,15 +5,17 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Duende.IdentityServer;
+using Duende.IdentityServer.Events;
+using Duende.IdentityServer.Extensions;
+using Duende.IdentityServer.Services;
+using Duende.IdentityServer.Stores;
 using IdentityModel;
-using IdentityServer4.Events;
-using IdentityServer4.Extensions;
-using IdentityServer4.Services;
-using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using VideoPlatform.BLL.Infrastructure.Extensions;
 using VideoPlatform.Domain.Entities;
 
 namespace IdentityServer4.Quickstart.UI;
@@ -294,7 +296,7 @@ public class AccountController : Controller
             LogoutId = logoutId
         };
 
-        if (User?.Identity.IsAuthenticated == true)
+        if (User.Identity?.IsAuthenticated == true)
         {
             var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
             if (idp != null && idp != IdentityServerConstants.LocalIdentityProvider)
@@ -302,12 +304,7 @@ public class AccountController : Controller
                 var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
                 if (providerSupportsSignout)
                 {
-                    if (vm.LogoutId == null)
-                        // if there's no current logout context, we need to create one
-                        // this captures necessary info from the current logged in user
-                        // before we signout and redirect away to the external IdP for signout
-                        vm.LogoutId = await _interaction.CreateLogoutContextAsync();
-
+                    vm.LogoutId ??= await _interaction.CreateLogoutContextAsync();
                     vm.ExternalAuthenticationScheme = idp;
                 }
             }
