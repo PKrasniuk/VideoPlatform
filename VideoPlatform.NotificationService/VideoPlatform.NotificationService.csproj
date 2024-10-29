@@ -12,13 +12,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetCore.CAP" Version="8.2.0" />
-    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="8.2.0" />
-    <PackageReference Include="DotNetCore.CAP.SqlServer" Version="8.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="8.0.8" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.8.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.8.0" />
+    <PackageReference Include="DotNetCore.CAP" Version="8.3.0" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="8.3.0" />
+    <PackageReference Include="DotNetCore.CAP.SqlServer" Version="8.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="8.0.10" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.9.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.9.0" />
   </ItemGroup>
 
   <ItemGroup>
