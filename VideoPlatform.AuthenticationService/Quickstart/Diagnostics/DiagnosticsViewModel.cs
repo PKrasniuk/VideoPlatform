@@ -8,24 +8,38 @@ using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Newtonsoft.Json;
 
-namespace IdentityServer4.Quickstart.UI;
+namespace VideoPlatform.AuthenticationService.Quickstart.Diagnostics;
 
+/// <summary>
+///     DiagnosticsViewModel
+/// </summary>
 public class DiagnosticsViewModel
 {
+    /// <summary>
+    ///     DiagnosticsViewModel
+    /// </summary>
+    /// <param name="result"></param>
     public DiagnosticsViewModel(AuthenticateResult result)
     {
         AuthenticateResult = result;
 
-        if (result.Properties.Items.ContainsKey("client_list"))
-        {
-            var encoded = result.Properties.Items["client_list"];
-            var bytes = Base64Url.Decode(encoded);
-            var value = Encoding.UTF8.GetString(bytes);
+        if (result.Properties != null && result.Properties.Items.TryGetValue("client_list", out var encoded))
+            if (encoded != null)
+            {
+                var bytes = Base64Url.Decode(encoded);
+                var value = Encoding.UTF8.GetString(bytes);
 
-            Clients = JsonConvert.DeserializeObject<string[]>(value);
-        }
+                Clients = JsonConvert.DeserializeObject<string[]>(value);
+            }
     }
 
+    /// <summary>
+    ///     AuthenticateResult
+    /// </summary>
     public AuthenticateResult AuthenticateResult { get; }
+
+    /// <summary>
+    ///     Clients
+    /// </summary>
     public IEnumerable<string> Clients { get; } = new List<string>();
 }

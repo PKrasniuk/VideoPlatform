@@ -5,20 +5,42 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace IdentityServer4.Quickstart.UI;
+namespace VideoPlatform.AuthenticationService.Quickstart.Account;
 
+/// <summary>
+///     LoginViewModel
+/// </summary>
 public class LoginViewModel : LoginInputModel
 {
+    /// <summary>
+    ///     AllowRememberLogin
+    /// </summary>
     public bool AllowRememberLogin { get; set; } = true;
+
+    /// <summary>
+    ///     EnableLocalLogin
+    /// </summary>
     public bool EnableLocalLogin { get; set; } = true;
 
+    /// <summary>
+    ///     ExternalProviders
+    /// </summary>
     public IEnumerable<ExternalProvider> ExternalProviders { get; set; } = Enumerable.Empty<ExternalProvider>();
 
+    /// <summary>
+    ///     VisibleExternalProviders
+    /// </summary>
     public IEnumerable<ExternalProvider> VisibleExternalProviders =>
         ExternalProviders.Where(x => !string.IsNullOrWhiteSpace(x.DisplayName));
 
+    /// <summary>
+    ///     IsExternalLoginOnly
+    /// </summary>
     public bool IsExternalLoginOnly => EnableLocalLogin == false && ExternalProviders?.Count() == 1;
 
+    /// <summary>
+    ///     ExternalLoginScheme
+    /// </summary>
     public string ExternalLoginScheme =>
         IsExternalLoginOnly ? ExternalProviders?.SingleOrDefault()?.AuthenticationScheme : null;
 }

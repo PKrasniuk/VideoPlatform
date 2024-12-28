@@ -5,22 +5,52 @@
 using System;
 using Microsoft.AspNetCore.Server.IISIntegration;
 
-namespace IdentityServer4.Quickstart.UI;
+namespace VideoPlatform.AuthenticationService.Quickstart.Account;
 
-public class AccountOptions
+/// <summary>
+///     AccountOptions
+/// </summary>
+public static class AccountOptions
 {
-    public static bool AllowLocalLogin = true;
-    public static bool AllowRememberLogin = true;
+    /// <summary>
+    ///     AllowLocalLogin
+    /// </summary>
+    public static readonly bool AllowLocalLogin = true;
+
+    /// <summary>
+    ///     AllowRememberLogin
+    /// </summary>
+    public static readonly bool AllowRememberLogin = true;
+
+    /// <summary>
+    ///     RememberMeLoginDuration
+    /// </summary>
     public static TimeSpan RememberMeLoginDuration = TimeSpan.FromDays(30);
 
-    public static bool ShowLogoutPrompt = true;
-    public static bool AutomaticRedirectAfterSignOut = false;
+    /// <summary>
+    ///     ShowLogoutPrompt
+    /// </summary>
+    public static readonly bool ShowLogoutPrompt = true;
+
+    /// <summary>
+    ///     AutomaticRedirectAfterSignOut
+    /// </summary>
+    public static readonly bool AutomaticRedirectAfterSignOut = false;
 
     // specify the Windows authentication scheme being used
+    /// <summary>
+    ///     WindowsAuthenticationSchemeName
+    /// </summary>
     public static readonly string WindowsAuthenticationSchemeName = IISDefaults.AuthenticationScheme;
 
     // if user uses windows auth, should we load the groups from windows
-    public static bool IncludeWindowsGroups = false;
+    /// <summary>
+    ///     IncludeWindowsGroups
+    /// </summary>
+    public static readonly bool IncludeWindowsGroups = false;
 
-    public static string InvalidCredentialsErrorMessage = "Invalid username or password";
+    /// <summary>
+    ///     InvalidCredentialsErrorMessage
+    /// </summary>
+    public static readonly string InvalidCredentialsErrorMessage = "Invalid username or password";
 }

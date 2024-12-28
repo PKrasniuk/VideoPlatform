@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Services;
-using Duende.IdentityServer.Stores;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IdentityServer4.Quickstart.UI;
+namespace VideoPlatform.AuthenticationService.Quickstart.Grants;
 
 /// <summary>
 ///     This sample controller allows a user to revoke grants given to clients
@@ -20,19 +19,18 @@ namespace IdentityServer4.Quickstart.UI;
 [Authorize]
 public class GrantsController : Controller
 {
-    private readonly IClientStore _clients;
     private readonly IEventService _events;
     private readonly IIdentityServerInteractionService _interaction;
-    private readonly IResourceStore _resources;
 
+    /// <summary>
+    ///     GrantsController
+    /// </summary>
+    /// <param name="interaction"></param>
+    /// <param name="events"></param>
     public GrantsController(IIdentityServerInteractionService interaction,
-        IClientStore clients,
-        IResourceStore resources,
         IEventService events)
     {
         _interaction = interaction;
-        _clients = clients;
-        _resources = resources;
         _events = events;
     }
 

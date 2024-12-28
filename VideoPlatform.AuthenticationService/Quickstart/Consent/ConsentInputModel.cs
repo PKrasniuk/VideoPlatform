@@ -4,12 +4,30 @@
 
 using System.Collections.Generic;
 
-namespace IdentityServer4.Quickstart.UI;
+namespace VideoPlatform.AuthenticationService.Quickstart.Consent;
 
+/// <summary>
+///     ConsentInputModel
+/// </summary>
 public class ConsentInputModel
 {
+    /// <summary>
+    ///     Button
+    /// </summary>
     public string Button { get; set; }
+
+    /// <summary>
+    ///     ScopesConsented
+    /// </summary>
     public IEnumerable<string> ScopesConsented { get; set; }
+
+    /// <summary>
+    ///     RememberConsent
+    /// </summary>
     public bool RememberConsent { get; set; }
+
+    /// <summary>
+    ///     ReturnUrl
+    /// </summary>
     public string ReturnUrl { get; set; }
 }

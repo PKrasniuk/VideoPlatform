@@ -10,8 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace IdentityServer4.Quickstart.UI;
+namespace VideoPlatform.AuthenticationService.Quickstart.Home;
 
+/// <summary>
+///     HomeController
+/// </summary>
 [SecurityHeaders]
 [AllowAnonymous]
 public class HomeController : Controller
@@ -20,6 +23,12 @@ public class HomeController : Controller
     private readonly IIdentityServerInteractionService _interaction;
     private readonly ILogger _logger;
 
+    /// <summary>
+    ///     HomeController
+    /// </summary>
+    /// <param name="interaction"></param>
+    /// <param name="environment"></param>
+    /// <param name="logger"></param>
     public HomeController(IIdentityServerInteractionService interaction, IWebHostEnvironment environment,
         ILogger logger)
     {
@@ -28,6 +37,10 @@ public class HomeController : Controller
         _logger = logger;
     }
 
+    /// <summary>
+    ///     Index
+    /// </summary>
+    /// <returns></returns>
     public IActionResult Index()
     {
         if (_environment.IsDevelopment())

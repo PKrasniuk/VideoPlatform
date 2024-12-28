@@ -43,7 +43,7 @@ public class ClientsConfiguration
     {
         yield return new ApiResource
         {
-            Name = Configuration["Security:ApiResources:Name"],
+            Name = Configuration["Security:ApiResources:Name"] ?? string.Empty,
             DisplayName = Configuration["Security:ApiResources:DisplayName"]
             //Scopes = new[]
             //{
@@ -66,7 +66,7 @@ public class ClientsConfiguration
                 AllowAccessTokensViaBrowser = true,
                 AllowedGrantTypes = GrantTypes.Implicit,
                 AllowedScopes = new[] { "readAccess", "writeAccess" },
-                ClientId = Configuration["Security:ApiClient:ClientId"],
+                ClientId = Configuration["Security:ApiClient:ClientId"] ?? string.Empty,
                 ClientName = Configuration["Security:ApiClient:ClientName"],
                 ClientSecrets = new[] { new Secret(Configuration["Security:ApiClient:ClientSecret"].Sha256()) },
                 RedirectUris = new[] { Configuration["Security:ApiClient:RedirectUrl"] }

@@ -11,8 +11,9 @@ using Duende.IdentityServer.Stores;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using VideoPlatform.AuthenticationService.Quickstart.Account;
 
-namespace IdentityServer4.Quickstart.UI;
+namespace VideoPlatform.AuthenticationService.Quickstart.Consent;
 
 /// <summary>
 ///     This controller processes the consent UI
@@ -22,22 +23,22 @@ namespace IdentityServer4.Quickstart.UI;
 public class ConsentController : Controller
 {
     private readonly IClientStore _clientStore;
-    private readonly IEventService _events;
     private readonly IIdentityServerInteractionService _interaction;
     private readonly ILogger<ConsentController> _logger;
-    private readonly IResourceStore _resourceStore;
 
+    /// <summary>
+    ///     ConsentController
+    /// </summary>
+    /// <param name="interaction"></param>
+    /// <param name="clientStore"></param>
+    /// <param name="logger"></param>
     public ConsentController(
         IIdentityServerInteractionService interaction,
         IClientStore clientStore,
-        IResourceStore resourceStore,
-        IEventService events,
         ILogger<ConsentController> logger)
     {
         _interaction = interaction;
         _clientStore = clientStore;
-        _resourceStore = resourceStore;
-        _events = events;
         _logger = logger;
     }
 
@@ -95,7 +96,7 @@ public class ConsentController : Controller
         ConsentResponse grantedConsent = null;
 
         // user clicked 'no' - send back the standard 'access_denied' response
-        if (model?.Button == "no")
+        if (model.Button == "no")
         {
             //grantedConsent = ConsentResponse.Denied;
 
@@ -103,14 +104,14 @@ public class ConsentController : Controller
             //await _events.RaiseAsync(new ConsentDeniedEvent(User.GetSubjectId(), request.ClientId, request.ScopesRequested));
         }
         // user clicked 'yes' - validate the data
-        else if (model?.Button == "yes")
+        else if (model.Button == "yes")
         {
             // if the user consented to some scope, build the response model
             if (model.ScopesConsented != null && model.ScopesConsented.Any())
             {
                 var scopes = model.ScopesConsented;
                 if (ConsentOptions.EnableOfflineAccess == false)
-                    scopes = scopes.Where(x => x != IdentityServerConstants.StandardScopes.OfflineAccess);
+                    scopes.Where(x => x != IdentityServerConstants.StandardScopes.OfflineAccess);
 
                 grantedConsent = new ConsentResponse
                 {

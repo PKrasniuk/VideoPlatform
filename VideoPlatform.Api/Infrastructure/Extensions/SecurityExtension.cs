@@ -1,5 +1,5 @@
-﻿using IdentityServer4.AccessTokenValidation;
-using Microsoft.AspNetCore.Builder;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,12 +9,14 @@ internal static partial class ConfigurationExtension
 {
     public static void AddSecurityConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-            .AddIdentityServerAuthentication(options =>
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
             {
                 options.Authority = configuration["Security:Authority"];
-                options.ApiName = configuration["Security:ApiName"];
-                options.RequireHttpsMetadata = bool.Parse(configuration["Security:RequireHttpsMetadata"]); //dev only
+                options.TokenValidationParameters.ValidAudiences = new List<string>
+                    { configuration[configuration["Security:ApiName"] ?? string.Empty] };
+                options.RequireHttpsMetadata =
+                    bool.Parse(configuration["Security:RequireHttpsMetadata"] ?? string.Empty); //dev only
             });
 
         services.AddAuthorization(c =>

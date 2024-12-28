@@ -5,10 +5,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace IdentityServer4.Quickstart.UI;
+namespace VideoPlatform.AuthenticationService.Quickstart;
 
+/// <summary>
+///     SecurityHeadersAttribute
+/// </summary>
 public class SecurityHeadersAttribute : ActionFilterAttribute
 {
+    /// <summary>
+    ///     OnResultExecuting
+    /// </summary>
+    /// <param name="context"></param>
     public override void OnResultExecuting(ResultExecutingContext context)
     {
         var result = context.Result;
@@ -38,9 +45,9 @@ public class SecurityHeadersAttribute : ActionFilterAttribute
                 context.HttpContext.Response.Headers.Add("X-Content-Security-Policy", csp);
 
             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
-            var referrer_policy = "no-referrer";
+            const string referrerPolicy = "no-referrer";
             if (!context.HttpContext.Response.Headers.ContainsKey("Referrer-Policy"))
-                context.HttpContext.Response.Headers.Add("Referrer-Policy", referrer_policy);
+                context.HttpContext.Response.Headers.Add("Referrer-Policy", referrerPolicy);
         }
     }
 }

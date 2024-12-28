@@ -9,7 +9,6 @@ using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Services;
-using Duende.IdentityServer.Stores;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -18,31 +17,39 @@ using Microsoft.AspNetCore.Mvc;
 using VideoPlatform.BLL.Infrastructure.Extensions;
 using VideoPlatform.Domain.Entities;
 
-namespace IdentityServer4.Quickstart.UI;
+namespace VideoPlatform.AuthenticationService.Quickstart.Account;
 
+/// <summary>
+///     AccountController
+/// </summary>
 [SecurityHeaders]
 [AllowAnonymous]
 public class AccountController : Controller
 {
-    private readonly IClientStore _clientStore;
     private readonly IEventService _events;
     private readonly IIdentityServerInteractionService _interaction;
     private readonly IAuthenticationSchemeProvider _schemeProvider;
     private readonly SignInManager<AppUser> _signInManager;
     private readonly UserManager<AppUser> _userManager;
 
+    /// <summary>
+    ///     AccountController
+    /// </summary>
+    /// <param name="userManager"></param>
+    /// <param name="signInManager"></param>
+    /// <param name="interaction"></param>
+    /// <param name="schemeProvider"></param>
+    /// <param name="events"></param>
     public AccountController(
         UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager,
         IIdentityServerInteractionService interaction,
-        IClientStore clientStore,
         IAuthenticationSchemeProvider schemeProvider,
         IEventService events)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _interaction = interaction;
-        _clientStore = clientStore;
         _schemeProvider = schemeProvider;
         _events = events;
     }
@@ -99,7 +106,7 @@ public class AccountController : Controller
                 await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, true);
             if (result.Succeeded)
             {
-                var user = await _userManager.FindByNameAsync(model.Username);
+                await _userManager.FindByNameAsync(model.Username);
                 //await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id.ToString(), user.UserName, clientId: context?.ClientId));
 
                 if (context != null)
@@ -158,7 +165,7 @@ public class AccountController : Controller
         // build a model so the logged out page knows what to display
         var vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
 
-        if (User?.Identity.IsAuthenticated == true)
+        if (User.Identity != null && User.Identity.IsAuthenticated)
         {
             // delete local authentication cookie
             await _signInManager.SignOutAsync();
@@ -182,6 +189,10 @@ public class AccountController : Controller
         return View("LoggedOut", vm);
     }
 
+    /// <summary>
+    ///     AccessDenied
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public IActionResult AccessDenied()
     {
@@ -204,7 +215,7 @@ public class AccountController : Controller
             {
                 EnableLocalLogin = local,
                 ReturnUrl = returnUrl,
-                Username = context?.LoginHint
+                Username = context.LoginHint
             };
 
             if (!local) vm.ExternalProviders = new[] { new ExternalProvider { AuthenticationScheme = context.IdP } };
@@ -225,25 +236,10 @@ public class AccountController : Controller
                 AuthenticationScheme = x.Name
             }).ToList();
 
-        var allowLocal = true;
-        //if (context?.ClientId != null)
-        //{
-        //    var client = await _clientStore.FindEnabledClientByIdAsync(context.ClientId);
-        //    if (client != null)
-        //    {
-        //        allowLocal = client.EnableLocalLogin;
-
-        //        if (client.IdentityProviderRestrictions != null && client.IdentityProviderRestrictions.Any())
-        //        {
-        //            providers = providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList();
-        //        }
-        //    }
-        //}
-
         return new LoginViewModel
         {
             AllowRememberLogin = AccountOptions.AllowRememberLogin,
-            EnableLocalLogin = allowLocal && AccountOptions.AllowLocalLogin,
+            EnableLocalLogin = AccountOptions.AllowLocalLogin,
             ReturnUrl = returnUrl,
             Username = context?.LoginHint,
             ExternalProviders = providers.ToArray()
@@ -262,7 +258,7 @@ public class AccountController : Controller
     {
         var vm = new LogoutViewModel { LogoutId = logoutId, ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt };
 
-        if (User?.Identity.IsAuthenticated != true)
+        if (User.Identity != null && User.Identity.IsAuthenticated != true)
         {
             // if the user is not authenticated, then just show logged out page
             vm.ShowLogoutPrompt = false;
@@ -270,7 +266,7 @@ public class AccountController : Controller
         }
 
         var context = await _interaction.GetLogoutContextAsync(logoutId);
-        if (context?.ShowSignoutPrompt == false)
+        if (context.ShowSignoutPrompt == false)
         {
             // it's safe to automatically sign-out
             vm.ShowLogoutPrompt = false;
@@ -290,9 +286,9 @@ public class AccountController : Controller
         var vm = new LoggedOutViewModel
         {
             AutomaticRedirectAfterSignOut = AccountOptions.AutomaticRedirectAfterSignOut,
-            PostLogoutRedirectUri = logout?.PostLogoutRedirectUri,
-            ClientName = string.IsNullOrEmpty(logout?.ClientName) ? logout?.ClientId : logout?.ClientName,
-            SignOutIframeUrl = logout?.SignOutIFrameUrl,
+            PostLogoutRedirectUri = logout.PostLogoutRedirectUri,
+            ClientName = string.IsNullOrEmpty(logout.ClientName) ? logout.ClientId : logout.ClientName,
+            SignOutIframeUrl = logout.SignOutIFrameUrl,
             LogoutId = logoutId
         };
 

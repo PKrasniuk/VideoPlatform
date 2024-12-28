@@ -1,8 +1,11 @@
 using System.Threading.Tasks;
 using Duende.IdentityServer.Stores;
 
-namespace IdentityServer4.Quickstart.UI;
+namespace VideoPlatform.AuthenticationService.Quickstart;
 
+/// <summary>
+///     Extensions
+/// </summary>
 public static class Extensions
 {
     /// <summary>

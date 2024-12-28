@@ -8,37 +8,36 @@ using System.Threading.Tasks;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
-using Duende.IdentityServer.Stores;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using VideoPlatform.AuthenticationService.Quickstart.Consent;
 
-namespace IdentityServer4.Quickstart.UI.Device;
+namespace VideoPlatform.AuthenticationService.Quickstart.Device;
 
+/// <summary>
+///     DeviceController
+/// </summary>
 [Authorize]
 [SecurityHeaders]
 public class DeviceController : Controller
 {
-    private readonly IClientStore _clientStore;
-    private readonly IEventService _events;
     private readonly IDeviceFlowInteractionService _interaction;
-    private readonly ILogger<DeviceController> _logger;
-    private readonly IResourceStore _resourceStore;
 
+    /// <summary>
+    ///     DeviceController
+    /// </summary>
+    /// <param name="interaction"></param>
     public DeviceController(
-        IDeviceFlowInteractionService interaction,
-        IClientStore clientStore,
-        IResourceStore resourceStore,
-        IEventService eventService,
-        ILogger<DeviceController> logger)
+        IDeviceFlowInteractionService interaction)
     {
         _interaction = interaction;
-        _clientStore = clientStore;
-        _resourceStore = resourceStore;
-        _events = eventService;
-        _logger = logger;
     }
 
+    /// <summary>
+    ///     Index
+    /// </summary>
+    /// <param name="userCode"></param>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> Index([FromQuery(Name = "user_code")] string userCode)
     {
@@ -51,6 +50,11 @@ public class DeviceController : Controller
         return View("UserCodeConfirmation", vm);
     }
 
+    /// <summary>
+    ///     UserCodeCapture
+    /// </summary>
+    /// <param name="userCode"></param>
+    /// <returns></returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UserCodeCapture(string userCode)
@@ -61,6 +65,12 @@ public class DeviceController : Controller
         return View("UserCodeConfirmation", vm);
     }
 
+    /// <summary>
+    ///     Callback
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Callback(DeviceAuthorizationInputModel model)

@@ -4,15 +4,40 @@
 
 using System.Collections.Generic;
 
-namespace IdentityServer4.Quickstart.UI;
+namespace VideoPlatform.AuthenticationService.Quickstart.Consent;
 
+/// <summary>
+///     ConsentViewModel
+/// </summary>
 public class ConsentViewModel : ConsentInputModel
 {
+    /// <summary>
+    ///     ClientName
+    /// </summary>
     public string ClientName { get; set; }
+
+    /// <summary>
+    ///     ClientUrl
+    /// </summary>
     public string ClientUrl { get; set; }
+
+    /// <summary>
+    ///     ClientLogoUrl
+    /// </summary>
     public string ClientLogoUrl { get; set; }
+
+    /// <summary>
+    ///     AllowRememberConsent
+    /// </summary>
     public bool AllowRememberConsent { get; set; }
 
+    /// <summary>
+    ///     IdentityScopes
+    /// </summary>
     public IEnumerable<ScopeViewModel> IdentityScopes { get; set; }
+
+    /// <summary>
+    ///     ResourceScopes
+    /// </summary>
     public IEnumerable<ScopeViewModel> ResourceScopes { get; set; }
 }

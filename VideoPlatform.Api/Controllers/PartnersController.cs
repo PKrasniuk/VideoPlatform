@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -59,7 +59,7 @@ public class PartnersController : ControllerBase
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PartnerModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetailsModel))]
-    [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme,
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
         Policy = "readAccess")]
     public async Task<ActionResult<PartnerModel>> GetPartnerAsync(int id)
     {
@@ -76,7 +76,7 @@ public class PartnersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FilterResultModel<PartnerModel>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetailsModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetailsModel))]
-    [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme,
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
         Policy = "readAccess")]
     public async Task<ActionResult<FilterResultModel<PartnerModel>>> GetPartnersSearchAsync(
         [FromForm] FilterPartnerModel model)
@@ -122,7 +122,7 @@ public class PartnersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FilterResultModel<PartnerModel>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetailsModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetailsModel))]
-    [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme,
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
         Policy = "readAccess")]
     public async Task<ActionResult<FilterResultModel<PartnerModel>>> GetPartnersByFilterAsync(
         [FromForm] FilterPartnerModel model)
@@ -172,7 +172,7 @@ public class PartnersController : ControllerBase
     [HttpGet("all")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ICollection<PartnerModel>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetailsModel))]
-    [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme,
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
         Policy = "readAccess")]
     public async Task<ActionResult<ICollection<PartnerModel>>> GetCachedPartnersAsync()
     {
@@ -191,7 +191,7 @@ public class PartnersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PartnerModel))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetailsModel))]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(ErrorDetailsModel))]
-    [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme,
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
         Policy = "writeAccess")]
     public async Task<ActionResult<PartnerModel>> AddPartnerAsync([FromForm] AddPartnerModel model)
     {
@@ -213,7 +213,7 @@ public class PartnersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PartnerModel))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetailsModel))]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(ErrorDetailsModel))]
-    [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme,
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
         Policy = "writeAccess")]
     public async Task<ActionResult<PartnerModel>> UpdatePartnerAsync([FromForm] UpdatePartnerModel model)
     {
@@ -234,7 +234,7 @@ public class PartnersController : ControllerBase
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetailsModel))]
-    [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme,
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
         Policy = "writeAccess")]
     public async Task<ActionResult> RemovePartnerAsync(int id)
     {

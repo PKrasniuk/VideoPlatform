@@ -4,18 +4,31 @@
 
 using Duende.IdentityServer.Models;
 
-namespace IdentityServer4.Quickstart.UI;
+namespace VideoPlatform.AuthenticationService.Quickstart.Home;
 
+/// <summary>
+///     ErrorViewModel
+/// </summary>
 public class ErrorViewModel
 {
+    /// <summary>
+    ///     ErrorViewModel
+    /// </summary>
     public ErrorViewModel()
     {
     }
 
+    /// <summary>
+    ///     ErrorViewModel
+    /// </summary>
+    /// <param name="error"></param>
     public ErrorViewModel(string error)
     {
         Error = new ErrorMessage { Error = error };
     }
 
+    /// <summary>
+    ///     Error
+    /// </summary>
     public ErrorMessage Error { get; set; }
 }

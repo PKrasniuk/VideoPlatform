@@ -4,14 +4,32 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityServer4.Quickstart.UI;
+namespace VideoPlatform.AuthenticationService.Quickstart.Account;
 
+/// <summary>
+///     LoginInputModel
+/// </summary>
 public class LoginInputModel
 {
-    [Required] public string Username { get; set; }
+    /// <summary>
+    ///     Username
+    /// </summary>
+    [Required]
+    public string Username { get; set; }
 
-    [Required] public string Password { get; set; }
+    /// <summary>
+    ///     Password
+    /// </summary>
+    [Required]
+    public string Password { get; set; }
 
+    /// <summary>
+    ///     RememberLogin
+    /// </summary>
     public bool RememberLogin { get; set; }
+
+    /// <summary>
+    ///     ReturnUrl
+    /// </summary>
     public string ReturnUrl { get; set; }
 }
