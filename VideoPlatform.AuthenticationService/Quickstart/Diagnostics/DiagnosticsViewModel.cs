@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 using System.Text;
-using IdentityModel;
+using Duende.IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Newtonsoft.Json;
 
