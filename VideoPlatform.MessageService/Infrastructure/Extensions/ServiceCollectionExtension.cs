@@ -22,7 +22,7 @@ public static class ServiceCollectionExtension
             options.Password = configuration["RabbitMQ:Password"];
             options.HostName = configuration["RabbitMQ:HostName"];
             options.VHost = configuration["RabbitMQ:VHost"];
-            options.Port = int.Parse(configuration["RabbitMQ:Port"]);
+            options.Port = int.Parse(configuration["RabbitMQ:Port"] ?? "5672");
         });
 
         services.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();

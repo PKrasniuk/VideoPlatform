@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using VideoPlatform.MessageService.Models;
+using IModel = RabbitMQ.Client.IModel;
 
 namespace VideoPlatform.MessageService.Infrastructure.Configuration;
 
