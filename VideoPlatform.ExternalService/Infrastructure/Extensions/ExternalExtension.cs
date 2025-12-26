@@ -25,22 +25,19 @@ public static class ExternalExtension
             .HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
             .FallbackAsync(FallbackAction, OnFallbackAsync);
 
-        if (configuration.GetSection("ExternalServices") != null)
-        {
-            var externalServicesConfigCollection =
-                configuration.GetSection("ExternalServices").Get<ICollection<ExternalServiceInfo>>();
-            if (externalServicesConfigCollection != null && externalServicesConfigCollection.Any())
-                foreach (var externalServicesConfig in externalServicesConfigCollection)
-                    services.AddHttpClient(externalServicesConfig.Name, client =>
-                    {
-                        client.BaseAddress = new Uri(externalServicesConfig.Url);
+        var externalServicesConfigCollection =
+            configuration.GetSection("ExternalServices").Get<ICollection<ExternalServiceInfo>>();
+        if (externalServicesConfigCollection != null && externalServicesConfigCollection.Any())
+            foreach (var externalServicesConfig in externalServicesConfigCollection)
+                services.AddHttpClient(externalServicesConfig.Name, client =>
+                {
+                    client.BaseAddress = new Uri(externalServicesConfig.Url);
 
-                        if (externalServicesConfig.DefaultRequestHeaders != null &&
-                            externalServicesConfig.DefaultRequestHeaders.Any())
-                            foreach (var defaultRequestHeader in externalServicesConfig.DefaultRequestHeaders)
-                                client.DefaultRequestHeaders.Add(defaultRequestHeader.Name, defaultRequestHeader.Value);
-                    }).AddPolicyHandler(Policy.WrapAsync(fallbackPolicy, httpWaitAndRetryPolicy));
-        }
+                    if (externalServicesConfig.DefaultRequestHeaders != null &&
+                        externalServicesConfig.DefaultRequestHeaders.Any())
+                        foreach (var defaultRequestHeader in externalServicesConfig.DefaultRequestHeaders)
+                            client.DefaultRequestHeaders.Add(defaultRequestHeader.Name, defaultRequestHeader.Value);
+                }).AddPolicyHandler(Policy.WrapAsync(fallbackPolicy, httpWaitAndRetryPolicy));
     }
 
     private static Task OnFallbackAsync(DelegateResult<HttpResponseMessage> response, Context context)

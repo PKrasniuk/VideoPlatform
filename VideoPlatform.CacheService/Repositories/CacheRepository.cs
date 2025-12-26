@@ -8,14 +8,9 @@ using VideoPlatform.Common.Infrastructure.Constants;
 
 namespace VideoPlatform.CacheService.Repositories;
 
-public class CacheRepository : ICacheRepository
+public class CacheRepository(IDistributedCache cache) : ICacheRepository
 {
-    private readonly IDistributedCache _cache;
-
-    public CacheRepository(IDistributedCache cache)
-    {
-        _cache = cache ?? throw new ArgumentNullException(nameof(cache));
-    }
+    private readonly IDistributedCache _cache = cache ?? throw new ArgumentNullException(nameof(cache));
 
     public async Task RefreshAsync(string key, CancellationToken cancellationToken)
     {

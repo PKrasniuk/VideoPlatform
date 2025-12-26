@@ -4,13 +4,9 @@ using VideoPlatform.DAL.Interfaces;
 
 namespace VideoPlatform.BLL.Managers;
 
-public class SubscriptionSeriesManager : ISubscriptionSeriesManager
+public class SubscriptionSeriesManager(ISubscriptionSeriesRepository subscriptionSeriesRepository)
+    : ISubscriptionSeriesManager
 {
-    private readonly ISubscriptionSeriesRepository _subscriptionSeriesRepository;
-
-    public SubscriptionSeriesManager(ISubscriptionSeriesRepository subscriptionSeriesRepository)
-    {
-        _subscriptionSeriesRepository = subscriptionSeriesRepository ??
-                                        throw new ArgumentNullException(nameof(subscriptionSeriesRepository));
-    }
+    private readonly ISubscriptionSeriesRepository _subscriptionSeriesRepository = subscriptionSeriesRepository ??
+        throw new ArgumentNullException(nameof(subscriptionSeriesRepository));
 }

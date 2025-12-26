@@ -19,26 +19,27 @@ using VideoPlatform.MessageService.Models.Enums;
 
 namespace VideoPlatform.BLL.Managers;
 
-public class PartnerTypesManager : IPartnerTypesManager
+public class PartnerTypesManager(
+    IPartnerTypesRepository partnerTypesRepository,
+    IIndexingPartnerTypesManager indexingPartnerTypesManager,
+    IRabbitManager rabbitManager,
+    ICapPublisher eventBus,
+    IProducerWrapper producerWrapper)
+    : IPartnerTypesManager
 {
-    private readonly ICapPublisher _eventBus;
-    private readonly IIndexingPartnerTypesManager _indexingPartnerTypesManager;
-    private readonly IPartnerTypesRepository _partnerTypesRepository;
-    private readonly IProducerWrapper _producerWrapper;
-    private readonly IRabbitManager _rabbitManager;
+    private readonly ICapPublisher _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 
-    public PartnerTypesManager(IPartnerTypesRepository partnerTypesRepository,
-        IIndexingPartnerTypesManager indexingPartnerTypesManager, IRabbitManager rabbitManager,
-        ICapPublisher eventBus, IProducerWrapper producerWrapper)
-    {
-        _partnerTypesRepository =
-            partnerTypesRepository ?? throw new ArgumentNullException(nameof(partnerTypesRepository));
-        _indexingPartnerTypesManager = indexingPartnerTypesManager ??
-                                       throw new ArgumentNullException(nameof(indexingPartnerTypesManager));
-        _rabbitManager = rabbitManager ?? throw new ArgumentNullException(nameof(rabbitManager));
-        _producerWrapper = producerWrapper ?? throw new ArgumentNullException(nameof(producerWrapper));
-        _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-    }
+    private readonly IIndexingPartnerTypesManager _indexingPartnerTypesManager = indexingPartnerTypesManager ??
+        throw new ArgumentNullException(nameof(indexingPartnerTypesManager));
+
+    private readonly IPartnerTypesRepository _partnerTypesRepository =
+        partnerTypesRepository ?? throw new ArgumentNullException(nameof(partnerTypesRepository));
+
+    private readonly IProducerWrapper _producerWrapper =
+        producerWrapper ?? throw new ArgumentNullException(nameof(producerWrapper));
+
+    private readonly IRabbitManager _rabbitManager =
+        rabbitManager ?? throw new ArgumentNullException(nameof(rabbitManager));
 
     public ICollection<ListItem<byte>> GetPartnerTypes(CancellationToken cancellationToken)
     {

@@ -5,12 +5,8 @@ using System.Threading;
 
 namespace VideoPlatform.Tests.Infrastructure;
 
-internal class AsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>
+internal class AsyncEnumerable<T>(Expression expression) : EnumerableQuery<T>(expression), IAsyncEnumerable<T>
 {
-    public AsyncEnumerable(Expression expression) : base(expression)
-    {
-    }
-
     public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
     {
         return GetEnumerator();

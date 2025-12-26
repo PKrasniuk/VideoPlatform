@@ -9,14 +9,9 @@ using VideoPlatform.MessageService.Models.Enums;
 
 namespace VideoPlatform.MessageService.Managers;
 
-public class RabbitManager : IRabbitManager
+public class RabbitManager(IPooledObjectPolicy<IModel> objectPolicy) : IRabbitManager
 {
-    private readonly DefaultObjectPool<IModel> _objectPool;
-
-    public RabbitManager(IPooledObjectPolicy<IModel> objectPolicy)
-    {
-        _objectPool = new DefaultObjectPool<IModel>(objectPolicy, Environment.ProcessorCount * 2);
-    }
+    private readonly DefaultObjectPool<IModel> _objectPool = new(objectPolicy, Environment.ProcessorCount * 2);
 
     public void Publish<T>(T message, MessageType type) where T : class
     {

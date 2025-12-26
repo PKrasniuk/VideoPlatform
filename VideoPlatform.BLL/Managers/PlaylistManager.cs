@@ -4,12 +4,8 @@ using VideoPlatform.DAL.Interfaces;
 
 namespace VideoPlatform.BLL.Managers;
 
-public class PlaylistManager : IPlaylistManager
+public class PlaylistManager(IPlaylistsRepository playlistsRepository) : IPlaylistManager
 {
-    private readonly IPlaylistsRepository _playlistsRepository;
-
-    public PlaylistManager(IPlaylistsRepository playlistsRepository)
-    {
-        _playlistsRepository = playlistsRepository ?? throw new ArgumentNullException(nameof(playlistsRepository));
-    }
+    private readonly IPlaylistsRepository _playlistsRepository =
+        playlistsRepository ?? throw new ArgumentNullException(nameof(playlistsRepository));
 }

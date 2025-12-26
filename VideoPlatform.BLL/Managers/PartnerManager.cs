@@ -14,21 +14,22 @@ using VideoPlatform.ElasticSearchService.Models;
 
 namespace VideoPlatform.BLL.Managers;
 
-public class PartnerManager : IPartnerManager
+public class PartnerManager(
+    IPartnersRepository partnersRepository,
+    IIndexingPartnerManager indexingPartnerManager,
+    ICacheRepository cacheRepository)
+    : IPartnerManager
 {
     private const string PartnersCacheKey = "AllPartners";
-    private readonly ICacheRepository _cacheRepository;
-    private readonly IIndexingPartnerManager _indexingPartnerManager;
-    private readonly IPartnersRepository _partnersRepository;
 
-    public PartnerManager(IPartnersRepository partnersRepository, IIndexingPartnerManager indexingPartnerManager,
-        ICacheRepository cacheRepository)
-    {
-        _partnersRepository = partnersRepository ?? throw new ArgumentNullException(nameof(partnersRepository));
-        _indexingPartnerManager =
-            indexingPartnerManager ?? throw new ArgumentNullException(nameof(indexingPartnerManager));
-        _cacheRepository = cacheRepository ?? throw new ArgumentNullException(nameof(cacheRepository));
-    }
+    private readonly ICacheRepository _cacheRepository =
+        cacheRepository ?? throw new ArgumentNullException(nameof(cacheRepository));
+
+    private readonly IIndexingPartnerManager _indexingPartnerManager =
+        indexingPartnerManager ?? throw new ArgumentNullException(nameof(indexingPartnerManager));
+
+    private readonly IPartnersRepository _partnersRepository =
+        partnersRepository ?? throw new ArgumentNullException(nameof(partnersRepository));
 
     public async Task<Partner> GetPartnerByIdAsync(int partnerId, CancellationToken cancellationToken)
     {

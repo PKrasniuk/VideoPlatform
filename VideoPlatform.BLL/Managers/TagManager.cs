@@ -9,14 +9,10 @@ using VideoPlatform.Domain.Entities;
 
 namespace VideoPlatform.BLL.Managers;
 
-public class TagManager : ITagManager
+public class TagManager(ITagsRepository tagsRepository) : ITagManager
 {
-    private readonly ITagsRepository _tagsRepository;
-
-    public TagManager(ITagsRepository tagsRepository)
-    {
-        _tagsRepository = tagsRepository ?? throw new ArgumentNullException(nameof(tagsRepository));
-    }
+    private readonly ITagsRepository _tagsRepository =
+        tagsRepository ?? throw new ArgumentNullException(nameof(tagsRepository));
 
     public async Task<Tag> GetTagByIdAsync(int tagId, CancellationToken cancellationToken)
     {

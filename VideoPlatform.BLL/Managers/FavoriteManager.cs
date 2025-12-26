@@ -4,12 +4,8 @@ using VideoPlatform.DAL.Interfaces;
 
 namespace VideoPlatform.BLL.Managers;
 
-public class FavoriteManager : IFavoriteManager
+public class FavoriteManager(IFavoritesRepository favoritesRepository) : IFavoriteManager
 {
-    private readonly IFavoritesRepository _favoritesRepository;
-
-    public FavoriteManager(IFavoritesRepository favoritesRepository)
-    {
-        _favoritesRepository = favoritesRepository ?? throw new ArgumentNullException(nameof(favoritesRepository));
-    }
+    private readonly IFavoritesRepository _favoritesRepository =
+        favoritesRepository ?? throw new ArgumentNullException(nameof(favoritesRepository));
 }

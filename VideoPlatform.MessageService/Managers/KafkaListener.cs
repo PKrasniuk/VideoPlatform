@@ -8,15 +8,9 @@ using VideoPlatform.MessageService.Models.Enums;
 
 namespace VideoPlatform.MessageService.Managers;
 
-public abstract class KafkaListener : BackgroundService
+public abstract class KafkaListener(IConsumerWrapper consumerWrapper) : BackgroundService
 {
-    private readonly IConsumerWrapper _consumerWrapper;
     private bool _disposed;
-
-    protected KafkaListener(IConsumerWrapper consumerWrapper)
-    {
-        _consumerWrapper = consumerWrapper;
-    }
 
     protected MessageType MessageType { private get; set; }
 
@@ -28,8 +22,8 @@ public abstract class KafkaListener : BackgroundService
             while (currentNumAttempts < ConfigurationConstants.MaxNumAttempts)
             {
                 currentNumAttempts++;
-                _consumerWrapper.Subscribe(MessageType);
-                await ProcessAsync(_consumerWrapper.ReadMessage());
+                consumerWrapper.Subscribe(MessageType);
+                await ProcessAsync(consumerWrapper.ReadMessage());
             }
         }
     }
@@ -52,7 +46,7 @@ public abstract class KafkaListener : BackgroundService
         if (disposing)
         {
             base.Dispose();
-            _consumerWrapper.Dispose();
+            consumerWrapper.Dispose();
         }
 
         _disposed = true;

@@ -3,9 +3,5 @@ using VideoPlatform.Domain.Entities;
 
 namespace VideoPlatform.DAL.Repositories;
 
-public class FavoritesRepository : EntityRepository<Favorite, int>, IFavoritesRepository
-{
-    public FavoritesRepository(VideoPlatformContext dbContext) : base(dbContext)
-    {
-    }
-}
+public class FavoritesRepository(VideoPlatformContext dbContext)
+    : EntityRepository<Favorite, int>(dbContext), IFavoritesRepository;

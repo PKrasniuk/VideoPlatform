@@ -9,14 +9,10 @@ using VideoPlatform.Domain.Entities;
 
 namespace VideoPlatform.BLL.Managers;
 
-public class InfoDataManager : IInfoDataManager
+public class InfoDataManager(IInfoDataRepository infoDataRepository) : IInfoDataManager
 {
-    private readonly IInfoDataRepository _infoDataRepository;
-
-    public InfoDataManager(IInfoDataRepository infoDataRepository)
-    {
-        _infoDataRepository = infoDataRepository ?? throw new ArgumentNullException(nameof(infoDataRepository));
-    }
+    private readonly IInfoDataRepository _infoDataRepository =
+        infoDataRepository ?? throw new ArgumentNullException(nameof(infoDataRepository));
 
     public async Task<InfoData> GetInfoDataByIdAsync(Guid id, CancellationToken cancellationToken)
     {

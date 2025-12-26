@@ -3,9 +3,5 @@ using VideoPlatform.Domain.Entities;
 
 namespace VideoPlatform.DAL.Repositories;
 
-public class SubscriptionSeriesRepository : EntityRepository<SubscriptionSeries, int>, ISubscriptionSeriesRepository
-{
-    public SubscriptionSeriesRepository(VideoPlatformContext dbContext) : base(dbContext)
-    {
-    }
-}
+public class SubscriptionSeriesRepository(VideoPlatformContext dbContext)
+    : EntityRepository<SubscriptionSeries, int>(dbContext), ISubscriptionSeriesRepository;

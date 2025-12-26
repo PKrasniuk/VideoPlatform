@@ -12,32 +12,21 @@ namespace VideoPlatform.SchedulerService;
 /// <summary>
 ///     QuartzHostedService
 /// </summary>
-public class QuartzHostedService : IHostedService
+public class QuartzHostedService(
+    ISchedulerFactory schedulerFactory,
+    IEnumerable<JobSchedule> jobSchedules,
+    IJobFactory jobFactory)
+    : IHostedService
 {
-    private readonly IJobFactory _jobFactory;
-
-    private readonly IEnumerable<JobSchedule> _jobSchedules;
-    private readonly ISchedulerFactory _schedulerFactory;
-
-    public QuartzHostedService(
-        ISchedulerFactory schedulerFactory,
-        IEnumerable<JobSchedule> jobSchedules,
-        IJobFactory jobFactory)
-    {
-        _schedulerFactory = schedulerFactory;
-        _jobSchedules = jobSchedules;
-        _jobFactory = jobFactory;
-    }
-
     private IScheduler Scheduler { get; set; }
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        Scheduler = await _schedulerFactory.GetScheduler(cancellationToken);
+        Scheduler = await schedulerFactory.GetScheduler(cancellationToken);
 
-        Scheduler.JobFactory = _jobFactory;
+        Scheduler.JobFactory = jobFactory;
 
-        foreach (var jobSchedule in _jobSchedules)
+        foreach (var jobSchedule in jobSchedules)
         {
             var job = CreateJob(jobSchedule);
             var trigger = CreateTrigger(jobSchedule);

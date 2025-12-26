@@ -12,7 +12,7 @@ public static class ConfigurationExtension
     {
         var indexName = configuration["ElasticSearch:index"];
 
-        var settings = new ConnectionSettings(new Uri(configuration["ElasticSearch:url"]))
+        var settings = new ConnectionSettings(new Uri(configuration["ElasticSearch:url"]!))
             .DefaultIndex(indexName)
             .DisableDirectStreaming()
             .PrettyJson()

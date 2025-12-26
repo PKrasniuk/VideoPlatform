@@ -16,6 +16,7 @@ public class NotificationServiceIntegrationTests
     private const string Message = "Integration Testing in Microsoft AspNetCore SignalR";
     private readonly HubConnection _connection;
 
+    [Obsolete("Obsolete")]
     public NotificationServiceIntegrationTests()
     {
         var webHostBuilder = new WebHostBuilder()

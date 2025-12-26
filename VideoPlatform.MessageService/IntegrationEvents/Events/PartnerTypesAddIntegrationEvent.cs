@@ -2,15 +2,9 @@
 
 namespace VideoPlatform.MessageService.IntegrationEvents.Events;
 
-public class PartnerTypesAddIntegrationEvent
+public class PartnerTypesAddIntegrationEvent(int partnerId, PartnerType type)
 {
-    public PartnerTypesAddIntegrationEvent(int partnerId, PartnerType type)
-    {
-        PartnerId = partnerId;
-        Type = type;
-    }
+    public int PartnerId { get; } = partnerId;
 
-    public int PartnerId { get; }
-
-    public PartnerType Type { get; }
+    public PartnerType Type { get; } = type;
 }

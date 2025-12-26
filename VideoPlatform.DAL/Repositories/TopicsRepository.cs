@@ -3,9 +3,5 @@ using VideoPlatform.Domain.Entities;
 
 namespace VideoPlatform.DAL.Repositories;
 
-public class TopicsRepository : EntityRepository<Topic, int>, ITopicsRepository
-{
-    public TopicsRepository(VideoPlatformContext dbContext) : base(dbContext)
-    {
-    }
-}
+public class TopicsRepository(VideoPlatformContext dbContext)
+    : EntityRepository<Topic, int>(dbContext), ITopicsRepository;

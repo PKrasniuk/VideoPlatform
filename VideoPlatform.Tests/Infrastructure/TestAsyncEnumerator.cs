@@ -4,16 +4,11 @@ using System.Threading.Tasks;
 
 namespace VideoPlatform.Tests.Infrastructure;
 
-internal sealed class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
+internal sealed class TestAsyncEnumerator<T>(IEnumerator<T> inner) : IAsyncEnumerator<T>
 {
-    private readonly IEnumerator<T> _inner;
+    private readonly IEnumerator<T> _inner = inner ?? throw new ArgumentNullException(nameof(inner));
 
     private bool _disposed;
-
-    public TestAsyncEnumerator(IEnumerator<T> inner)
-    {
-        _inner = inner ?? throw new ArgumentNullException(nameof(inner));
-    }
 
     public ValueTask<bool> MoveNextAsync()
     {

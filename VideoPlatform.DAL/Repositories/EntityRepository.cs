@@ -15,16 +15,12 @@ using SortOrder = VideoPlatform.Common.Models.Enums.SortOrder;
 
 namespace VideoPlatform.DAL.Repositories;
 
-public abstract class EntityRepository<TEntity, TKey> : IEntityRepository<TEntity, TKey> where TEntity : Entity<TKey>
+public abstract class EntityRepository<TEntity, TKey>(DbContext dbContext) : IEntityRepository<TEntity, TKey>
+    where TEntity : Entity<TKey>
 {
     private const int MaxReloadIteration = 10;
 
-    protected EntityRepository(DbContext dbContext)
-    {
-        DatabaseContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-    }
-
-    private DbContext DatabaseContext { get; }
+    private DbContext DatabaseContext { get; } = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
     public async Task BeginTransactionAsync(CancellationToken cancellationToken)
     {

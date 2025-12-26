@@ -3,9 +3,5 @@ using VideoPlatform.Domain.Entities;
 
 namespace VideoPlatform.DAL.Repositories;
 
-public class PartnersRepository : EntityRepository<Partner, int>, IPartnersRepository
-{
-    public PartnersRepository(VideoPlatformContext dbContext) : base(dbContext)
-    {
-    }
-}
+public class PartnersRepository(VideoPlatformContext dbContext)
+    : EntityRepository<Partner, int>(dbContext), IPartnersRepository;

@@ -10,14 +10,10 @@ using VideoPlatform.Domain.Entities;
 
 namespace VideoPlatform.BLL.Managers;
 
-public class MetaDataManager : IMetaDataManager
+public class MetaDataManager(IMetaDataRepository metaDataRepository) : IMetaDataManager
 {
-    private readonly IMetaDataRepository _metaDataRepository;
-
-    public MetaDataManager(IMetaDataRepository metaDataRepository)
-    {
-        _metaDataRepository = metaDataRepository ?? throw new ArgumentNullException(nameof(metaDataRepository));
-    }
+    private readonly IMetaDataRepository _metaDataRepository =
+        metaDataRepository ?? throw new ArgumentNullException(nameof(metaDataRepository));
 
     public async Task<MetaData> GetMetaDataByIdAsync(ObjectId id, CancellationToken cancellationToken)
     {

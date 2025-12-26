@@ -43,13 +43,14 @@ public class ExperimentsRepositoryTests
 
         var mockSet = new Mock<DbSet<Experiment>>();
 
-        mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetAsyncEnumerator(default))
+        mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetAsyncEnumerator(CancellationToken.None))
             .Returns(new TestAsyncEnumerator<Experiment>(data.GetEnumerator()));
         mockSet.As<IQueryable<Experiment>>().Setup(m => m.Provider)
             .Returns(new TestAsyncQueryProvider<Experiment>(data.Provider));
         mockSet.As<IQueryable<Experiment>>().Setup(m => m.Expression).Returns(data.Expression);
         mockSet.As<IQueryable<Experiment>>().Setup(m => m.ElementType).Returns(data.ElementType);
-        mockSet.As<IQueryable<Experiment>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+        using var enumerator = data.GetEnumerator();
+        mockSet.As<IQueryable<Experiment>>().Setup(m => m.GetEnumerator()).Returns(enumerator);
 
         var mockContext = new Mock<VideoPlatformContext>(new DbContextOptions<VideoPlatformContext>());
 
@@ -59,7 +60,7 @@ public class ExperimentsRepositoryTests
             .Callback((Experiment model, CancellationToken _) =>
             {
                 dataList.Add(model);
-                mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetAsyncEnumerator(default))
+                mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetAsyncEnumerator(CancellationToken.None))
                     .Returns(new TestAsyncEnumerator<Experiment>(data.GetEnumerator()));
             })
             .Returns((Experiment _, CancellationToken _) => new ValueTask<EntityEntry<Experiment>>());
@@ -76,16 +77,16 @@ public class ExperimentsRepositoryTests
                 item.Status = model.Status;
                 item.Type = model.Type;
             }
-        }).Returns<EntityState>(null);
+        }).Returns<EntityState>(null!);
 
         mockContext.Setup(m => m.Remove(It.IsAny<Experiment>())).Callback((Experiment model) =>
         {
             var item = dataList.FirstOrDefault(x => x.Id.Equals(model.Id));
             if (item != null) dataList.Remove(item);
 
-            mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetAsyncEnumerator(default))
+            mockSet.As<IAsyncEnumerable<Experiment>>().Setup(m => m.GetAsyncEnumerator(CancellationToken.None))
                 .Returns(new TestAsyncEnumerator<Experiment>(data.GetEnumerator()));
-        }).Returns<EntityState>(null);
+        }).Returns<EntityState>(null!);
 
         _experimentsRepository = new ExperimentsRepository(mockContext.Object);
     }
@@ -125,7 +126,7 @@ public class ExperimentsRepositoryTests
     {
         var result = await _experimentsRepository.GetEntitiesAsync();
         Assert.IsNotNull(result);
-        Assert.AreEqual(1, result.Count);
+        Assert.HasCount(1, result);
     }
 
     [TestMethod]
@@ -133,7 +134,7 @@ public class ExperimentsRepositoryTests
     {
         var result = await _experimentsRepository.GetEntitiesAsync(x => x.Name.Equals("testExperiment"));
         Assert.IsNotNull(result);
-        Assert.AreEqual(1, result.Count);
+        Assert.HasCount(1, result);
     }
 
     [TestMethod]
@@ -141,7 +142,7 @@ public class ExperimentsRepositoryTests
     {
         var result = await _experimentsRepository.GetEntitiesAsync(x => x.Name.Equals("test"));
         Assert.IsNotNull(result);
-        Assert.AreEqual(0, result.Count);
+        Assert.HasCount(0, result);
     }
 
     [TestMethod]
@@ -196,7 +197,7 @@ public class ExperimentsRepositoryTests
 
         var result = await _experimentsRepository.GetEntitiesAsync();
         Assert.IsNotNull(result);
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
     }
 
     [TestMethod]
@@ -236,6 +237,6 @@ public class ExperimentsRepositoryTests
 
         var result = await _experimentsRepository.GetEntitiesAsync();
         Assert.IsNotNull(result);
-        Assert.AreEqual(1, result.Count);
+        Assert.HasCount(1, result);
     }
 }

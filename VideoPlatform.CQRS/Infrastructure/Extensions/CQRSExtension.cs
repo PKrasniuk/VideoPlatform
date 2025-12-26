@@ -5,8 +5,11 @@ namespace VideoPlatform.CQRS.Infrastructure.Extensions;
 
 public static class CQRSExtension
 {
-    public static void AddCQRS(this IServiceCollection services, Assembly assembly)
+    extension(IServiceCollection services)
     {
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
+        public void AddCQRS(Assembly assembly)
+        {
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
+        }
     }
 }

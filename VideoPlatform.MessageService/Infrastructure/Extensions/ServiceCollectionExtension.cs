@@ -14,64 +14,67 @@ namespace VideoPlatform.MessageService.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtension
 {
-    public static void AddMessenger(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        services.Configure<RabbitOptions>(options =>
+        public void AddMessenger(IConfiguration configuration)
         {
-            options.UserName = configuration["RabbitMQ:UserName"];
-            options.Password = configuration["RabbitMQ:Password"];
-            options.HostName = configuration["RabbitMQ:HostName"];
-            options.VHost = configuration["RabbitMQ:VHost"];
-            options.Port = int.Parse(configuration["RabbitMQ:Port"] ?? "5672");
-        });
-
-        services.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
-        services.AddSingleton<IPooledObjectPolicy<IModel>, RabbitModelPooledObjectPolicy>();
-
-        services.AddSingleton<IRabbitManager, RabbitManager>();
-        services.AddHostedService<PartnerTypesRemoveListener>();
-    }
-
-    public static void AddEventBus(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddCap(options =>
-        {
-            options.UseDashboard();
-            options.UseSqlServer(configuration["ConnectionStrings:Default"]);
-
-            options.UseRabbitMQ(conf =>
+            services.Configure<RabbitOptions>(options =>
             {
-                conf.HostName = configuration["RabbitMQ:HostName"];
-                conf.Port = int.Parse(configuration["RabbitMQ:Port"]);
-                conf.UserName = configuration["RabbitMQ:UserName"];
-                conf.Password = configuration["RabbitMQ:Password"];
-                conf.VirtualHost = configuration["RabbitMQ:VHost"];
+                options.UserName = configuration["RabbitMQ:UserName"];
+                options.Password = configuration["RabbitMQ:Password"];
+                options.HostName = configuration["RabbitMQ:HostName"];
+                options.VHost = configuration["RabbitMQ:VHost"];
+                options.Port = int.Parse(configuration["RabbitMQ:Port"] ?? "5672");
             });
 
-            options.FailedRetryCount = int.Parse(configuration["RabbitMQ:MessengerRetryCount"]);
-            options.DefaultGroupName = configuration["RabbitMQ:MessengerClientName"];
-        });
-    }
+            services.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
+            services.AddSingleton<IPooledObjectPolicy<IModel>, RabbitModelPooledObjectPolicy>();
 
-    public static void RegisteringEventHandlers(this IServiceCollection services)
-    {
-        services.AddTransient<PartnerTypesAddIntegrationEventHandler>();
-        services.AddTransient<PartnerTypesRemoveIntegrationEventHandler>();
-    }
+            services.AddSingleton<IRabbitManager, RabbitManager>();
+            services.AddHostedService<PartnerTypesRemoveListener>();
+        }
 
-    public static void AddKafkaMessenger(this IServiceCollection services, IConfiguration configuration)
-    {
-        var producerConfig = new ProducerConfig();
-        configuration.Bind("Kafka:Producer", producerConfig);
-        services.AddSingleton(producerConfig);
+        public void AddEventBus(IConfiguration configuration)
+        {
+            services.AddCap(options =>
+            {
+                options.UseDashboard();
+                options.UseSqlServer(configuration["ConnectionStrings:Default"]!);
 
-        var consumerConfig = new ConsumerConfig();
-        configuration.Bind("Kafka:Consumer", consumerConfig);
-        services.AddSingleton(consumerConfig);
+                options.UseRabbitMQ(conf =>
+                {
+                    conf.HostName = configuration["RabbitMQ:HostName"]!;
+                    conf.Port = int.Parse(configuration["RabbitMQ:Port"]!);
+                    conf.UserName = configuration["RabbitMQ:UserName"]!;
+                    conf.Password = configuration["RabbitMQ:Password"]!;
+                    conf.VirtualHost = configuration["RabbitMQ:VHost"]!;
+                });
 
-        services.AddTransient<IProducerWrapper, ProducerWrapper>();
-        services.AddTransient<IConsumerWrapper, ConsumerWrapper>();
+                options.FailedRetryCount = int.Parse(configuration["RabbitMQ:MessengerRetryCount"]!);
+                options.DefaultGroupName = configuration["RabbitMQ:MessengerClientName"]!;
+            });
+        }
 
-        services.AddHostedService<PartnerTypesRemoveKafkaListener>();
+        public void RegisteringEventHandlers()
+        {
+            services.AddTransient<PartnerTypesAddIntegrationEventHandler>();
+            services.AddTransient<PartnerTypesRemoveIntegrationEventHandler>();
+        }
+
+        public void AddKafkaMessenger(IConfiguration configuration)
+        {
+            var producerConfig = new ProducerConfig();
+            configuration.Bind("Kafka:Producer", producerConfig);
+            services.AddSingleton(producerConfig);
+
+            var consumerConfig = new ConsumerConfig();
+            configuration.Bind("Kafka:Consumer", consumerConfig);
+            services.AddSingleton(consumerConfig);
+
+            services.AddTransient<IProducerWrapper, ProducerWrapper>();
+            services.AddTransient<IConsumerWrapper, ConsumerWrapper>();
+
+            services.AddHostedService<PartnerTypesRemoveKafkaListener>();
+        }
     }
 }

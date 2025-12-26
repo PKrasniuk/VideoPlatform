@@ -11,16 +11,12 @@ using VideoPlatform.Domain.Entities;
 
 namespace VideoPlatform.BLL.Managers;
 
-public class SettingManager : ISettingManager
+public class SettingManager(ISettingsRepository settingsRepository, IMediator mediator) : ISettingManager
 {
-    private readonly IMediator _mediator;
-    private readonly ISettingsRepository _settingsRepository;
+    private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
-    public SettingManager(ISettingsRepository settingsRepository, IMediator mediator)
-    {
-        _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
-        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-    }
+    private readonly ISettingsRepository _settingsRepository =
+        settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
 
     public async Task<ICollection<Setting>> GetSettingsAsync(CancellationToken cancellationToken)
     {

@@ -3,9 +3,4 @@ using VideoPlatform.Domain.Entities;
 
 namespace VideoPlatform.DAL.Repositories;
 
-public class TagsRepository : EntityRepository<Tag, int>, ITagsRepository
-{
-    public TagsRepository(VideoPlatformContext dbContext) : base(dbContext)
-    {
-    }
-}
+public class TagsRepository(VideoPlatformContext dbContext) : EntityRepository<Tag, int>(dbContext), ITagsRepository;

@@ -4,13 +4,8 @@ using VideoPlatform.DAL.Interfaces;
 
 namespace VideoPlatform.BLL.Managers;
 
-public class ExperimentManager : IExperimentManager
+public class ExperimentManager(IExperimentsRepository experimentsRepository) : IExperimentManager
 {
-    private readonly IExperimentsRepository _experimentsRepository;
-
-    public ExperimentManager(IExperimentsRepository experimentsRepository)
-    {
-        _experimentsRepository =
-            experimentsRepository ?? throw new ArgumentNullException(nameof(experimentsRepository));
-    }
+    private readonly IExperimentsRepository _experimentsRepository =
+        experimentsRepository ?? throw new ArgumentNullException(nameof(experimentsRepository));
 }

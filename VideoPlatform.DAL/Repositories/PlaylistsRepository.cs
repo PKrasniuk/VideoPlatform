@@ -3,9 +3,5 @@ using VideoPlatform.Domain.Entities;
 
 namespace VideoPlatform.DAL.Repositories;
 
-public class PlaylistsRepository : EntityRepository<Playlist, int>, IPlaylistsRepository
-{
-    public PlaylistsRepository(VideoPlatformContext dbContext) : base(dbContext)
-    {
-    }
-}
+public class PlaylistsRepository(VideoPlatformContext dbContext)
+    : EntityRepository<Playlist, int>(dbContext), IPlaylistsRepository;

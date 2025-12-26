@@ -9,14 +9,11 @@ using VideoPlatform.ElasticSearchService.Models;
 
 namespace VideoPlatform.ElasticSearchService.Managers;
 
-public abstract class IndexingEntityManager<TEntity> : IIndexingEntityManager<TEntity> where TEntity : class
+public abstract class IndexingEntityManager<TEntity>(IElasticClient elasticClient) : IIndexingEntityManager<TEntity>
+    where TEntity : class
 {
-    private readonly IElasticClient _elasticClient;
-
-    protected IndexingEntityManager(IElasticClient elasticClient)
-    {
-        _elasticClient = elasticClient ?? throw new ArgumentNullException(nameof(elasticClient));
-    }
+    private readonly IElasticClient _elasticClient =
+        elasticClient ?? throw new ArgumentNullException(nameof(elasticClient));
 
     public async Task IndexEntityAsync(TEntity entity, CancellationToken cancellationToken)
     {

@@ -7,20 +7,14 @@ using VideoPlatform.MessageService.Models.Enums;
 
 namespace VideoPlatform.MessageService.Wrappers;
 
-public class ProducerWrapper : IProducerWrapper
+public class ProducerWrapper(ProducerConfig config) : IProducerWrapper
 {
     private static readonly Random Rand = new();
-    private readonly ProducerConfig _config;
-
-    public ProducerWrapper(ProducerConfig config)
-    {
-        _config = config;
-    }
 
     public async Task<DeliveryResult<string, string>> WriteMessage(string message, MessageType messageType,
         CancellationToken cancellationToken)
     {
-        using var producer = new ProducerBuilder<string, string>(_config).Build();
+        using var producer = new ProducerBuilder<string, string>(config).Build();
         return await producer.ProduceAsync(messageType.ToString(), new Message<string, string>
         {
             Key = Rand.Next(5).ToString(),

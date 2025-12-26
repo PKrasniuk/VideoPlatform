@@ -31,8 +31,8 @@ internal static partial class ConfigurationExtension
                     AuthorizationCode = new OpenApiOAuthFlow
                     {
                         AuthorizationUrl =
-                            new Uri(configuration["Security:SwaggerSecurityDefinition:AuthorizationUrl"]),
-                        TokenUrl = new Uri(configuration["Security:SwaggerSecurityDefinition:TokenUrl"]),
+                            new Uri(configuration["Security:SwaggerSecurityDefinition:AuthorizationUrl"]!),
+                        TokenUrl = new Uri(configuration["Security:SwaggerSecurityDefinition:TokenUrl"]!),
                         Scopes = new Dictionary<string, string>
                         {
                             { "readAccess", "Access read operations" },

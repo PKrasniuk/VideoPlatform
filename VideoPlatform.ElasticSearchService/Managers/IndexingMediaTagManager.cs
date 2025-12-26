@@ -4,9 +4,5 @@ using VideoPlatform.ElasticSearchService.Interfaces;
 
 namespace VideoPlatform.ElasticSearchService.Managers;
 
-public class IndexingMediaTagManager : IndexingEntityManager<MediaTag>, IIndexingMediaTagManager
-{
-    public IndexingMediaTagManager(IElasticClient elasticClient) : base(elasticClient)
-    {
-    }
-}
+public class IndexingMediaTagManager(IElasticClient elasticClient)
+    : IndexingEntityManager<MediaTag>(elasticClient), IIndexingMediaTagManager;

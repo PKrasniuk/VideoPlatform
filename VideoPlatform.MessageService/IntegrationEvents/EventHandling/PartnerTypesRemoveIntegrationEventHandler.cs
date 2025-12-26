@@ -6,14 +6,10 @@ using VideoPlatform.MessageService.IntegrationEvents.Events;
 
 namespace VideoPlatform.MessageService.IntegrationEvents.EventHandling;
 
-public class PartnerTypesRemoveIntegrationEventHandler : ICapSubscribe
+public class PartnerTypesRemoveIntegrationEventHandler(IPartnerTypesRepository repository) : ICapSubscribe
 {
-    private readonly IPartnerTypesRepository _repository;
-
-    public PartnerTypesRemoveIntegrationEventHandler(IPartnerTypesRepository repository)
-    {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-    }
+    private readonly IPartnerTypesRepository _repository =
+        repository ?? throw new ArgumentNullException(nameof(repository));
 
     [CapSubscribe(nameof(PartnerTypesRemoveIntegrationEvent))]
     public async Task HandleAsync(PartnerTypesRemoveIntegrationEvent @event)

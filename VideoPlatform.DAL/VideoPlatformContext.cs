@@ -11,12 +11,8 @@ namespace VideoPlatform.DAL;
 /// <summary>
 ///     VideoPlatform Context
 /// </summary>
-public class VideoPlatformContext : IdentityDbContext<AppUser, AppRole, int>
+public class VideoPlatformContext(DbContextOptions options) : IdentityDbContext<AppUser, AppRole, int>(options)
 {
-    public VideoPlatformContext(DbContextOptions options) : base(options)
-    {
-    }
-
     public virtual DbSet<Experiment> Experiments { get; set; }
 
     public virtual DbSet<Favorite> Favorites { get; set; }

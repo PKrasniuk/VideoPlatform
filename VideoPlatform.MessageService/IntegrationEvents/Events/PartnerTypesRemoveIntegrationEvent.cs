@@ -3,15 +3,9 @@ using VideoPlatform.Domain.Enums;
 
 namespace VideoPlatform.MessageService.IntegrationEvents.Events;
 
-public class PartnerTypesRemoveIntegrationEvent
+public class PartnerTypesRemoveIntegrationEvent(int partnerId, PartnerType type)
 {
-    public PartnerTypesRemoveIntegrationEvent(int partnerId, PartnerType type)
-    {
-        PartnerId = partnerId;
-        Type = type;
-    }
+    [JsonProperty("partnerId")] public int PartnerId { get; } = partnerId;
 
-    [JsonProperty("partnerId")] public int PartnerId { get; }
-
-    [JsonProperty("partnerType")] public PartnerType Type { get; }
+    [JsonProperty("partnerType")] public PartnerType Type { get; } = type;
 }

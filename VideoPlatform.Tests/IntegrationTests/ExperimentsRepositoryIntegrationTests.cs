@@ -46,7 +46,7 @@ public class ExperimentsRepositoryIntegrationTests
 
         var result = await _experimentsRepository.GetEntitiesAsync();
         Assert.IsNotNull(result);
-        Assert.AreEqual(1, result.Count);
+        Assert.HasCount(1, result);
     }
 
     [TestMethod]

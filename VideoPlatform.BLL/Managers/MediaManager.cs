@@ -4,12 +4,8 @@ using VideoPlatform.DAL.Interfaces;
 
 namespace VideoPlatform.BLL.Managers;
 
-public class MediaManager : IMediaManager
+public class MediaManager(IMediaRepository mediaRepository) : IMediaManager
 {
-    private readonly IMediaRepository _mediaRepository;
-
-    public MediaManager(IMediaRepository mediaRepository)
-    {
-        _mediaRepository = mediaRepository ?? throw new ArgumentNullException(nameof(mediaRepository));
-    }
+    private readonly IMediaRepository _mediaRepository =
+        mediaRepository ?? throw new ArgumentNullException(nameof(mediaRepository));
 }

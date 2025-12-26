@@ -4,12 +4,8 @@ using VideoPlatform.DAL.Interfaces;
 
 namespace VideoPlatform.BLL.Managers;
 
-public class ToolManager : IToolManager
+public class ToolManager(IToolsRepository toolsRepository) : IToolManager
 {
-    private readonly IToolsRepository _toolsRepository;
-
-    public ToolManager(IToolsRepository toolsRepository)
-    {
-        _toolsRepository = toolsRepository ?? throw new ArgumentNullException(nameof(toolsRepository));
-    }
+    private readonly IToolsRepository _toolsRepository =
+        toolsRepository ?? throw new ArgumentNullException(nameof(toolsRepository));
 }

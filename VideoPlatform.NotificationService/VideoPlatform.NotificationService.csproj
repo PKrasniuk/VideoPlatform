@@ -15,7 +15,6 @@
     <PackageReference Include="DotNetCore.CAP" Version="8.3.2" />
     <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="8.3.2" />
     <PackageReference Include="DotNetCore.CAP.SqlServer" Version="8.3.2" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="10.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.6" />
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="9.0.6" />

@@ -5,14 +5,9 @@ using System.Threading.Tasks;
 
 namespace VideoPlatform.Tests.Infrastructure;
 
-internal class AsyncEnumerator<T> : IAsyncEnumerator<T>, IDisposable
+internal class AsyncEnumerator<T>(IEnumerator<T> enumerator) : IAsyncEnumerator<T>, IDisposable
 {
-    private readonly IEnumerator<T> _enumerator;
-
-    public AsyncEnumerator(IEnumerator<T> enumerator)
-    {
-        _enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
-    }
+    private readonly IEnumerator<T> _enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
 
     public ValueTask<bool> MoveNextAsync()
     {

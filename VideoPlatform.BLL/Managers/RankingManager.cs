@@ -6,23 +6,17 @@ using VideoPlatform.BLL.Interfaces;
 
 namespace VideoPlatform.BLL.Managers;
 
-public class RankingManager : IRankingManager
+public class RankingManager(IManager<SearchResultModel, SearchResultPredictionModel, RankingMetrics> rankingManager)
+    : IRankingManager
 {
-    private readonly IManager<SearchResultModel, SearchResultPredictionModel, RankingMetrics> _rankingManager;
-
-    public RankingManager(IManager<SearchResultModel, SearchResultPredictionModel, RankingMetrics> rankingManager)
-    {
-        _rankingManager = rankingManager;
-    }
-
     public RankingMetrics BuildRankingModel()
     {
-        return _rankingManager.BuildTrainEvaluateAndSaveModel().Item2;
+        return rankingManager.BuildTrainEvaluateAndSaveModel().Item2;
     }
 
     public ICollection<SearchResultPredictionModel> CalculatePrediction(IEnumerable<SearchResultModel> items,
         bool rebuildModel)
     {
-        return _rankingManager.CalculatePrediction(items, rebuildModel);
+        return rankingManager.CalculatePrediction(items, rebuildModel);
     }
 }

@@ -10,19 +10,15 @@ using VideoPlatform.Domain.Entities;
 
 namespace VideoPlatform.CQRS.Handlers;
 
-public class SettingsHandler :
+public class SettingsHandler(ISettingsRepository settingsRepository) :
     IRequestHandler<GetSettingQuery, Setting>,
     IRequestHandler<SettingsQuery, IEnumerable<Setting>>,
     IRequestHandler<CreateSettingCommand, Setting>,
     IRequestHandler<UpdateSettingCommand>,
     IRequestHandler<RemoveSettingCommand>
 {
-    private readonly ISettingsRepository _settingsRepository;
-
-    public SettingsHandler(ISettingsRepository settingsRepository)
-    {
-        _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
-    }
+    private readonly ISettingsRepository _settingsRepository =
+        settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
 
     public async Task<Setting> Handle(CreateSettingCommand request, CancellationToken cancellationToken)
     {

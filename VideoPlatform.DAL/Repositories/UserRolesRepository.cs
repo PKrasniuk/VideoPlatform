@@ -8,14 +8,9 @@ using VideoPlatform.DAL.Interfaces;
 
 namespace VideoPlatform.DAL.Repositories;
 
-public class UserRolesRepository : IUserRolesRepository
+public class UserRolesRepository(VideoPlatformContext dbContext) : IUserRolesRepository
 {
-    private readonly VideoPlatformContext _dbContext;
-
-    public UserRolesRepository(VideoPlatformContext dbContext)
-    {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-    }
+    private readonly VideoPlatformContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
     public async Task<ICollection<UserRoleDataModel>> GetUserRolesAsync(CancellationToken cancellationToken)
     {

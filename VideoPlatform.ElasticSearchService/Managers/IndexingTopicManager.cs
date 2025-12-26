@@ -4,9 +4,5 @@ using VideoPlatform.ElasticSearchService.Interfaces;
 
 namespace VideoPlatform.ElasticSearchService.Managers;
 
-public class IndexingTopicManager : IndexingEntityManager<Topic>, IIndexingTopicManager
-{
-    public IndexingTopicManager(IElasticClient elasticClient) : base(elasticClient)
-    {
-    }
-}
+public class IndexingTopicManager(IElasticClient elasticClient)
+    : IndexingEntityManager<Topic>(elasticClient), IIndexingTopicManager;

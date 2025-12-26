@@ -8,14 +8,10 @@ using VideoPlatform.DAL.Interfaces;
 
 namespace VideoPlatform.BLL.Managers;
 
-public class UserRolesManager : IUserRolesManager
+public class UserRolesManager(IUserRolesRepository userRolesRepository) : IUserRolesManager
 {
-    private readonly IUserRolesRepository _userRolesRepository;
-
-    public UserRolesManager(IUserRolesRepository userRolesRepository)
-    {
-        _userRolesRepository = userRolesRepository ?? throw new ArgumentNullException(nameof(userRolesRepository));
-    }
+    private readonly IUserRolesRepository _userRolesRepository =
+        userRolesRepository ?? throw new ArgumentNullException(nameof(userRolesRepository));
 
     public async Task<ICollection<UserRoleDataModel>> GetUserRolesAsync(CancellationToken cancellationToken)
     {

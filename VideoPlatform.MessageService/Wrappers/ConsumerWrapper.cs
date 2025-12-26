@@ -4,15 +4,10 @@ using VideoPlatform.MessageService.Models.Enums;
 
 namespace VideoPlatform.MessageService.Wrappers;
 
-public sealed class ConsumerWrapper : IConsumerWrapper
+public sealed class ConsumerWrapper(ConsumerConfig config) : IConsumerWrapper
 {
-    private readonly IConsumer<string, string> _consumer;
+    private readonly IConsumer<string, string> _consumer = new ConsumerBuilder<string, string>(config).Build();
     private bool _disposed;
-
-    public ConsumerWrapper(ConsumerConfig config)
-    {
-        _consumer = new ConsumerBuilder<string, string>(config).Build();
-    }
 
     public void Subscribe(MessageType messageType)
     {

@@ -5,18 +5,11 @@ using Quartz.Spi;
 
 namespace VideoPlatform.SchedulerService.Jobs;
 
-public class JobFactory : IJobFactory
+public class JobFactory(IServiceProvider serviceProvider) : IJobFactory
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    public JobFactory(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
-
     public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
     {
-        return _serviceProvider.GetRequiredService(bundle.JobDetail.JobType) as IJob;
+        return (serviceProvider.GetRequiredService(bundle.JobDetail.JobType) as IJob)!;
     }
 
     public void ReturnJob(IJob job)

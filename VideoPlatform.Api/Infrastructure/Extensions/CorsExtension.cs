@@ -15,7 +15,7 @@ internal static partial class ConfigurationExtension
                 ConfigurationConstants.DefaultCorsPolicyName,
                 builder => builder
                     .WithOrigins(
-                        configuration["App:CorsOrigins"]
+                        configuration["App:CorsOrigins"]!
                             .Split(",", StringSplitOptions.RemoveEmptyEntries)
                             .Select(o => o.RemoveFromEnd("/"))
                             .ToArray()

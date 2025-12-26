@@ -18,7 +18,7 @@ internal static partial class ConfigurationExtension
             })
             .Report.ToInfluxDb(options =>
             {
-                options.InfluxDb.BaseUri = new Uri(configuration["Metrics:InfluxDBUrl"]);
+                options.InfluxDb.BaseUri = new Uri(configuration["Metrics:InfluxDBUrl"]!);
                 options.InfluxDb.Database = configuration["Metrics:MetricsDBName"];
                 options.InfluxDb.CreateDataBaseIfNotExists = true;
                 options.HttpPolicy.BackoffPeriod = TimeSpan.FromSeconds(30);
