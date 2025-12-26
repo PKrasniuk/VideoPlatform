@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using VideoPlatform.Api.Infrastructure.Filters;
 using VideoPlatform.Common.Infrastructure.Constants;
 using VideoPlatform.Common.Infrastructure.Filters;

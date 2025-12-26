@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using VideoPlatform.Common.Infrastructure.Filters;
 
 namespace VideoPlatform.NotificationService.Infrastructure.Extensions;

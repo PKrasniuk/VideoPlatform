@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using VideoPlatform.Common.Infrastructure.Constants;
 
@@ -31,16 +31,22 @@ public class SecurityRequirementsOperationFilter : IOperationFilter
                 var requiredScopes = controllerScopes.Union(actionScopes).Distinct().ToList();
                 if (requiredScopes.Any())
                 {
-                    operation.Responses.Add(((int)HttpStatusCode.Unauthorized).ToString(),
-                        new OpenApiResponse { Description = HttpStatusCode.Unauthorized.ToString() });
-                    operation.Responses.Add(((int)HttpStatusCode.Forbidden).ToString(),
-                        new OpenApiResponse { Description = HttpStatusCode.Forbidden.ToString() });
+                    if (operation.Responses != null)
+                    {
+                        operation.Responses.Add(((int)HttpStatusCode.Unauthorized).ToString(),
+                            new OpenApiResponse { Description = nameof(HttpStatusCode.Unauthorized) });
+                        operation.Responses.Add(((int)HttpStatusCode.Forbidden).ToString(),
+                            new OpenApiResponse { Description = nameof(HttpStatusCode.Forbidden) });
+                    }
+
                     operation.Security = new List<OpenApiSecurityRequirement>
                     {
                         new()
                         {
                             {
-                                new OpenApiSecurityScheme { Name = ConfigurationConstants.SecurityDefinitionName },
+                                new OpenApiSecuritySchemeReference(
+                                    ConfigurationConstants.SecurityDefinitionName
+                                ),
                                 requiredScopes
                             }
                         }

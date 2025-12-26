@@ -24,9 +24,9 @@
     <PackageReference Include="AutoMapper" Version="16.0.0" />
     <PackageReference Include="Duende.IdentityServer" Version="7.3.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.6" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="9.0.6" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="10.1.0" />
   </ItemGroup>
 
   <ItemGroup>
