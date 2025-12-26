@@ -12,8 +12,8 @@ public static class MachineLearningExtension
     public static void AddMachineLearningConfiguration(this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddTransient<IManager<TripModel, TripFarePredictionModel, RegressionMetrics>, TripManager>(
-            _ => new TripManager(configuration["AIConfiguration:Trip:DataSetsPath"],
+        services.AddTransient<IManager<TripModel, TripFarePredictionModel, RegressionMetrics>, TripManager>(_ =>
+            new TripManager(configuration["AIConfiguration:Trip:DataSetsPath"],
                 configuration["AIConfiguration:Trip:ModelsPath"]));
 
         services.AddTransient<IManager<SearchResultModel, SearchResultPredictionModel, RankingMetrics>,

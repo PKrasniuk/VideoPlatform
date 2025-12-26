@@ -22,8 +22,7 @@ internal static partial class BuilderExtension
                     new() { Service = "OverAll", Status = r.Status }
                 };
                 result.AddRange(
-                    r.Entries.Select(
-                        e => new ServiceStatus
+                    r.Entries.Select(e => new ServiceStatus
                         {
                             Service = e.Key,
                             Status = e.Value.Status,

@@ -147,7 +147,7 @@ public class AccountController : Controller
         // build a model so the logout page knows what to display
         var vm = await BuildLogoutViewModelAsync(logoutId);
 
-        if (vm.ShowLogoutPrompt == false)
+        if (!vm.ShowLogoutPrompt)
             // if the request for logout was properly authenticated from IdentityServer, then
             // we don't need to show the prompt and can just log the user out directly.
             return await Logout(vm);
@@ -258,7 +258,7 @@ public class AccountController : Controller
     {
         var vm = new LogoutViewModel { LogoutId = logoutId, ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt };
 
-        if (User.Identity != null && User.Identity.IsAuthenticated != true)
+        if (User.Identity != null && !User.Identity.IsAuthenticated)
         {
             // if the user is not authenticated, then just show logged out page
             vm.ShowLogoutPrompt = false;
@@ -266,7 +266,7 @@ public class AccountController : Controller
         }
 
         var context = await _interaction.GetLogoutContextAsync(logoutId);
-        if (context.ShowSignoutPrompt == false)
+        if (!context.ShowSignoutPrompt)
         {
             // it's safe to automatically sign-out
             vm.ShowLogoutPrompt = false;

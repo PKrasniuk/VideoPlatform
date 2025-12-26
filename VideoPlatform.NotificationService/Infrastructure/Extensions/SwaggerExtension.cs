@@ -11,15 +11,14 @@ internal static partial class ConfigurationExtension
 {
     internal static void AddSwaggerConfiguration(this IServiceCollection services)
     {
-        services.AddSwaggerGen(
-            c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Video Platform Notification API", Version = "v1" });
-                c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                    $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
-                c.EnableAnnotations();
-                c.SchemaFilter<NullableTypeSchemaFilter>();
-            });
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Video Platform Notification API", Version = "v1" });
+            c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+            c.EnableAnnotations();
+            c.SchemaFilter<NullableTypeSchemaFilter>();
+        });
 
         services.AddSwaggerGenNewtonsoftSupport();
     }

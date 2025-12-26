@@ -36,7 +36,7 @@ public class LoginViewModel : LoginInputModel
     /// <summary>
     ///     IsExternalLoginOnly
     /// </summary>
-    public bool IsExternalLoginOnly => EnableLocalLogin == false && ExternalProviders?.Count() == 1;
+    public bool IsExternalLoginOnly => !EnableLocalLogin && ExternalProviders?.Count() == 1;
 
     /// <summary>
     ///     ExternalLoginScheme

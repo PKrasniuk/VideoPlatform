@@ -56,7 +56,7 @@ public class ExternalController : Controller
         if (string.IsNullOrEmpty(returnUrl)) returnUrl = "~/";
 
         // validate returnUrl - either it is a valid OIDC URL or back to a local page
-        if (Url.IsLocalUrl(returnUrl) == false && _interaction.IsValidReturnUrl(returnUrl) == false)
+        if (!Url.IsLocalUrl(returnUrl) && !_interaction.IsValidReturnUrl(returnUrl))
             // user might have clicked on a malicious link - should be logged
             throw new Exception("invalid return URL");
 
@@ -86,7 +86,7 @@ public class ExternalController : Controller
     {
         // read external identity from the temporary cookie
         var result = await HttpContext.AuthenticateAsync(IdentityConstants.ExternalScheme);
-        if (result.Succeeded != true) throw new Exception("External authentication error");
+        if (!result.Succeeded) throw new Exception("External authentication error");
 
         if (_logger.IsEnabled(LogLevel.Debug))
         {

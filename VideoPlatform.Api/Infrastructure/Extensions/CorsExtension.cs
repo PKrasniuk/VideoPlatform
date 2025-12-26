@@ -11,8 +11,7 @@ internal static partial class ConfigurationExtension
 {
     internal static void AddCorsConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddCors(
-            options => options.AddPolicy(
+        services.AddCors(options => options.AddPolicy(
                 ConfigurationConstants.DefaultCorsPolicyName,
                 builder => builder
                     .WithOrigins(
