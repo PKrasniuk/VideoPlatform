@@ -23,10 +23,10 @@
     <PackageReference Include="App.Metrics.Reporting.InfluxDB" Version="4.3.0" />
     <PackageReference Include="AutoMapper" Version="16.1.1" />
     <PackageReference Include="Duende.IdentityServer" Version="7.3.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.1.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="10.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.1.7" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="10.1.7" />
   </ItemGroup>
 
   <ItemGroup>
