@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
 using Duende.IdentityModel;
 using Duende.IdentityServer;
@@ -126,7 +127,7 @@ public class ExternalController : Controller
         var returnUrl = result.Properties.Items["returnUrl"] ?? "~/";
 
         // check if external login is in the context of an OIDC request
-        await _interaction.GetAuthorizationContextAsync(returnUrl);
+        await _interaction.GetAuthorizationContextAsync(returnUrl, CancellationToken.None);
         //await _events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.Id.ToString(), name, true, context?.ClientId));
 
         //if (context != null)

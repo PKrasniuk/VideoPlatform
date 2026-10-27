@@ -3,6 +3,7 @@
 
 
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
@@ -90,7 +91,7 @@ public class ConsentController : Controller
         var result = new ProcessConsentResult();
 
         // validate return url is still valid
-        var request = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
+        var request = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl, CancellationToken.None);
         if (request == null) return result;
 
         ConsentResponse grantedConsent = null;
@@ -135,7 +136,7 @@ public class ConsentController : Controller
         if (grantedConsent != null)
         {
             // communicate outcome of consent back to identityserver
-            await _interaction.GrantConsentAsync(request, grantedConsent);
+            await _interaction.GrantConsentAsync(request, grantedConsent, CancellationToken.None);
 
             // indicate that's it ok to redirect back to authorization endpoint
             result.RedirectUri = model.ReturnUrl;
@@ -152,7 +153,7 @@ public class ConsentController : Controller
 
     private async Task<ConsentViewModel> BuildViewModelAsync(string returnUrl, ConsentInputModel model = null)
     {
-        var request = await _interaction.GetAuthorizationContextAsync(returnUrl);
+        var request = await _interaction.GetAuthorizationContextAsync(returnUrl, CancellationToken.None);
         if (request != null)
         {
             //var client = await _clientStore.FindEnabledClientByIdAsync(request.ClientId);

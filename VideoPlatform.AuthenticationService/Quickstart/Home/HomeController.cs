@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.Threading;
 using System.Threading.Tasks;
 using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -59,7 +60,7 @@ public class HomeController : Controller
         var vm = new ErrorViewModel();
 
         // retrieve error details from identityserver
-        var message = await _interaction.GetErrorContextAsync(errorId);
+        var message = await _interaction.GetErrorContextAsync(errorId, CancellationToken.None);
         if (message != null)
         {
             vm.Error = message;

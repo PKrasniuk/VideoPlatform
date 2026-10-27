@@ -3,6 +3,7 @@
 
 
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Extensions;
@@ -50,8 +51,8 @@ public class GrantsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Revoke(string clientId)
     {
-        await _interaction.RevokeUserConsentAsync(clientId);
-        await _events.RaiseAsync(new GrantsRevokedEvent(User.GetSubjectId(), clientId));
+        await _interaction.RevokeUserConsentAsync(clientId, CancellationToken.None);
+        await _events.RaiseAsync(new GrantsRevokedEvent(User.GetSubjectId(), clientId), CancellationToken.None);
 
         return RedirectToAction("Index");
     }

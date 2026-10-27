@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Duende.IdentityServer.Stores;
 
@@ -18,7 +19,7 @@ public static class Extensions
     {
         if (!string.IsNullOrWhiteSpace(client_id))
         {
-            var client = await store.FindEnabledClientByIdAsync(client_id);
+            var client = await store.FindEnabledClientByIdAsync(client_id, CancellationToken.None);
             return client?.RequirePkce == true;
         }
 

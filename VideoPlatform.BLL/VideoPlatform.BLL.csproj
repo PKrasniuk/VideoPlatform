@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\VideoPlatform.AIL\VideoPlatform.AIL.csproj" />
     <ProjectReference Include="..\VideoPlatform.CacheService\VideoPlatform.CacheService.csproj" />
     <ProjectReference Include="..\VideoPlatform.CQRS\VideoPlatform.CQRS.csproj" />

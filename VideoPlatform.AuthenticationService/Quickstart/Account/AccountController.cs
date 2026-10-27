@@ -4,6 +4,7 @@
 
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Duende.IdentityModel;
 using Duende.IdentityServer;
@@ -78,7 +79,7 @@ public class AccountController : Controller
     public async Task<IActionResult> Login(LoginInputModel model, string button)
     {
         // check if we are in the context of an authorization request
-        var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
+        var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl, CancellationToken.None);
 
         // the user clicked the "cancel" button
         if (button != "login")
@@ -171,7 +172,8 @@ public class AccountController : Controller
             await _signInManager.SignOutAsync();
 
             // raise the logout event
-            await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
+            await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()),
+                CancellationToken.None);
         }
 
         // check if we need to trigger sign-out at an upstream identity provider
@@ -205,7 +207,7 @@ public class AccountController : Controller
     /*****************************************/
     private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
     {
-        var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
+        var context = await _interaction.GetAuthorizationContextAsync(returnUrl, CancellationToken.None);
         if (context?.IdP != null && await _schemeProvider.GetSchemeAsync(context.IdP) != null)
         {
             var local = context.IdP == IdentityServerConstants.LocalIdentityProvider;
@@ -265,7 +267,7 @@ public class AccountController : Controller
             return vm;
         }
 
-        var context = await _interaction.GetLogoutContextAsync(logoutId);
+        var context = await _interaction.GetLogoutContextAsync(logoutId, CancellationToken.None);
         if (!context.ShowSignoutPrompt)
         {
             // it's safe to automatically sign-out
@@ -281,7 +283,7 @@ public class AccountController : Controller
     private async Task<LoggedOutViewModel> BuildLoggedOutViewModelAsync(string logoutId)
     {
         // get context information (client name, post logout redirect URI and iframe for federated signout)
-        var logout = await _interaction.GetLogoutContextAsync(logoutId);
+        var logout = await _interaction.GetLogoutContextAsync(logoutId, CancellationToken.None);
 
         var vm = new LoggedOutViewModel
         {
@@ -300,7 +302,7 @@ public class AccountController : Controller
                 var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
                 if (providerSupportsSignout)
                 {
-                    vm.LogoutId ??= await _interaction.CreateLogoutContextAsync();
+                    vm.LogoutId ??= await _interaction.CreateLogoutContextAsync(CancellationToken.None);
                     vm.ExternalAuthenticationScheme = idp;
                 }
             }
